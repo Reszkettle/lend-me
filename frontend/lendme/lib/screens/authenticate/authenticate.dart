@@ -21,17 +21,19 @@ class _AuthenticateState extends State<Authenticate> {
         ),
         body: Container(
             padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
-            child: ElevatedButton(
-              child: const Text('Sign in anon'),
-              onPressed: () async {
-                dynamic result = await _auth.signInAnon();
-                if(result == null) {
-                  print('error signing in');
-                } else {
-                  print('signed in');
-                  print(result);
-                }
-              },
+            child: Center(
+              child: ElevatedButton(
+                child: const Text('Sign in anonymously'),
+                onPressed: () async {
+                  dynamic result = await _auth.signInAnon();
+                  if(result == null) {
+                    print('error signing in');
+                  } else {
+                    print('signed in');
+                    print(result);
+                  }
+                },
+              ),
             )
         )
     );
