@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:lendme/main.dart';
+import 'package:lendme/screens/wrapper.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,10 +18,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      routes: {
-        '/splash': (context) => const MyHomePage(title: "Lend Me")
-      },
-      initialRoute: '/splash',
+      home: const Wrapper()
     );
   }
 }
