@@ -5,8 +5,23 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: const Text('Home'),
+    return Scaffold(
+      backgroundColor: Colors.brown[50],
+      appBar: AppBar(
+        title: const Text('Lend me'),
+        backgroundColor: Colors.brown[400],
+        elevation: 0.0,
+        actions: <Widget>[
+          TextButton.icon(
+              icon: const Icon(Icons.logout, color: Colors.white),
+              label: const Text(
+                  'logout',
+                  style: TextStyle(color: Colors.white),
+              ),
+            onPressed: () {},
+          ),
+        ]
+      )
     );
   }
 }
