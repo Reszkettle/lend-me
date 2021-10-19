@@ -1,0 +1,20 @@
+To run these commands you need to install npm and run this command: npm install -g firebase-tools
+
+Usefull commands:
+npm --prefix functions run build
+npm --prefix functions run build-watch
+firebase emulators:start --import ..\..\data\1-empty
+
+dir ..\..\data
+firebase emulators:export ..\..\data\1-test 
+
+netstat -ano | findStr "8080"
+taskkill /F /PID 8080
+
+firebase emulators:start --only auth,storage,firestore,database
+firebase functions:shell
+
+firebase deploy --only functions
+npm install (inside functions dir)
+
+gsutil acl set -r public-read gs://[BUCKET_NAME]/[FOLDER_NAME]/

@@ -1,0 +1,7 @@
+{
+    "files.eol": "\n",
+    "editor.tabSize": 2,
+    "files.exclude": {
+        "**/*.log": true
+    },
+}
