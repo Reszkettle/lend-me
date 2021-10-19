@@ -1,7 +1,7 @@
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:lendme/screens/wrapper.dart';
+import 'package:lendme/screens/proxy.dart';
 import 'package:lendme/services/auth.dart';
 import 'package:provider/provider.dart';
 
@@ -18,16 +18,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamProvider<UserModel?>.value(
+    return StreamProvider<AppUser?>.value(
       value: AuthService().user,
       initialData: null,
-      child: MaterialApp(
-        title: 'Lend Me',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        home: const Wrapper()
-      ),
+      child: const Proxy()
     );
   }
 }

@@ -1,7 +1,7 @@
-class UserModel {
+class AppUser {
 
   final String uid;
 
-  UserModel({ required this.uid });
+  AppUser({ required this.uid });
 
 }

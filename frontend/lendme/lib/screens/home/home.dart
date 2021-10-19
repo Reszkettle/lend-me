@@ -17,8 +17,6 @@ class _HomeState extends State<Home> {
   final AuthService _auth = AuthService();
 
   int _selectedIndex = 0;
-  static const TextStyle _optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
   static const List<Widget> _tabsContent = <Widget>[
     Items(),
@@ -36,10 +34,8 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.brown[50],
         appBar: AppBar(
             title: const Text('Lend me'),
-            backgroundColor: Colors.brown[400],
             elevation: 0.0,
             actions: <Widget>[
               TextButton.icon(
@@ -57,6 +53,7 @@ class _HomeState extends State<Home> {
           child: _tabsContent[_selectedIndex],
         ),
         bottomNavigationBar: BottomNavigationBar(
+          backgroundColor: Colors.blue,
           type: BottomNavigationBarType.fixed,
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
@@ -77,7 +74,7 @@ class _HomeState extends State<Home> {
             ),
           ],
           currentIndex: _selectedIndex,
-          selectedItemColor: Colors.amber[800],
+          selectedItemColor: Colors.white,
           onTap: _onItemTapped,
         ));
   }

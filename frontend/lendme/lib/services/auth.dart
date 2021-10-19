@@ -6,12 +6,12 @@ class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   // create user obj based on FirebaseUser
-  UserModel? _userFromFirebaseUser(User? user) {
-    return user != null ? UserModel(uid: user.uid) : null;
+  AppUser? _userFromFirebaseUser(User? user) {
+    return user != null ? AppUser(uid: user.uid) : null;
   }
 
   // auth change user stream
-  Stream<UserModel?> get user {
+  Stream<AppUser?> get user {
     return _auth
         .authStateChanges()
         .map(_userFromFirebaseUser);
