@@ -47,3 +47,4 @@ app.*.map.json
 
 # Custom ignores
 /android/app/google-services.json
+.gradle/
