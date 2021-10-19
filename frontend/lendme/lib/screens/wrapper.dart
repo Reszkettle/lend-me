@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lendme/screens/authenticate/authenticate.dart';
 import 'package:lendme/screens/home/home.dart';
 
 class Wrapper extends StatelessWidget {
@@ -7,6 +8,6 @@ class Wrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // return either Home or Authenticate widget
-    return const Home();
+    return const Authenticate();
   }
 }
