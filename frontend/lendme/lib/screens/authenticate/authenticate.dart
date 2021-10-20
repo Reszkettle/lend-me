@@ -1,4 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_signin_button/button_list.dart';
+import 'package:flutter_signin_button/button_view.dart';
 import 'package:lendme/services/auth.dart';
 
 class Authenticate extends StatefulWidget {
@@ -18,7 +21,7 @@ class _AuthenticateState extends State<Authenticate> {
             title: const Text('Sign in to Lend Me')
         ),
         body: Container(
-            padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
+            padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 40.0),
             child: OrientationBuilder(
                 builder: (context, orientation) {
                   if(orientation == Orientation.portrait) {
@@ -57,8 +60,15 @@ class AuthButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         ElevatedButton(
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.resolveWith<Color?>(
+                    (Set<MaterialState> states) {
+                  return Colors.blueGrey;
+                }),
+          ),
           child: const Text('Sign in anonymously'),
           onPressed: () async {
             dynamic result = await _auth.signInAnon();
@@ -70,8 +80,8 @@ class AuthButtons extends StatelessWidget {
             }
           },
         ),
-        ElevatedButton(
-          child: const Text('Sign in with Google'),
+        SignInButton(
+          Buttons.Google,
           onPressed: () async {
             dynamic result = await _auth.signInWithGoogle();
             if(result == null) {
@@ -82,8 +92,8 @@ class AuthButtons extends StatelessWidget {
             }
           },
         ),
-        ElevatedButton(
-          child: const Text('Sign in with Facebook'),
+        SignInButton(
+          Buttons.Facebook,
           onPressed: () async {
             dynamic result = await _auth.signInWithFacebook();
             if(result == null) {
