@@ -62,49 +62,52 @@ class AuthButtons extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        ElevatedButton(
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.resolveWith<Color?>(
-                    (Set<MaterialState> states) {
-                  return Colors.blueGrey;
-                }),
-          ),
-          child: const Text('Sign in anonymously'),
-          onPressed: () async {
-            dynamic result = await _auth.signInAnon();
-            if(result == null) {
-              print('error signing in');
-            } else {
-              print('signed in');
-              print(result);
-            }
-          },
-        ),
-        SignInButton(
-          Buttons.Google,
-          onPressed: () async {
-            dynamic result = await _auth.signInWithGoogle();
-            if(result == null) {
-              print('error signing in');
-            } else {
-              print('signed in');
-              print(result);
-            }
-          },
-        ),
-        SignInButton(
-          Buttons.Facebook,
-          onPressed: () async {
-            dynamic result = await _auth.signInWithFacebook();
-            if(result == null) {
-              print('error signing in');
-            } else {
-              print('signed in');
-              print(result);
-            }
-          },
-        ),
+        emailButton(context),
+        facebookButton(context),
+        googleButton(context),
       ],
     );
+  }
+
+  SignInButton emailButton(BuildContext context) {
+    return SignInButton(
+      Buttons.Email,
+      elevation: 0,
+      onPressed: () async {
+        Navigator.pushNamed(context, '/email');
+      },
+    );
+  }
+
+  SignInButton facebookButton(BuildContext context) {
+    return SignInButton(
+        Buttons.Facebook,
+        elevation: 0,
+        onPressed: () async {
+          dynamic result = await _auth.signInWithFacebook();
+          if(result == null) {
+            print('error signing in');
+          } else {
+            print('signed in');
+            print(result);
+          }
+        },
+      );
+  }
+
+  SignInButton googleButton(BuildContext context) {
+    return SignInButton(
+        Buttons.Google,
+        elevation: 0,
+        onPressed: () async {
+          dynamic result = await _auth.signInWithGoogle();
+          if(result == null) {
+            print('error signing in');
+          } else {
+            print('signed in');
+            print(result);
+          }
+        },
+      );
   }
 }
