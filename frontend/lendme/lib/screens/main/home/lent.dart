@@ -10,8 +10,16 @@ class Lent extends StatefulWidget {
 class _LentState extends State<Lent> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Text("Lent"),
+    return Stack(
+        children: const [
+          Placeholder(),
+          Center(child:
+          Text(
+              "Lent",
+              style: TextStyle(fontSize: 40, color: Colors.grey, backgroundColor: Colors.white)
+          )
+          )
+        ]
     );
   }
 }

@@ -2,7 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/button_list.dart';
 import 'package:flutter_signin_button/button_view.dart';
+import 'package:lendme/exceptions/exception.dart';
 import 'package:lendme/services/auth.dart';
+import 'package:lendme/utils/ui/error_snackbar.dart';
 
 class Authenticate extends StatefulWidget {
   const Authenticate({Key? key}) : super(key: key);
@@ -117,12 +119,10 @@ class AuthButtons extends StatelessWidget {
         Buttons.Facebook,
         elevation: 0,
         onPressed: () async {
-          dynamic result = await _auth.signInWithFacebook();
-          if (result == null) {
-            print('error signing in');
-          } else {
-            print('signed in');
-            print(result);
+          try {
+            await _auth.signInWithFacebook();
+          } on DomainException catch(e) {
+            showErrorSnackBar(context, e.message);
           }
         },
       ),
@@ -136,12 +136,10 @@ class AuthButtons extends StatelessWidget {
         Buttons.Google,
         elevation: 0,
         onPressed: () async {
-          dynamic result = await _auth.signInWithGoogle();
-          if (result == null) {
-            print('error signing in');
-          } else {
-            print('signed in');
-            print(result);
+          try {
+            await _auth.signInWithGoogle();
+          } on DomainException catch(e) {
+            showErrorSnackBar(context, e.message);
           }
         },
       ),
