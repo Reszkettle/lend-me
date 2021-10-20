@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Lend Me</string>
+    <string name="facebook_app_id">1009100513156408</string>
+    <string name="fb_login_protocol_scheme">fb1009100513156408</string>
+</resources>

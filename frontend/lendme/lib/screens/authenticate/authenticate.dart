@@ -82,6 +82,18 @@ class AuthButtons extends StatelessWidget {
             }
           },
         ),
+        ElevatedButton(
+          child: const Text('Sign in with Facebook'),
+          onPressed: () async {
+            dynamic result = await _auth.signInWithFacebook();
+            if(result == null) {
+              print('error signing in');
+            } else {
+              print('signed in');
+              print(result);
+            }
+          },
+        ),
       ],
     );
   }
