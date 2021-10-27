@@ -23,7 +23,7 @@ class _EmailSignInState extends State<EmailSignIn> {
       child: Form(
         key: _formKey,
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
+          padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -31,7 +31,8 @@ class _EmailSignInState extends State<EmailSignIn> {
               TextFormField(
                 decoration: const InputDecoration(
                     border: OutlineInputBorder(),
-                    hintText: 'Email'
+                    hintText: 'Email',
+                    prefixIcon: Icon(Icons.email)
                 ),
                 validator: (val) => val!.isEmpty ? 'Enter an email' : null,
                 onChanged: (val) {
@@ -45,7 +46,8 @@ class _EmailSignInState extends State<EmailSignIn> {
                 obscureText: true,
                 decoration: const InputDecoration(
                     border: OutlineInputBorder(),
-                    hintText: 'Password'
+                    hintText: 'Password',
+                    prefixIcon: Icon(Icons.password)
                 ),
                 validator: (val) => val!.length < 6 ? 'Enter a password min 6 characters long' : null,
                 onChanged: (val) {

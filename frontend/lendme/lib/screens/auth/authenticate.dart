@@ -12,44 +12,70 @@ class Authenticate extends StatefulWidget {
 }
 
 class _AuthenticateState extends State<Authenticate> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-            elevation: 0.0,
-            title: const Text('Sign in to Lend Me')
+        appBar: AppBar(elevation: 0.0, title: const Text('Sign in to Lend Me')),
+        body: OrientationBuilder(builder: (context, orientation) {
+          if (orientation == Orientation.portrait) {
+            return buildPortraitLayout();
+          } else {
+            return buildLandscapeLayout();
+          }
+        }));
+  }
+
+  Row buildLandscapeLayout() {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        const Expanded(
+          child: Logo(),
         ),
-        body: Container(
-            padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 40.0),
-            child: OrientationBuilder(
-                builder: (context, orientation) {
-                  if(orientation == Orientation.portrait) {
-                    return Column(
-                      children: [
-                        const Image(image: AssetImage("assets/images/logo.png")),
-                        Expanded(child: AuthButtons())
-                      ],
-                    );
-                  }
-                  else {
-                    return Row(
-                      children: [
-                        const Expanded(
-                          child: Image(image: AssetImage("assets/images/logo.png")),
-                        ),
-                        const Spacer(),
-                        Expanded(child: AuthButtons()),
-                      ],
-                    );
-                  }
-                }
-            )
-        )
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: AuthButtons(),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Column buildPortraitLayout() {
+    return Column(
+      children: [
+        const SizedBox(height: 30),
+        const Logo(),
+        Expanded(child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 32.0),
+          child: AuthButtons(),
+        ))
+      ],
     );
   }
 }
 
+class Logo extends StatelessWidget {
+  const Logo({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: const [
+        Image(
+          image: AssetImage("assets/images/logo.png"),
+          height: 200,
+        ),
+        SizedBox(height: 10),
+        Text("Lend Me",
+            style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold)),
+      ],
+    );
+  }
+}
 
 class AuthButtons extends StatelessWidget {
   AuthButtons({Key? key}) : super(key: key);
@@ -63,51 +89,62 @@ class AuthButtons extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         emailButton(context),
+        const SizedBox(height: 10),
         facebookButton(context),
+        const SizedBox(height: 10),
         googleButton(context),
       ],
     );
   }
 
-  SignInButton emailButton(BuildContext context) {
-    return SignInButton(
-      Buttons.Email,
-      elevation: 0,
-      onPressed: () async {
-        Navigator.pushNamed(context, '/email');
-      },
+  SizedBox emailButton(BuildContext context) {
+    return SizedBox(
+      height: 50,
+      child: SignInButton(
+        Buttons.Email,
+        elevation: 0,
+        onPressed: () async {
+          Navigator.pushNamed(context, '/email');
+        },
+      ),
     );
   }
 
-  SignInButton facebookButton(BuildContext context) {
-    return SignInButton(
+  SizedBox facebookButton(BuildContext context) {
+    return SizedBox(
+      height: 50,
+      child: SignInButton(
         Buttons.Facebook,
         elevation: 0,
         onPressed: () async {
           dynamic result = await _auth.signInWithFacebook();
-          if(result == null) {
+          if (result == null) {
             print('error signing in');
           } else {
             print('signed in');
             print(result);
           }
         },
-      );
+      ),
+    );
   }
 
-  SignInButton googleButton(BuildContext context) {
-    return SignInButton(
+  SizedBox googleButton(BuildContext context) {
+    return SizedBox(
+      height: 50,
+      child: SignInButton(
         Buttons.Google,
         elevation: 0,
         onPressed: () async {
           dynamic result = await _auth.signInWithGoogle();
-          if(result == null) {
+          if (result == null) {
             print('error signing in');
           } else {
             print('signed in');
             print(result);
           }
         },
-      );
+      ),
+    );
   }
 }

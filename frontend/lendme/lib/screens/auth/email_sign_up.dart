@@ -23,14 +23,16 @@ class _EmailSignUpState extends State<EmailSignUp> {
       child: Form(
         key: _formKey,
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
+          padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const SizedBox(height: 20.0),
               TextFormField(
                 decoration: const InputDecoration(
-                    border: OutlineInputBorder(), hintText: 'Email'),
+                    border: OutlineInputBorder(),
+                    hintText: 'Email',
+                    prefixIcon: Icon(Icons.email)),
                 validator: (val) => val!.isEmpty ? 'Enter an email' : null,
                 onChanged: (val) {
                   setState(() {
@@ -42,7 +44,9 @@ class _EmailSignUpState extends State<EmailSignUp> {
               TextFormField(
                 obscureText: true,
                 decoration: const InputDecoration(
-                    border: OutlineInputBorder(), hintText: 'Password'),
+                    border: OutlineInputBorder(),
+                    hintText: 'Password',
+                    prefixIcon: Icon(Icons.password)),
                 validator: (val) => val!.length < 6 ? 'Enter a password min 6 characters long' : null,
                 onChanged: (val) {
                   password = val;
@@ -53,7 +57,8 @@ class _EmailSignUpState extends State<EmailSignUp> {
                 obscureText: true,
                 decoration: const InputDecoration(
                     border: OutlineInputBorder(),
-                    hintText: 'Repeated password'),
+                    hintText: 'Repeated password',
+                    prefixIcon: Icon(Icons.password)),
                 validator: (val) => val != password ? "Passwords are not the same" : null,
                 onChanged: (val) {
                   repeatedPassword = val;
