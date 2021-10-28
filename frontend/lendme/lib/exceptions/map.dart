@@ -4,6 +4,10 @@ import 'package:lendme/exceptions/general.dart';
 
 DomainException mapToDomainException(Object e) {
   if(e is FirebaseException) {
+    if(e.code == 'network-request-failed'){
+      return InternetException();
+    }
+
     if(e.message != null) {
       return DomainException(e.message!);
     }

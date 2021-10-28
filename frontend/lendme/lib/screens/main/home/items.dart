@@ -10,8 +10,16 @@ class Items extends StatefulWidget {
 class _ItemsState extends State<Items> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Text("Items"),
+    return Stack(
+        children: const [
+          Placeholder(),
+          Center(child:
+            Text(
+                "Items",
+                style: TextStyle(fontSize: 40, color: Colors.grey, backgroundColor: Colors.white)
+            )
+          )
+        ]
     );
   }
 }
