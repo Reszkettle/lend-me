@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lendme/exceptions/exception.dart';
 import 'package:lendme/services/auth.dart';
 
 class EmailSignUp extends StatefulWidget {
@@ -15,7 +16,6 @@ class _EmailSignUpState extends State<EmailSignUp> {
   String email = '';
   String password = '';
   String repeatedPassword = '';
-  String error = '';
 
   @override
   Widget build(BuildContext context) {
@@ -69,25 +69,27 @@ class _EmailSignUpState extends State<EmailSignUp> {
                 child: const Text("Sign up"),
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
-                    dynamic result = await _auth.registerWithEmailAndPassword(email, password);
-                    if(result == null) {
-                      setState(() {
-                        error = 'Unable to authenticate';
-                      });
+                    try {
+                      dynamic result = await _auth.registerWithEmailAndPassword(
+                          email, password);
+                    } on DomainException catch(e) {
+                      _showErrorSnackBar(context, e.message);
                     }
                   }
                 },
-              ),
-              const SizedBox(height: 12.0,),
-              Text(
-                error,
-                style: const TextStyle(color: Colors.red, fontSize: 14.0),
-                textAlign: TextAlign.center,
               ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  void _showErrorSnackBar(BuildContext context, String text) {
+    final snackBar = SnackBar(
+      content: Text(text),
+      backgroundColor: Colors.red,
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }
