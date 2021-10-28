@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lendme/screens/home/profile.dart';
+import 'package:lendme/screens/main/home/profile.dart';
 import 'package:lendme/services/auth.dart';
 
 import 'borrowed.dart';
