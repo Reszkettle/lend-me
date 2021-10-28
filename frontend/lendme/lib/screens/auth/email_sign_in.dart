@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:lendme/exceptions/exception.dart';
 import 'package:lendme/services/auth.dart';
+import 'package:lendme/utils/ui/error_snackbar.dart';
 
 class EmailSignIn extends StatefulWidget {
   const EmailSignIn({Key? key}) : super(key: key);
@@ -15,7 +17,6 @@ class _EmailSignInState extends State<EmailSignIn> {
 
   String email = '';
   String password = '';
-  String error = '';
 
   @override
   Widget build(BuildContext context) {
@@ -59,20 +60,13 @@ class _EmailSignInState extends State<EmailSignIn> {
                   child: const Text("Sign in"),
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      dynamic result = await _auth.signInWithEmailAndPassword(email, password);
-                      if(result == null) {
-                        setState(() {
-                          error = 'Unable to authenticate';
-                        });
+                      try {
+                        await _auth.signInWithEmailAndPassword(email, password);
+                      } on DomainException catch(e) {
+                        showErrorSnackBar(context, e.message);
                       }
                     }
                   },
-              ),
-              const SizedBox(height: 12.0,),
-              Text(
-                error,
-                style: const TextStyle(color: Colors.red, fontSize: 14.0),
-                textAlign: TextAlign.center,
               ),
             ],
           ),

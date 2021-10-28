@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:lendme/exceptions/map.dart';
 import 'package:lendme/models/user.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
@@ -23,8 +24,7 @@ class AuthService {
       User? user = result.user;
       return _userFromFirebaseUser(user);
     } catch (e) {
-      print(e.toString());
-      return null;
+      throw mapToDomainException(e);
     }
   }
 
@@ -43,8 +43,7 @@ class AuthService {
       User? user = userCredential.user;
       return _userFromFirebaseUser(user);
     } catch (e) {
-      print(e.toString());
-      return null;
+      throw mapToDomainException(e);
     }
   }
 
@@ -59,12 +58,11 @@ class AuthService {
       User? user = userCredential.user;
       return _userFromFirebaseUser(user);
     } catch (e) {
-      print(e.toString());
-      return null;
+      throw mapToDomainException(e);
     }
   }
 
-  // Register with email & password
+  // register with email & password
   Future registerWithEmailAndPassword(String email, String password) async {
     try {
       UserCredential credential = await _auth.createUserWithEmailAndPassword(
@@ -72,12 +70,11 @@ class AuthService {
       User? user = credential.user;
       return _userFromFirebaseUser(user);
     } catch (e) {
-      print(e.toString());
-      return null;
+      throw mapToDomainException(e);
     }
   }
 
-  // Sign in with email & password
+  // sign in with email & password
   Future signInWithEmailAndPassword(String email, String password) async {
     try {
       UserCredential credential = await _auth.signInWithEmailAndPassword(
@@ -85,8 +82,7 @@ class AuthService {
       User? user = credential.user;
       return _userFromFirebaseUser(user);
     } catch (e) {
-      print(e.toString());
-      return null;
+      throw mapToDomainException(e);
     }
   }
 
@@ -95,8 +91,7 @@ class AuthService {
     try {
       return await _auth.signOut();
     } catch (e) {
-      print(e.toString());
-      null;
+      throw mapToDomainException(e);
     }
   }
 }

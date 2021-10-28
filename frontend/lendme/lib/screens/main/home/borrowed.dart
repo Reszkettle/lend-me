@@ -10,8 +10,16 @@ class Borrowed extends StatefulWidget {
 class _BorrowedState extends State<Borrowed> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Text("Borrowed"),
+    return Stack(
+        children: const [
+          Placeholder(),
+          Center(child:
+          Text(
+              "Borrowed",
+              style: TextStyle(fontSize: 40, color: Colors.grey, backgroundColor: Colors.white)
+          )
+          )
+        ]
     );
   }
 }

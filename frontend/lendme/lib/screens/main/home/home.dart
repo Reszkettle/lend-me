@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lendme/screens/main/home/profile.dart';
-import 'package:lendme/services/auth.dart';
+import 'package:lendme/screens/main/home/notifications.dart';
 
 import 'borrowed.dart';
 import 'items.dart';
@@ -14,14 +13,13 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final AuthService _auth = AuthService();
 
   int _selectedIndex = 0;
 
   static const List<Widget> _tabsContent = <Widget>[
     Items(),
-    Borrowed(),
     Lent(),
+    Borrowed(),
     Profile(),
   ];
 
@@ -38,44 +36,63 @@ class _HomeState extends State<Home> {
             title: const Text('Lend me'),
             elevation: 0.0,
             actions: <Widget>[
-              TextButton.icon(
-                icon: const Icon(Icons.logout, color: Colors.white),
-                label: const Text(
-                  'logout',
-                  style: TextStyle(color: Colors.white),
-                ),
+              IconButton(
+                icon: const Icon(Icons.settings_rounded, color: Colors.white),
                 onPressed: () async {
-                  await _auth.signOut();
+                  Navigator.pushNamed(context, '/settings');
                 },
               ),
             ]),
         body: Center(
           child: _tabsContent[_selectedIndex],
         ),
+        floatingActionButton: _floatingActionButton(),
         bottomNavigationBar: BottomNavigationBar(
           backgroundColor: Colors.blue,
           type: BottomNavigationBarType.fixed,
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: Icon(Icons.home),
+              icon: Icon(Icons.category_rounded),
               label: 'Items',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Borrowed',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
+              icon: Icon(Icons.file_upload_rounded),
               label: 'Lent',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Profile',
+              icon: Icon(Icons.download_rounded),
+              label: 'Borrowed',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.notifications_rounded),
+              label: 'Notifications',
             ),
           ],
           currentIndex: _selectedIndex,
           selectedItemColor: Colors.white,
           onTap: _onItemTapped,
-        ));
+        ),);
+  }
+
+  Widget? _floatingActionButton() {
+    if(_selectedIndex == 0) {
+      return FloatingActionButton(
+        child: const Icon(Icons.add),
+        onPressed: () {
+          Navigator.pushNamed(context, '/add_item');
+        }
+      );
+    }
+    else if(_selectedIndex == 2) {
+      return FloatingActionButton(
+          child: const Icon(Icons.qr_code_scanner_rounded),
+          onPressed: () {
+
+          }
+      );
+    }
+    else {
+      return null;
+    }
   }
 }
