@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:lendme/models/user.dart';
 import 'package:provider/provider.dart';
 
-import 'package:lendme/screens/auth/routes.dart' as auth;
 import 'package:lendme/screens/main/routes.dart' as main;
 
 class Proxy extends StatelessWidget {
@@ -10,7 +9,6 @@ class Proxy extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final user = Provider.of<AppUser?>(context);
 
     return MaterialApp(
@@ -18,8 +16,7 @@ class Proxy extends StatelessWidget {
       title: 'Lend Me',
       theme: ThemeData(primarySwatch: Colors.blue),
       initialRoute: '/',
-      routes: (user == null) ? auth.routes : main.routes,
+      routes: (user == null) ? main.routes : main.routes,
     );
   }
 }
-
