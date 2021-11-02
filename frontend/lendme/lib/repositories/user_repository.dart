@@ -31,10 +31,10 @@ class UserRepository {
         'info': _userInfo2Map(userInfo)
       };
 
-      await _firestore
-          .collection("users")
-          .doc(uid)
-          .update(data);
+      await _firestore.runTransaction((transaction) async {
+        DocumentReference ref = _firestore.collection("users").doc(uid);
+        transaction.update(ref, data);
+      });
     } catch (e) {
       throw mapToDomainException(e);
     }
