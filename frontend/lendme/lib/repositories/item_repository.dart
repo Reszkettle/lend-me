@@ -13,7 +13,6 @@ class ItemRepository {
 
   Stream<QuerySnapshot<Item>> getListOfCurrentUserItems() {
     String currentUserId = '12345';
-
     return itemsRef.where('ownerId', isEqualTo: currentUserId).snapshots();
   }
 }

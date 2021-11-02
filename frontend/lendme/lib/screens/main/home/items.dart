@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:lendme/components/base_tile.dart';
+import 'package:lendme/components/my_item_tile.dart';
+import 'package:lendme/models/item.dart';
 import 'package:lendme/repositories/item_repository.dart';
-import 'package:timeago/timeago.dart' as timeago;
 
 class Items extends StatefulWidget {
   const Items({Key? key}) : super(key: key);
@@ -27,12 +27,12 @@ class _ItemsState extends State<Items> {
                 padding: const EdgeInsets.all(9),
                 itemBuilder: (context, index) {
                   DocumentSnapshot itemDoc = snapshot.data!.docs[index];
-                  return BaseTile(
-                      title: itemDoc["title"],
-                      subtitle: "Added: " +
-                          timeago.format(
-                              (itemDoc["createdAt"] as Timestamp).toDate()),
-                      imageUrl: itemDoc["imageUrl"]);
+                  return MyItemTile(
+                      item: Item(
+                          title: itemDoc['title'],
+                          createdAt: itemDoc['createdAt'],
+                          imageUrl: itemDoc['imageUrl'],
+                          ownerId: itemDoc['ownerId']));
                 },
                 separatorBuilder: (BuildContext context, int index) {
                   return const SizedBox(height: 9);
