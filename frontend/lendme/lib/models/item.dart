@@ -20,14 +20,24 @@ class Item {
       this.lentById,
       this.imageUrl});
 
-  factory Item.fromJson(Map<String, dynamic> json) {
-    return Item(
-        id: json['uid'] as String,
-        ownerId: json['id'] as String,
-        createdAt: json['createdAt'] as Timestamp,
-        description: json['description'] as String?,
-        title: json['title'] as String,
-        lentById: json['lentById'] as String?,
-        imageUrl: json['imageUrl'] as String?);
+  Item.fromJson(Map<String, Object?> json)
+      : this(
+            id: json['uid'] as String?,
+            ownerId: json['ownerId'] as String,
+            createdAt: json['createdAt'] as Timestamp,
+            description: json['description'] as String?,
+            title: json['title'] as String,
+            lentById: json['lentById'] as String?,
+            imageUrl: json['imageUrl'] as String?);
+
+  Map<String, Object?> toJson() {
+    return {
+      'ownerId': ownerId,
+      'createdAt': createdAt,
+      'description': description,
+      'title': title,
+      'lentById': lentById,
+      'imageUrl': imageUrl
+    };
   }
 }

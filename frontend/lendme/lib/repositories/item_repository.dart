@@ -4,23 +4,16 @@ import 'package:lendme/models/item.dart';
 
 class ItemRepository {
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-  final FirebaseFirestore firebaseStore = FirebaseFirestore.instance;
 
-  Future<List<Item>> getListOfCurrentUserItems() async {
-    final String currentUserId = '12345';
+  final itemsRef =
+      FirebaseFirestore.instance.collection("items").withConverter<Item>(
+            fromFirestore: (snapshot, _) => Item.fromJson(snapshot.data()!),
+            toFirestore: (item, _) => item.toJson(),
+          );
 
-    QuerySnapshot snapshot = await firebaseStore
-        .collection("items")
-        .where('ownerId', isEqualTo: currentUserId)
-        .get();
+  Stream<QuerySnapshot<Item>> getListOfCurrentUserItems() {
+    String currentUserId = '12345';
 
-    List<Item> items = [];
-
-    for (var element in snapshot.docs) {
-      print(element.data());
-      items.add(Item.fromJson(element.data() as Map<String, dynamic>));
-    }
-
-    return items;
+    return itemsRef.where('ownerId', isEqualTo: currentUserId).snapshots();
   }
 }

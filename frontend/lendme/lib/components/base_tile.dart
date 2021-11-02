@@ -31,9 +31,6 @@ class _BaseTileState extends State<BaseTile> {
 
   @override
   Widget build(BuildContext context) {
-    ItemRepository().getListOfCurrentUserItems().then((items) {
-      print(items);
-    });
     return InkWell(
         splashColor: const Color(0x557D00EE),
         onTap: () {},
