@@ -20,10 +20,12 @@ exports.onUserCreated = functions.auth.user().onCreate(async (user) => {
   const userDocument = {
     avatarUrl: user.photoURL,
     createdAt: admin.firestore.FieldValue.serverTimestamp(),
-    email: user.email,
-    firstName: firstName,
-    lastName: lastName,
-    phone: user.phoneNumber,
+    info: {
+      email: user.email,
+      firstName: firstName,
+      lastName: lastName,
+      phone: user.phoneNumber,
+    },
   };
   await firestore.collection("users").doc(user.uid).set(userDocument);
 });

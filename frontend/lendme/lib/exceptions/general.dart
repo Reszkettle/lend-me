@@ -7,3 +7,7 @@ class InternetException extends DomainException {
 class UnknownException extends DomainException {
   UnknownException({Object? cause}) : super('Unknown exception occurred', cause: cause);
 }
+
+class ResourceNotFoundException extends DomainException {
+  ResourceNotFoundException({Object? cause}) : super('Unable to find requested resource', cause: cause);
+}
