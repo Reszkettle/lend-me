@@ -1,35 +1,29 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:lendme/exceptions/map.dart';
-import 'package:lendme/models/user.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  // create user obj based on FirebaseUser
-  AppUser? _userFromFirebaseUser(User? user) {
-    return user != null ? AppUser(uid: user.uid) : null;
-  }
-
   // auth change user stream
-  Stream<AppUser?> get user {
-    return _auth.authStateChanges().map(_userFromFirebaseUser);
+  Stream<String?> get uid {
+    return _auth.authStateChanges().map((user) => user?.uid);
   }
 
   // sign in anonymously
-  Future signInAnonymously() async {
+  Future<String?> signInAnonymously() async {
     try {
       UserCredential result = await _auth.signInAnonymously();
       User? user = result.user;
-      return _userFromFirebaseUser(user);
+      return user?.uid;
     } catch (e) {
       throw mapToDomainException(e);
     }
   }
 
   // sign in with google
-  Future signInWithGoogle() async {
+  Future<String?> signInWithGoogle() async {
     try {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
       final GoogleSignInAuthentication? googleAuth =
@@ -41,14 +35,14 @@ class AuthService {
       UserCredential userCredential =
           await FirebaseAuth.instance.signInWithCredential(credential);
       User? user = userCredential.user;
-      return _userFromFirebaseUser(user);
+      return user?.uid;
     } catch (e) {
       throw mapToDomainException(e);
     }
   }
 
   // sign in with Facebook
-  Future signInWithFacebook() async {
+  Future<String?> signInWithFacebook() async {
     try {
       final LoginResult loginResult = await FacebookAuth.instance.login();
       final OAuthCredential facebookAuthCredential =
@@ -56,31 +50,31 @@ class AuthService {
       final UserCredential userCredential = await FirebaseAuth.instance
           .signInWithCredential(facebookAuthCredential);
       User? user = userCredential.user;
-      return _userFromFirebaseUser(user);
+      return user?.uid;
     } catch (e) {
       throw mapToDomainException(e);
     }
   }
 
   // register with email & password
-  Future registerWithEmailAndPassword(String email, String password) async {
+  Future<String?> registerWithEmailAndPassword(String email, String password) async {
     try {
       UserCredential credential = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       User? user = credential.user;
-      return _userFromFirebaseUser(user);
+      return user?.uid;
     } catch (e) {
       throw mapToDomainException(e);
     }
   }
 
   // sign in with email & password
-  Future signInWithEmailAndPassword(String email, String password) async {
+  Future<String?> signInWithEmailAndPassword(String email, String password) async {
     try {
       UserCredential credential = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
       User? user = credential.user;
-      return _userFromFirebaseUser(user);
+      return user?.uid;
     } catch (e) {
       throw mapToDomainException(e);
     }

@@ -5,9 +5,7 @@ import 'package:lendme/services/auth.dart';
 import 'package:lendme/services/emulators.dart';
 import 'package:provider/provider.dart';
 
-import 'models/user.dart';
-
-const useEmulators = false;
+const useEmulators = true;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,8 +23,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamProvider<AppUser?>.value(
-      value: AuthService().user,
+    return StreamProvider<String?>.value(
+      value: AuthService().uid,
       initialData: null,
       child: const Proxy()
     );

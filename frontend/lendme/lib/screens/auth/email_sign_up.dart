@@ -70,8 +70,7 @@ class _EmailSignUpState extends State<EmailSignUp> {
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
                     try {
-                      dynamic result = await _auth.registerWithEmailAndPassword(
-                          email, password);
+                      await _auth.registerWithEmailAndPassword(email, password);
                     } on DomainException catch(e) {
                       _showErrorSnackBar(context, e.message);
                     }
