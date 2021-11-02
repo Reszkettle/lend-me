@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lendme/exceptions/general.dart';
 import 'package:lendme/exceptions/map.dart';
+import 'package:lendme/models/resource.dart';
 import 'package:lendme/models/user.dart';
 import 'package:lendme/models/user_info.dart';
 
@@ -8,7 +9,7 @@ class UserRepository {
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future getUser(String uid) async {
+  Future<User> getUser(String uid) async {
     try {
       DocumentSnapshot snapshot = await _firestore
           .collection("users")
@@ -20,6 +21,25 @@ class UserRepository {
       }
       User user = _map2User(map, uid);
       return user;
+    } catch (e) {
+      throw mapToDomainException(e);
+    }
+  }
+
+  Stream<Resource<User>> getUserStream(String uid) {
+    try {
+      return _firestore
+          .collection("users")
+          .doc(uid)
+          .snapshots()
+      .map((snapshot) {
+        Map<String, dynamic>? map = snapshot.data();
+        if(map == null) {
+          return Resource.error(ResourceNotFoundException());
+        }
+        User user = _map2User(map, uid);
+        return Resource.success(user);
+      });
     } catch (e) {
       throw mapToDomainException(e);
     }

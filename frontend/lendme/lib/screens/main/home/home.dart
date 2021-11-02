@@ -39,7 +39,7 @@ class _HomeState extends State<Home> {
               IconButton(
                 icon: const Icon(Icons.settings_rounded, color: Colors.white),
                 onPressed: () async {
-                  Navigator.pushNamed(context, '/settings');
+                  Navigator.of(context).pushNamed('/settings');
                 },
               ),
             ]),
@@ -79,7 +79,7 @@ class _HomeState extends State<Home> {
       return FloatingActionButton(
         child: const Icon(Icons.add),
         onPressed: () {
-          Navigator.pushNamed(context, '/add_item');
+          Navigator.of(context).pushNamed('/add_item');
         }
       );
     }

@@ -6,14 +6,14 @@ import 'package:lendme/exceptions/exception.dart';
 import 'package:lendme/services/auth.dart';
 import 'package:lendme/utils/ui/error_snackbar.dart';
 
-class Authenticate extends StatefulWidget {
-  const Authenticate({Key? key}) : super(key: key);
+class AuthMain extends StatefulWidget {
+  const AuthMain({Key? key}) : super(key: key);
 
   @override
-  _AuthenticateState createState() => _AuthenticateState();
+  _AuthMainState createState() => _AuthMainState();
 }
 
-class _AuthenticateState extends State<Authenticate> {
+class _AuthMainState extends State<AuthMain> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -106,7 +106,7 @@ class AuthButtons extends StatelessWidget {
         Buttons.Email,
         elevation: 0,
         onPressed: () async {
-          Navigator.pushNamed(context, '/email');
+          Navigator.of(context).pushNamed('/email');
         },
       ),
     );

@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:lendme/exceptions/general.dart';
+import 'package:lendme/models/resource.dart';
+import 'package:lendme/models/user.dart';
+import 'package:lendme/screens/error/error.dart';
+import 'package:lendme/screens/info/info.dart';
+import 'package:lendme/screens/splash/splash.dart';
 import 'package:provider/provider.dart';
 
-import 'package:lendme/screens/auth/routes.dart' as auth;
-import 'package:lendme/screens/main/routes.dart' as main;
+import 'auth/auth.dart';
+import 'main/main.dart';
 
 class Proxy extends StatelessWidget {
   const Proxy({Key? key}) : super(key: key);
@@ -10,14 +16,27 @@ class Proxy extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final uid = Provider.of<String?>(context);
+    final userResource = Provider.of<Resource<User?>>(context);
+    print('User changed to $userResource');
 
-    return MaterialApp(
-      key: Key(uid.toString()),
-      title: 'Lend Me',
-      theme: ThemeData(primarySwatch: Colors.blue),
-      initialRoute: '/',
-      routes: (uid == null) ? auth.routes : main.routes,
-    );
+    Widget widget = Splash();
+    if(userResource.isError) {
+      if(userResource.error is UserNotAuthenticatedException) {
+        widget = Auth();
+      }
+      else {
+        widget = ErrorScreen();
+      }
+    }
+    else if(userResource.isSuccess) {
+      if(userResource.data?.info.phone != null) {
+        widget = Main();
+      }
+      else {
+        widget = Info();
+      }
+    }
+
+    return widget;
   }
 }
