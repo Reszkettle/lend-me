@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lendme/models/user_info.dart';
 
 class User {
@@ -9,16 +8,6 @@ class User {
   final UserInfo info;
 
   User({required this.uid, required this.avatarUrl, required this.createdAt, required this.info});
-
-  factory User.fromJson(Map<String, dynamic> json, String uid) {
-    Timestamp t = json['createdAt'] as Timestamp;
-    return User(
-        uid: uid,
-        avatarUrl: json['id'] as String?,
-        createdAt: t.toDate(),
-        info: UserInfo.fromJson(json['info'])
-    );
-  }
 
   @override
   String toString() {
