@@ -35,18 +35,10 @@ class LoadableArea extends StatefulWidget {
 class _LoadableAreaState extends State<LoadableArea> {
 
   late LoadableAreaState _state;
-  late Map<LoadableAreaState, Widget> _views;
 
   @override
   void initState() {
     _state = widget.initialState;
-
-    _views = {
-      LoadableAreaState.main: widget.child,
-      LoadableAreaState.loading: const _LoadingView(),
-      LoadableAreaState.pending: const _PendingView(),
-      LoadableAreaState.failure: const _FailureView(),
-    };
 
     widget.controller.addListener(() {
       setState(() {
@@ -58,43 +50,49 @@ class _LoadableAreaState extends State<LoadableArea> {
 
   @override
   Widget build(BuildContext context) {
-    return _views[_state]!;
-  }
-}
-
-class _LoadingView extends StatelessWidget {
-  const _LoadingView({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const SizedBox(
-      width: 200,
-      height: 200,
-      child: CircularProgressIndicator(
-        strokeWidth: 10.0,
-      ),
-    );
-  }
-}
-
-class _PendingView extends StatelessWidget {
-  const _PendingView({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Text("Pending"),
-    );
-  }
-}
-
-class _FailureView extends StatelessWidget {
-  const _FailureView({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Text("Failure"),
+    return Stack(
+      children: [
+        Visibility(
+          visible: _state == LoadableAreaState.main || _state == LoadableAreaState.pending,
+          child: IgnorePointer(
+            ignoring: _state == LoadableAreaState.pending,
+            child: widget.child,
+          ),
+        ),
+        Visibility(
+          visible: _state == LoadableAreaState.pending,
+          child: Container(
+            color: Colors.black.withOpacity(0.5),
+          ),
+        ),
+        Visibility(
+          visible: _state == LoadableAreaState.loading || _state == LoadableAreaState.pending,
+          child: const Center(
+            child: SizedBox(
+              width: 200,
+              height: 200,
+              child: CircularProgressIndicator(
+                strokeWidth: 10.0,
+              ),
+            ),
+          ),
+        ),
+        Visibility(
+          visible: _state == LoadableAreaState.failure,
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: const [
+                Icon(
+                  Icons.warning_rounded,
+                  size: 200,
+                ),
+                Text("Error occurred")
+              ],
+            ),
+          ),
+        )
+      ],
     );
   }
 }

@@ -42,32 +42,28 @@ class _InfoState extends State<Info> {
           title: const Text('Populate your profile'),
           elevation: 0.0
       ),
-      body: SizedBox(
-        width: double.infinity,
-        height: double.infinity,
-        child: LoadableArea(
-          controller: _loadableAreaController,
-          initialState: LoadableAreaState.loading,
-          child: SingleChildScrollView(
-            child: Form(
-              key: _formKey,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const SizedBox(height: 20.0),
-                    firstNameField(),
-                    const SizedBox(height: 20.0),
-                    lastNameField(),
-                    const SizedBox(height: 20),
-                    emailField(),
-                    const SizedBox(height: 20),
-                    phoneField(),
-                    const SizedBox(height: 20),
-                    confirmButton(user.uid),
-                  ],
-                ),
+      body: LoadableArea(
+        controller: _loadableAreaController,
+        initialState: LoadableAreaState.main,
+        child: SingleChildScrollView(
+          child: Form(
+            key: _formKey,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const SizedBox(height: 20.0),
+                  firstNameField(),
+                  const SizedBox(height: 20.0),
+                  lastNameField(),
+                  const SizedBox(height: 20),
+                  emailField(),
+                  const SizedBox(height: 20),
+                  phoneField(),
+                  const SizedBox(height: 20),
+                  confirmButton(user.uid),
+                ],
               ),
             ),
           ),
@@ -142,9 +138,12 @@ class _InfoState extends State<Info> {
           );
 
           try {
+            _loadableAreaController.setState(LoadableAreaState.pending);
             await userRepository.setUserInfo(userId, userInfo);
           } on DomainException catch(e) {
             showErrorSnackBar(context, "Failed to save profile. ${e.message}");
+          } finally {
+            _loadableAreaController.setState(LoadableAreaState.main);
           }
         }
       },

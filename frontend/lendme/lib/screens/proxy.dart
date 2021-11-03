@@ -33,7 +33,7 @@ class Proxy extends StatelessWidget {
         return Main();
       }
       else {
-        return Info();
+        return const Info();
       }
     }
 
