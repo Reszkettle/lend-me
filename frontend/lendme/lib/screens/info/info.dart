@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lendme/components/loadable_area.dart';
 import 'package:lendme/exceptions/exception.dart';
 import 'package:lendme/models/resource.dart';
 import 'package:lendme/models/user.dart';
@@ -24,6 +25,8 @@ class _InfoState extends State<Info> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
 
+  final LoadableAreaController _loadableAreaController = LoadableAreaController();
+
   @override
   Widget build(BuildContext context) {
     final _userResource = Provider.of<Resource<User?>>(context);
@@ -39,25 +42,33 @@ class _InfoState extends State<Info> {
           title: const Text('Populate your profile'),
           elevation: 0.0
       ),
-      body: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const SizedBox(height: 20.0),
-                firstNameField(),
-                const SizedBox(height: 20.0),
-                lastNameField(),
-                const SizedBox(height: 20),
-                emailField(),
-                const SizedBox(height: 20),
-                phoneField(),
-                const SizedBox(height: 20),
-                confirmButton(user.uid),
-              ],
+      body: SizedBox(
+        width: double.infinity,
+        height: double.infinity,
+        child: LoadableArea(
+          controller: _loadableAreaController,
+          initialState: LoadableAreaState.loading,
+          child: SingleChildScrollView(
+            child: Form(
+              key: _formKey,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const SizedBox(height: 20.0),
+                    firstNameField(),
+                    const SizedBox(height: 20.0),
+                    lastNameField(),
+                    const SizedBox(height: 20),
+                    emailField(),
+                    const SizedBox(height: 20),
+                    phoneField(),
+                    const SizedBox(height: 20),
+                    confirmButton(user.uid),
+                  ],
+                ),
+              ),
             ),
           ),
         ),
