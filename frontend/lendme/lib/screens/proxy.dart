@@ -15,28 +15,28 @@ class Proxy extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final userResource = Provider.of<Resource<User?>>(context);
-    print('User changed to $userResource');
+    return _getProperScreen(userResource);
+  }
 
-    Widget widget = Splash();
+  Widget _getProperScreen(Resource<User?> userResource) {
     if(userResource.isError) {
       if(userResource.error is UserNotAuthenticatedException) {
-        widget = Auth();
+        return Auth();
       }
       else {
-        widget = ErrorScreen();
+        return const ErrorScreen();
       }
     }
     else if(userResource.isSuccess) {
       if(userResource.data?.info.phone != null) {
-        widget = Main();
+        return Main();
       }
       else {
-        widget = Info();
+        return Info();
       }
     }
 
-    return widget;
+    return const Splash();
   }
 }
