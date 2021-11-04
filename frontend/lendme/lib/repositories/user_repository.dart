@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lendme/exceptions/exceptions.dart';
-import 'package:lendme/exceptions/map.dart';
 import 'package:lendme/models/resource.dart';
 import 'package:lendme/models/user.dart';
 import 'package:lendme/models/user_info.dart';
@@ -22,7 +21,7 @@ class UserRepository {
       User user = _map2User(map, uid);
       return user;
     } catch (e) {
-      throw mapToDomainException(e);
+      throw UnknownException();
     }
   }
 
@@ -41,7 +40,7 @@ class UserRepository {
         return Resource.success(user);
       });
     } catch (e) {
-      throw mapToDomainException(e);
+      throw UnknownException();
     }
   }
 
@@ -56,7 +55,7 @@ class UserRepository {
         transaction.update(ref, data);
       });
     } catch (e) {
-      throw mapToDomainException(e);
+      throw UnknownException();
     }
   }
 

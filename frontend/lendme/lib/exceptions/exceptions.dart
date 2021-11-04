@@ -1,9 +1,8 @@
 // Base exception
 class DomainException implements Exception {
   final String message;
-  final Object? cause;
 
-  DomainException(this.message, {this.cause});
+  DomainException(this.message);
 
   @override
   String toString() {
@@ -12,13 +11,13 @@ class DomainException implements Exception {
 }
 
 class InternetException extends DomainException {
-  InternetException({Object? cause}) : super('No internet connection', cause: cause);
-}
-
-class UnknownException extends DomainException {
-  UnknownException({Object? cause}) : super('Unknown exception occurred', cause: cause);
+  InternetException([String message = 'No internet connection']) : super(message);
 }
 
 class ResourceNotFoundException extends DomainException {
-  ResourceNotFoundException({Object? cause}) : super('Unable to find requested resource', cause: cause);
+  ResourceNotFoundException([String message = 'Unable to find requested resource']) : super(message);
+}
+
+class UnknownException extends DomainException {
+  UnknownException([String message = 'Unknown failure occurred']) : super(message);
 }
