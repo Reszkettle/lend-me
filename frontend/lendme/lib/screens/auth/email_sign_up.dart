@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lendme/components/loadable_area.dart';
 import 'package:lendme/exceptions/exception.dart';
 import 'package:lendme/services/auth.dart';
 
@@ -11,7 +12,9 @@ class EmailSignUp extends StatefulWidget {
 
 class _EmailSignUpState extends State<EmailSignUp> {
   final AuthService _auth = AuthService();
+
   final _formKey = GlobalKey<FormState>();
+  final _loadableAreaController = LoadableAreaController();
 
   String email = '';
   String password = '';
@@ -19,65 +22,71 @@ class _EmailSignUpState extends State<EmailSignUp> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Form(
-        key: _formKey,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const SizedBox(height: 20.0),
-              TextFormField(
-                decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: 'Email',
-                    prefixIcon: Icon(Icons.email)),
-                validator: (val) => val!.isEmpty ? 'Enter an email' : null,
-                onChanged: (val) {
-                  setState(() {
-                    email = val;
-                  });
-                },
-              ),
-              const SizedBox(height: 20.0),
-              TextFormField(
-                obscureText: true,
-                decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: 'Password',
-                    prefixIcon: Icon(Icons.password)),
-                validator: (val) => val!.length < 6 ? 'Enter a password min 6 characters long' : null,
-                onChanged: (val) {
-                  password = val;
-                },
-              ),
-              const SizedBox(height: 20.0),
-              TextFormField(
-                obscureText: true,
-                decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: 'Repeated password',
-                    prefixIcon: Icon(Icons.password)),
-                validator: (val) => val != password ? "Passwords are not the same" : null,
-                onChanged: (val) {
-                  repeatedPassword = val;
-                },
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                child: const Text("Sign up"),
-                onPressed: () async {
-                  if (_formKey.currentState!.validate()) {
-                    try {
-                      await _auth.registerWithEmailAndPassword(email, password);
-                    } on DomainException catch(e) {
-                      _showErrorSnackBar(context, e.message);
+    return LoadableArea(
+      controller: _loadableAreaController,
+      child: SingleChildScrollView(
+        child: Form(
+          key: _formKey,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const SizedBox(height: 20.0),
+                TextFormField(
+                  decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: 'Email',
+                      prefixIcon: Icon(Icons.email)),
+                  validator: (val) => val!.isEmpty ? 'Enter an email' : null,
+                  onChanged: (val) {
+                    setState(() {
+                      email = val;
+                    });
+                  },
+                ),
+                const SizedBox(height: 20.0),
+                TextFormField(
+                  obscureText: true,
+                  decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: 'Password',
+                      prefixIcon: Icon(Icons.password)),
+                  validator: (val) => val!.length < 6 ? 'Enter a password min 6 characters long' : null,
+                  onChanged: (val) {
+                    password = val;
+                  },
+                ),
+                const SizedBox(height: 20.0),
+                TextFormField(
+                  obscureText: true,
+                  decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: 'Repeated password',
+                      prefixIcon: Icon(Icons.password)),
+                  validator: (val) => val != password ? "Passwords are not the same" : null,
+                  onChanged: (val) {
+                    repeatedPassword = val;
+                  },
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  child: const Text("Sign up"),
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate()) {
+                      try {
+                        _loadableAreaController.setState(LoadableAreaState.pending);
+                        await Future.delayed(const Duration(seconds: 1));
+                        await _auth.registerWithEmailAndPassword(email, password);
+                      } on DomainException catch(e) {
+                        _loadableAreaController.setState(LoadableAreaState.main);
+                        _showErrorSnackBar(context, e.message);
+                      }
                     }
-                  }
-                },
-              ),
-            ],
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),

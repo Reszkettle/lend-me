@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/button_list.dart';
 import 'package:flutter_signin_button/button_view.dart';
+import 'package:lendme/components/loadable_area.dart';
 import 'package:lendme/exceptions/exception.dart';
 import 'package:lendme/services/auth.dart';
 import 'package:lendme/utils/ui/error_snackbar.dart';
@@ -14,17 +15,23 @@ class AuthMain extends StatefulWidget {
 }
 
 class _AuthMainState extends State<AuthMain> {
+
+  final LoadableAreaController _loadableAreaController = LoadableAreaController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(elevation: 0.0, title: const Text('Sign in to Lend Me')),
-        body: OrientationBuilder(builder: (context, orientation) {
-          if (orientation == Orientation.portrait) {
-            return buildPortraitLayout();
-          } else {
-            return buildLandscapeLayout();
-          }
-        }));
+        body: LoadableArea(
+          controller: _loadableAreaController,
+          child: OrientationBuilder(builder: (context, orientation) {
+            if (orientation == Orientation.portrait) {
+              return buildPortraitLayout();
+            } else {
+              return buildLandscapeLayout();
+            }
+          }),
+        ));
   }
 
   Row buildLandscapeLayout() {
@@ -38,7 +45,7 @@ class _AuthMainState extends State<AuthMain> {
         Expanded(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: AuthButtons(),
+            child: AuthButtons(_loadableAreaController),
           ),
         ),
       ],
@@ -52,7 +59,7 @@ class _AuthMainState extends State<AuthMain> {
         const Logo(),
         Expanded(child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 32.0),
-          child: AuthButtons(),
+          child: AuthButtons(_loadableAreaController),
         ))
       ],
     );
@@ -80,9 +87,10 @@ class Logo extends StatelessWidget {
 }
 
 class AuthButtons extends StatelessWidget {
-  AuthButtons({Key? key}) : super(key: key);
+  AuthButtons(this._loadableAreaController, {Key? key}) : super(key: key);
 
   final AuthService _auth = AuthService();
+  final LoadableAreaController _loadableAreaController;
 
   @override
   Widget build(BuildContext context) {
@@ -120,8 +128,11 @@ class AuthButtons extends StatelessWidget {
         elevation: 0,
         onPressed: () async {
           try {
+            _loadableAreaController.setState(LoadableAreaState.pending);
+            await Future.delayed(const Duration(seconds: 1));
             await _auth.signInWithFacebook();
           } on DomainException catch(e) {
+            _loadableAreaController.setState(LoadableAreaState.main);
             showErrorSnackBar(context, e.message);
           }
         },
@@ -137,8 +148,11 @@ class AuthButtons extends StatelessWidget {
         elevation: 0,
         onPressed: () async {
           try {
+            _loadableAreaController.setState(LoadableAreaState.pending);
+            await Future.delayed(const Duration(seconds: 1));
             await _auth.signInWithGoogle();
           } on DomainException catch(e) {
+            _loadableAreaController.setState(LoadableAreaState.main);
             showErrorSnackBar(context, e.message);
           }
         },
