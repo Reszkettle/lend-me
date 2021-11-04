@@ -52,6 +52,8 @@ class _EditProfileState extends State<EditProfile> {
     _emailController.text = user.info.email ?? "";
     _phoneController.text = user.info.phone ?? "";
 
+    Future.delayed(const Duration(milliseconds: 10), () => _formKey.currentState!.validate());
+
     return Scaffold(
       appBar: AppBar(
           title: Text(widget.afterLoginVariant ? 'Populate your profile' : 'Edit profile'),
@@ -108,6 +110,7 @@ class _EditProfileState extends State<EditProfile> {
   TextFormField firstNameField() {
     return TextFormField(
       controller: _firstNameController,
+      onChanged: (val) => { _formKey.currentState!.validate() },
       inputFormatters: [
         LengthLimitingTextInputFormatter(EditProfile.maxFirstNameLength),
       ],
@@ -123,6 +126,7 @@ class _EditProfileState extends State<EditProfile> {
   TextFormField lastNameField() {
     return TextFormField(
       controller: _lastNameController,
+      onChanged: (val) => { _formKey.currentState!.validate() },
       inputFormatters: [
         LengthLimitingTextInputFormatter(EditProfile.maxLastNameLength),
       ],
@@ -139,6 +143,7 @@ class _EditProfileState extends State<EditProfile> {
     return TextFormField(
       keyboardType: TextInputType.emailAddress,
       controller: _emailController,
+      onChanged: (val) => { _formKey.currentState!.validate() },
       inputFormatters: [
         LengthLimitingTextInputFormatter(EditProfile.maxEmailLength),
       ],
@@ -155,6 +160,7 @@ class _EditProfileState extends State<EditProfile> {
     return TextFormField(
       keyboardType: TextInputType.phone,
       controller: _phoneController,
+      onChanged: (val) => { _formKey.currentState!.validate() },
       inputFormatters: [
         LengthLimitingTextInputFormatter(EditProfile.maxPhoneLength),
       ],
@@ -195,7 +201,7 @@ class _EditProfileState extends State<EditProfile> {
     }
 
   String? validatePhone(String? phone) {
-    phone!.isEmpty ? 'Enter phone number' : null;
+    return phone!.isEmpty ? 'Enter phone number' : null;
   }
 
   ElevatedButton confirmButton(String? userId) {
