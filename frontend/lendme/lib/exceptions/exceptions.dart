@@ -1,4 +1,15 @@
-import 'exception.dart';
+// Base exception
+class DomainException implements Exception {
+  final String message;
+  final Object? cause;
+
+  DomainException(this.message, {this.cause});
+
+  @override
+  String toString() {
+    return '${runtimeType.toString()}($message)';
+  }
+}
 
 class InternetException extends DomainException {
   InternetException({Object? cause}) : super('No internet connection', cause: cause);

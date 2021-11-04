@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:lendme/exceptions/general.dart';
+import 'package:lendme/exceptions/exceptions.dart';
 import 'package:lendme/exceptions/map.dart';
 import 'package:lendme/models/resource.dart';
 import 'package:lendme/models/user.dart';

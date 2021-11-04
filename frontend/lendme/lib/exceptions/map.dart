@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:lendme/exceptions/exception.dart';
-import 'package:lendme/exceptions/general.dart';
+import 'package:lendme/exceptions/exceptions.dart';
 
 DomainException mapToDomainException(Object e) {
   if(e is FirebaseException) {

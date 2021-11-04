@@ -1,4 +1,4 @@
-import 'package:lendme/exceptions/exception.dart';
+import 'package:lendme/exceptions/exceptions.dart';
 
 class Resource<T> {
   T ? data;

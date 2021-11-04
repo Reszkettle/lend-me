@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/button_list.dart';
 import 'package:flutter_signin_button/button_view.dart';
 import 'package:lendme/components/loadable_area.dart';
-import 'package:lendme/exceptions/exception.dart';
+import 'package:lendme/exceptions/exceptions.dart';
 import 'package:lendme/services/auth.dart';
 import 'package:lendme/utils/ui/error_snackbar.dart';
 

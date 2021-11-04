@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lendme/exceptions/general.dart';
+import 'package:lendme/exceptions/exceptions.dart';
 import 'package:lendme/models/resource.dart';
 import 'package:lendme/models/user.dart';
 import 'package:lendme/routes/auth_routes.dart';
