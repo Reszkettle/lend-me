@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lendme/components/loadable_area.dart';
 import 'package:lendme/exceptions/exceptions.dart';
-import 'package:lendme/services/auth.dart';
+import 'package:lendme/services/auth_service.dart';
 
 class EmailSignUp extends StatefulWidget {
   const EmailSignUp({Key? key}) : super(key: key);

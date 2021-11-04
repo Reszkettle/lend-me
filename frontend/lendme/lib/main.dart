@@ -2,8 +2,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:lendme/repositories/user_repository.dart';
 import 'package:lendme/screens/proxy.dart';
-import 'package:lendme/services/auth.dart';
-import 'package:lendme/services/emulators.dart';
+import 'package:lendme/services/auth_service.dart';
+import 'package:lendme/services/emulators_service.dart';
 import 'package:provider/provider.dart';
 import 'package:stream_transform/stream_transform.dart';
 

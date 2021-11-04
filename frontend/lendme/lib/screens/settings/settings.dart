@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lendme/services/auth.dart';
+import 'package:lendme/services/auth_service.dart';
 
 class Settings extends StatelessWidget {
   Settings({Key? key}) : super(key: key);

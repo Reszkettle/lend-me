@@ -6,7 +6,7 @@ import 'package:lendme/models/resource.dart';
 import 'package:lendme/models/user.dart';
 import 'package:lendme/models/user_info.dart';
 import 'package:lendme/repositories/user_repository.dart';
-import 'package:lendme/services/auth.dart';
+import 'package:lendme/services/auth_service.dart';
 import 'package:lendme/utils/ui/error_snackbar.dart';
 import 'package:provider/provider.dart';
 
