@@ -35,7 +35,7 @@ class LentMeApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamProvider<Resource<User?>>.value(
+    return StreamProvider<Resource<User>>.value(
       value: userStream,
       initialData: Resource.loading(),
       child: MaterialApp(

@@ -19,20 +19,35 @@ class Proxy extends StatefulWidget {
 
 class _ProxyState extends State<Proxy> {
 
+  late _Screen _screen;
   late Widget _view;
+
+  final Map<_Screen, Widget> _screenViews = {
+    _Screen.splash: const Splash(),
+    _Screen.auth: Auth(),
+    _Screen.main: Main(),
+    _Screen.fillProfile: const EditProfile(afterLoginVariant: true),
+    _Screen.error: const ErrorScreen(),
+  };
 
   @override
   void initState() {
-    _view = _getProperScreen(Resource<User?>.loading());
+    _screen = _getScreenForUser(Resource<User>.loading());
+    _view = _screenViews[_screen]!;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final userResource = Provider.of<Resource<User?>>(context);
-    setState(() {
-      _view = _getProperScreen(userResource);
-    });
+    final userResource = Provider.of<Resource<User>>(context);
+
+    var newScreen = _getScreenForUser(userResource);
+    if(_screen != newScreen) {
+      setState(() {
+        _screen = newScreen;
+        _view = _screenViews[_screen]!;
+      });
+    }
 
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 700),
@@ -48,24 +63,28 @@ class _ProxyState extends State<Proxy> {
     );
   }
 
-  Widget _getProperScreen(Resource<User?> userResource) {
+  _Screen _getScreenForUser(Resource<User> userResource) {
     if(userResource.isError) {
       if(userResource.error is ResourceNotFoundException) {
-        return Auth();
+        return _Screen.auth;
       }
       else {
-        return const ErrorScreen();
+        return _Screen.error;
       }
     }
     else if(userResource.isSuccess) {
       if(userResource.data?.info.phone != null) {
-        return Main();
+        return _Screen.main;
       }
       else {
-        return const EditProfile(afterLoginVariant: true);
+        return _Screen.fillProfile;
       }
     }
 
-    return const Splash();
+    return _Screen.splash;
   }
+}
+
+enum _Screen {
+  splash, auth, main, fillProfile, error
 }
