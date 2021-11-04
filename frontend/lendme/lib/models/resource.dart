@@ -1,5 +1,7 @@
 import 'package:lendme/exceptions/exceptions.dart';
 
+// Wrapper class holing resource or exception
+// Mainly to use as stream elements, because it's impossible to push exception to streams
 class Resource<T> {
   T ? data;
   DomainException? error;
