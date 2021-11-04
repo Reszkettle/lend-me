@@ -34,7 +34,7 @@ class _EditProfileState extends State<EditProfile> {
 
   @override
   Widget build(BuildContext context) {
-    final userResource = Provider.of<Resource<User?>>(context);
+    final userResource = Provider.of<Resource<User>>(context);
     final user = userResource.data;
 
     _firstNameController.text = user?.info.firstName ?? "";
@@ -58,6 +58,22 @@ class _EditProfileState extends State<EditProfile> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  Container(
+                    width: 200,
+                    height: 200,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.grey,
+                      image: DecorationImage(
+                          image: NetworkImage(user?.avatarUrl ?? ""),
+                          fit: BoxFit.contain,
+                      ),
+                      border: Border.all(
+                        color: Colors.blueAccent,
+                        width: 3,
+                      ),
+                    ),
+                  ),
                   const SizedBox(height: 20.0),
                   firstNameField(),
                   const SizedBox(height: 20.0),
@@ -149,7 +165,11 @@ class _EditProfileState extends State<EditProfile> {
 
           try {
             _loadableAreaController.setState(LoadableAreaState.pending);
+            await Future.delayed(const Duration(seconds: 1));
             await _userRepository.setUserInfo(userId, userInfo);
+            if(!widget.afterLoginVariant) {
+              Navigator.of(context).pop();
+            }
           } on DomainException catch(e) {
             showErrorSnackBar(context, "Failed to save profile. ${e.message}");
           } finally {
