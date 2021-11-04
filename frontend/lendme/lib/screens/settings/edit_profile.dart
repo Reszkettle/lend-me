@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:lendme/components/loadable_area.dart';
 import 'package:lendme/exceptions/exception.dart';
 import 'package:lendme/models/resource.dart';
@@ -11,6 +12,11 @@ import 'package:provider/provider.dart';
 
 class EditProfile extends StatefulWidget {
   const EditProfile({this.afterLoginVariant = false, Key? key}) : super(key: key);
+
+  static const int maxFirstNameLength = 30;
+  static const int maxLastNameLength = 30;
+  static const int maxEmailLength = 40;
+  static const int maxPhoneLength = 15;
 
   final bool afterLoginVariant;
 
@@ -102,49 +108,94 @@ class _EditProfileState extends State<EditProfile> {
   TextFormField firstNameField() {
     return TextFormField(
       controller: _firstNameController,
+      inputFormatters: [
+        LengthLimitingTextInputFormatter(EditProfile.maxFirstNameLength),
+      ],
       decoration: const InputDecoration(
           border: OutlineInputBorder(),
           hintText: 'First name',
           prefixIcon: Icon(Icons.person_rounded)
       ),
-      validator: (val) => val!.isEmpty ? 'Enter first name' : null,
+      validator: validateFirstName,
     );
   }
 
   TextFormField lastNameField() {
     return TextFormField(
       controller: _lastNameController,
+      inputFormatters: [
+        LengthLimitingTextInputFormatter(EditProfile.maxLastNameLength),
+      ],
       decoration: const InputDecoration(
           border: OutlineInputBorder(),
           hintText: 'Last name',
           prefixIcon: Icon(Icons.person_rounded)
       ),
-      validator: (val) => val!.isEmpty ? 'Enter last name' : null,
+      validator: validateLastName,
     );
   }
 
   TextFormField emailField() {
     return TextFormField(
+      keyboardType: TextInputType.emailAddress,
       controller: _emailController,
+      inputFormatters: [
+        LengthLimitingTextInputFormatter(EditProfile.maxEmailLength),
+      ],
       decoration: const InputDecoration(
           border: OutlineInputBorder(),
           hintText: 'Email address',
           prefixIcon: Icon(Icons.email_rounded)
       ),
-      validator: (val) => val!.isEmpty ? 'Enter email address' : null,
+      validator: validateEmail,
     );
   }
 
   TextFormField phoneField() {
     return TextFormField(
+      keyboardType: TextInputType.phone,
       controller: _phoneController,
+      inputFormatters: [
+        LengthLimitingTextInputFormatter(EditProfile.maxPhoneLength),
+      ],
       decoration: const InputDecoration(
           border: OutlineInputBorder(),
           hintText: 'Phone number',
           prefixIcon: Icon(Icons.call_rounded)
       ),
-      validator: (val) => val!.isEmpty ? 'Enter phone number' : null,
+      validator: validatePhone,
     );
+  }
+
+  String? validateFirstName(String? name) {
+    if(name!.isEmpty) {
+      return 'Enter first name';
+    }
+    return null;
+  }
+
+  String? validateLastName(String? name) {
+    if(name!.isEmpty) {
+      return 'Enter last name';
+    }
+    return null;
+  }
+
+  String? validateEmail(String? email) {
+      if(email!.isEmpty) {
+        return 'Enter email address';
+      }
+      String pattern = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+      RegExp regex = RegExp(pattern);
+      if (!regex.hasMatch(email)) {
+        return 'Enter valid email';
+      } else {
+        return null;
+      }
+    }
+
+  String? validatePhone(String? phone) {
+    phone!.isEmpty ? 'Enter phone number' : null;
   }
 
   ElevatedButton confirmButton(String? userId) {
