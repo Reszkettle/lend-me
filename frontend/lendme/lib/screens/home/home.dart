@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:lendme/screens/main/home/notifications.dart';
 
 import 'borrowed.dart';
 import 'items.dart';
 import 'lent.dart';
+import 'notifications.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -20,7 +20,7 @@ class _HomeState extends State<Home> {
     Items(),
     Lent(),
     Borrowed(),
-    Profile(),
+    Notifications(),
   ];
 
   void _onItemTapped(int index) {

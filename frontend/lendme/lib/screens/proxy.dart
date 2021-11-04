@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:lendme/exceptions/general.dart';
 import 'package:lendme/models/resource.dart';
 import 'package:lendme/models/user.dart';
-import 'package:lendme/screens/main/other/error.dart';
-import 'package:lendme/screens/main/other/splash.dart';
+import 'package:lendme/screens/settings/edit_profile.dart';
 import 'package:provider/provider.dart';
 
-import 'auth/auth.dart';
-import 'main/main.dart';
-import 'main/settings/edit_profile.dart';
+import 'auth.dart';
+import 'main.dart';
+import 'other/error.dart';
+import 'other/splash.dart';
 
 class Proxy extends StatefulWidget {
   const Proxy({Key? key}) : super(key: key);
