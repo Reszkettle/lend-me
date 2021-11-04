@@ -11,7 +11,7 @@ import 'exceptions/exceptions.dart';
 import 'models/resource.dart';
 import 'models/user.dart';
 
-const useEmulators = true;
+const useEmulators = false;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
