@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:lendme/exceptions/general.dart';
 import 'package:lendme/models/resource.dart';
 import 'package:lendme/models/user.dart';
-import 'package:lendme/screens/error/error.dart';
-import 'package:lendme/screens/splash/splash.dart';
+import 'package:lendme/screens/main/other/error.dart';
+import 'package:lendme/screens/main/other/splash.dart';
 import 'package:provider/provider.dart';
 
 import 'auth/auth.dart';
