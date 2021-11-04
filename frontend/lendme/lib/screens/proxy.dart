@@ -77,7 +77,7 @@ class _ProxyState extends State<Proxy> {
       }
     }
     else if(userResource.isSuccess) {
-      if(userResource.data?.info.phone != null) {
+      if(userResource.data!.info.isFilled()) {
         return _Screen.main;
       }
       else {
