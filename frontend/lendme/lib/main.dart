@@ -27,7 +27,7 @@ Future<void> main() async {
 class LentMeApp extends StatelessWidget {
   LentMeApp({Key? key}) : super(key: key);
 
-  // This is stream of currently logged user with its data
+  // Stream of currently logged user
   final Stream<Resource<User>> userStream = AuthService().uid.switchMap((uid) {
       return uid != null ? UserRepository().getUserStream(uid) :
       Stream.value(Resource.error(ResourceNotFoundException()));
@@ -35,13 +35,14 @@ class LentMeApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // StreamProvided provides currently logged user to all widgets bellow
     return StreamProvider<Resource<User>>.value(
       value: userStream,
       initialData: Resource.loading(),
       child: MaterialApp(
         title: 'Lend Me',
         theme: ThemeData(primarySwatch: Colors.blue),
-        home: const Proxy(),
+        home: Proxy(),
       )
     );
   }

@@ -10,21 +10,14 @@ import 'package:provider/provider.dart';
 import 'other/error.dart';
 import 'other/splash.dart';
 
+// Enum representing parts of application which may be visible
 enum _Screen {
   splash, auth, main, fillProfile, error
 }
 
-class Proxy extends StatefulWidget {
-  const Proxy({Key? key}) : super(key: key);
-
-  @override
-  State<Proxy> createState() => _ProxyState();
-}
-
-class _ProxyState extends State<Proxy> {
-
-  late _Screen _screen;
-  late Widget _view;
+// Top widget showing proper part of application based on current user state. Actively listening
+class Proxy extends StatelessWidget {
+  Proxy({Key? key}) : super(key: key);
 
   final Map<_Screen, Widget> _screenViews = {
     _Screen.splash: const Splash(),
@@ -35,36 +28,10 @@ class _ProxyState extends State<Proxy> {
   };
 
   @override
-  void initState() {
-    _screen = _getScreenForUser(Resource<User>.loading());
-    _view = _screenViews[_screen]!;
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final userResource = Provider.of<Resource<User>>(context);
-
-    var newScreen = _getScreenForUser(userResource);
-    if(_screen != newScreen) {
-      setState(() {
-        _screen = newScreen;
-        _view = _screenViews[_screen]!;
-      });
-    }
-
-    return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 0),
-      transitionBuilder: (Widget child, Animation<double> animation) =>
-        SlideTransition(
-          position: Tween<Offset>(
-              begin: const Offset(1.2, 0),
-              end: const Offset(0, 0)
-          ).animate(animation),
-          child: child,
-        ),
-      child: _view,
-    );
+    _Screen screen = _getScreenForUser(userResource);
+    return _screenViews[screen]!;
   }
 
   // Return which part of application should be visible for given user state
@@ -87,7 +54,9 @@ class _ProxyState extends State<Proxy> {
     }
     return _Screen.splash;
   }
+
 }
+
 
 // Generally just a navigator, but with added support to hardware back button
 class PreMadeNavigator extends StatelessWidget {
