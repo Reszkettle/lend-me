@@ -11,7 +11,3 @@ class UnknownException extends DomainException {
 class ResourceNotFoundException extends DomainException {
   ResourceNotFoundException({Object? cause}) : super('Unable to find requested resource', cause: cause);
 }
-
-class UserNotAuthenticatedException extends DomainException {
-  UserNotAuthenticatedException({Object? cause}) : super('User is not authenticated', cause: cause);
-}

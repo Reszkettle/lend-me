@@ -21,17 +21,22 @@ Future<void> main() async {
     await EmulatorsService().setupEmulators();
   }
 
-  runApp(const MyApp());
+  runApp(LentMeApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class LentMeApp extends StatelessWidget {
+  LentMeApp({Key? key}) : super(key: key);
+
+  // This is stream of currently logged user with its data
+  final Stream<Resource<User>> userStream = AuthService().uid.switchMap((uid) {
+      return uid != null ? UserRepository().getUserStream(uid) :
+      Stream.value(Resource.error(ResourceNotFoundException()));
+    });
 
   @override
   Widget build(BuildContext context) {
-
     return StreamProvider<Resource<User?>>.value(
-      value: getUserStream(),
+      value: userStream,
       initialData: Resource.loading(),
       child: MaterialApp(
         title: 'Lend Me',
@@ -41,15 +46,4 @@ class MyApp extends StatelessWidget {
     );
   }
 
-  Stream<Resource<User>> getUserStream() {
-    return AuthService().uid.switchMap((uid) {
-      if(uid != null) {
-        return UserRepository().getUserStream(uid);
-      }
-      else {
-        return Stream.value(Resource.error(UserNotAuthenticatedException()));
-      }
-    });
-  }
 }
-

@@ -33,22 +33,24 @@ class _ProxyState extends State<Proxy> {
     setState(() {
       _view = _getProperScreen(userResource);
     });
+
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 700),
-      transitionBuilder: (Widget child, Animation<double> animation) {
-        return SlideTransition(
-          position: Tween<Offset>(begin: const Offset(1.2, 0), end: const Offset(0, 0))
-              .animate(animation),
+      transitionBuilder: (Widget child, Animation<double> animation) =>
+        SlideTransition(
+          position: Tween<Offset>(
+              begin: const Offset(1.2, 0),
+              end: const Offset(0, 0)
+          ).animate(animation),
           child: child,
-        );
-      },
+        ),
       child: _view,
     );
   }
 
   Widget _getProperScreen(Resource<User?> userResource) {
     if(userResource.isError) {
-      if(userResource.error is UserNotAuthenticatedException) {
+      if(userResource.error is ResourceNotFoundException) {
         return Auth();
       }
       else {
