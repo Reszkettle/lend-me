@@ -54,7 +54,7 @@ class _ProxyState extends State<Proxy> {
     }
 
     return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 700),
+      duration: const Duration(milliseconds: 0),
       transitionBuilder: (Widget child, Animation<double> animation) =>
         SlideTransition(
           position: Tween<Offset>(
@@ -67,6 +67,7 @@ class _ProxyState extends State<Proxy> {
     );
   }
 
+  // Return which part of application should be visible for given user state
   _Screen _getScreenForUser(Resource<User> userResource) {
     if(userResource.isError) {
       if(userResource.error is ResourceNotFoundException) {
@@ -84,11 +85,11 @@ class _ProxyState extends State<Proxy> {
         return _Screen.fillProfile;
       }
     }
-
     return _Screen.splash;
   }
 }
 
+// Generally just a navigator, but with added support to hardware back button
 class PreMadeNavigator extends StatelessWidget {
   PreMadeNavigator({required this.routes, this.initialRoute='/', Key? key}) : super(key: key);
 

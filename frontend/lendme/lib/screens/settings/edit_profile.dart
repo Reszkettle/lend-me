@@ -37,10 +37,14 @@ class _EditProfileState extends State<EditProfile> {
     final userResource = Provider.of<Resource<User>>(context);
     final user = userResource.data;
 
-    _firstNameController.text = user?.info.firstName ?? "";
-    _lastNameController.text = user?.info.lastName ?? "";
-    _emailController.text = user?.info.email ?? "";
-    _phoneController.text = user?.info.phone ?? "";
+    if(user == null) {
+      return Container();
+    }
+
+    _firstNameController.text = user.info.firstName ?? "";
+    _lastNameController.text = user.info.lastName ?? "";
+    _emailController.text = user.info.email ?? "";
+    _phoneController.text = user.info.phone ?? "";
 
     return Scaffold(
       appBar: AppBar(
@@ -65,7 +69,7 @@ class _EditProfileState extends State<EditProfile> {
                       shape: BoxShape.circle,
                       color: Colors.grey,
                       image: DecorationImage(
-                          image: NetworkImage(user?.avatarUrl ?? ""),
+                          image: NetworkImage(user.avatarUrl ?? ""),
                           fit: BoxFit.contain,
                       ),
                       border: Border.all(
@@ -83,8 +87,9 @@ class _EditProfileState extends State<EditProfile> {
                   const SizedBox(height: 20),
                   phoneField(),
                   const SizedBox(height: 20),
-                  confirmButton(user?.uid),
-                  signOutButton()
+                  confirmButton(user.uid),
+                  if(widget.afterLoginVariant)
+                    signOutButton()
                 ],
               ),
             ),
