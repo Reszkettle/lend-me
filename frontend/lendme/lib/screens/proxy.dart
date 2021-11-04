@@ -3,12 +3,12 @@ import 'package:lendme/exceptions/general.dart';
 import 'package:lendme/models/resource.dart';
 import 'package:lendme/models/user.dart';
 import 'package:lendme/screens/error/error.dart';
-import 'package:lendme/screens/info/info.dart';
 import 'package:lendme/screens/splash/splash.dart';
 import 'package:provider/provider.dart';
 
 import 'auth/auth.dart';
 import 'main/main.dart';
+import 'main/settings/edit_profile.dart';
 
 class Proxy extends StatefulWidget {
   const Proxy({Key? key}) : super(key: key);
@@ -62,7 +62,7 @@ class _ProxyState extends State<Proxy> {
         return Main();
       }
       else {
-        return const Info();
+        return const EditProfile(afterLoginVariant: true);
       }
     }
 

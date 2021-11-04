@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:lendme/screens/main/settings/edit_profile.dart';
 import 'package:lendme/screens/main/home/home.dart';
 import 'package:lendme/screens/main/other/add_item.dart';
 import 'package:lendme/screens/main/settings/change_theme.dart';
 import 'package:lendme/screens/main/settings/credits.dart';
-import 'package:lendme/screens/main/settings/edit_profile.dart';
 import 'package:lendme/screens/main/settings/settings.dart';
 
 class Main extends StatelessWidget {
