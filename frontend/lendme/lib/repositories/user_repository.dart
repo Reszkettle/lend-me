@@ -18,7 +18,7 @@ class UserRepository {
       if(map == null) {
         throw ResourceNotFoundException();
       }
-      User user = _map2User(map, uid);
+      User user = User.fromMap(map, uid);
       return user;
     } catch (e) {
       throw UnknownException();
@@ -36,7 +36,7 @@ class UserRepository {
         if(map == null) {
           return Resource.error(ResourceNotFoundException());
         }
-        User user = _map2User(map, uid);
+        User user = User.fromMap(map, uid);
         return Resource.success(user);
       });
     } catch (e) {
@@ -47,7 +47,7 @@ class UserRepository {
   Future setUserInfo(String uid, UserInfo userInfo) async {
     try {
       Map<String, dynamic> data = {
-        'info': _userInfo2Map(userInfo)
+        'info': userInfo.toMap()
       };
 
       await _firestore.runTransaction((transaction) async {
@@ -59,31 +59,4 @@ class UserRepository {
     }
   }
 
-  User _map2User(Map<String, dynamic> map, String uid) {
-    Timestamp t = map['createdAt'] as Timestamp;
-    return User(
-        uid: uid,
-        avatarUrl: map['avatarUrl'] as String?,
-        createdAt: t.toDate(),
-        info: _map2UserInfo(map['info'])
-    );
-  }
-
-  UserInfo _map2UserInfo(Map<String, dynamic> map) {
-    return UserInfo(
-        firstName: map['firstName'] as String?,
-        lastName: map['lastName'] as String?,
-        phone: map['phone'] as String?,
-        email: map['email'] as String?
-    );
-  }
-
-  Map<String, dynamic> _userInfo2Map(UserInfo map) {
-    return {
-      'firstName': map.firstName,
-      'lastName': map.lastName,
-      'phone': map.phone,
-      'email': map.email
-    };
-  }
 }

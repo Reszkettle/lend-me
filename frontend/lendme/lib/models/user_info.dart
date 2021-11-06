@@ -15,4 +15,22 @@ class UserInfo {
   String toString() {
     return 'UserInfo{firstName: $firstName, lastName: $lastName, phone: $phone, email: $email}';
   }
+
+  static UserInfo fromMap(Map<String, dynamic> map) {
+    return UserInfo(
+        firstName: map['firstName'] as String?,
+        lastName: map['lastName'] as String?,
+        phone: map['phone'] as String?,
+        email: map['email'] as String?
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'firstName': firstName,
+      'lastName': lastName,
+      'phone': phone,
+      'email': email
+    };
+  }
 }
