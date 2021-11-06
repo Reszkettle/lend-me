@@ -8,8 +8,16 @@ class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   // auth change user stream
-  Stream<String?> get uid {
+  Stream<String?> get uidStream {
     return _auth.authStateChanges().map((user) => user?.uid);
+  }
+
+  String? getUid() {
+    try {
+      return _auth.currentUser?.uid;
+    } catch (e) {
+      throw UnknownException();
+    }
   }
 
   // sign in anonymously

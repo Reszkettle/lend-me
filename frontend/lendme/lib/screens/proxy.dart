@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:lendme/exceptions/exceptions.dart';
-import 'package:lendme/models/resource.dart';
 import 'package:lendme/models/user.dart';
 import 'package:lendme/routes/auth_routes.dart';
 import 'package:lendme/routes/main_routes.dart';
 import 'package:lendme/screens/settings/edit_profile.dart';
+import 'package:lendme/services/auth_service.dart';
 import 'package:provider/provider.dart';
 
-import 'other/error.dart';
 import 'other/splash.dart';
 
 // Enum representing parts of application which may be visible
 enum _Screen {
-  splash, auth, main, fillProfile, error
+  splash, auth, main, fillProfile
 }
 
 // Top widget showing proper part of application based on current user state. Actively listening
@@ -25,6 +23,8 @@ class Proxy extends StatefulWidget {
 
 class _ProxyState extends State<Proxy> {
 
+  final AuthService _authRepository = AuthService();
+
   late _Screen _screen;
   late Widget _screenView;
 
@@ -33,7 +33,6 @@ class _ProxyState extends State<Proxy> {
     _Screen.auth: PreMadeNavigator(routes: authRoutes, key: UniqueKey(),),
     _Screen.main: PreMadeNavigator(routes: mainRoutes, key: UniqueKey()),
     _Screen.fillProfile: const EditProfile(afterLoginVariant: true),
-    _Screen.error: const ErrorScreen(),
   };
 
   @override
@@ -45,8 +44,9 @@ class _ProxyState extends State<Proxy> {
 
   @override
   Widget build(BuildContext context) {
-    final userResource = Provider.of<Resource<User>>(context);
-    _Screen newScreen = _getScreenForUser(userResource);
+    final uid = _authRepository.getUid();
+    final user = Provider.of<User?>(context);
+    _Screen newScreen = _getScreen(uid, user);
     if(_screen != newScreen) {
       _screen = newScreen;
       _screenView = _screenViews[_screen]!;
@@ -54,24 +54,21 @@ class _ProxyState extends State<Proxy> {
     return _screenView;
   }
 
-  _Screen _getScreenForUser(Resource<User> userResource) {
-    if(userResource.isError) {
-      if(userResource.error is ResourceNotFoundException) {
-        return _Screen.auth;
-      }
-      else {
-        return _Screen.error;
-      }
+  _Screen _getScreen(String? uid, User? user) {
+    if(uid == null) {
+      return _Screen.auth;
     }
-    else if(userResource.isSuccess) {
-      if(userResource.data!.info.isFilled()) {
-        return _Screen.main;
+    else {
+      if(user == null) {
+        return _Screen.splash;
       }
-      else {
+      else if(!user.info.isFilled()) {
         return _Screen.fillProfile;
       }
+      else {
+        return _Screen.main;
+      }
     }
-    return _Screen.splash;
   }
 }
 

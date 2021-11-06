@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lendme/components/loadable_area.dart';
 import 'package:lendme/exceptions/exceptions.dart';
-import 'package:lendme/models/resource.dart';
 import 'package:lendme/models/user.dart';
 import 'package:lendme/models/user_info.dart';
 import 'package:lendme/repositories/user_repository.dart';
@@ -40,8 +39,7 @@ class _EditProfileState extends State<EditProfile> {
 
   @override
   Widget build(BuildContext context) {
-    final userResource = Provider.of<Resource<User>>(context);
-    final user = userResource.data;
+    final user = Provider.of<User?>(context);
 
     if(user == null) {
       return Container();

@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lendme/exceptions/exceptions.dart';
-import 'package:lendme/models/resource.dart';
 import 'package:lendme/models/user.dart';
 import 'package:lendme/models/user_info.dart';
 
@@ -25,23 +24,19 @@ class UserRepository {
     }
   }
 
-  Stream<Resource<User>> getUserStream(String uid) {
-    try {
-      return _firestore
-          .collection("users")
-          .doc(uid)
-          .snapshots()
-      .map((snapshot) {
-        Map<String, dynamic>? map = snapshot.data();
-        if(map == null) {
-          return Resource.error(ResourceNotFoundException());
-        }
-        User user = User.fromMap(map, uid);
-        return Resource.success(user);
-      });
-    } catch (e) {
-      throw UnknownException();
-    }
+  Stream<User?> getUserStream(String uid) {
+    return _firestore
+        .collection("users")
+        .doc(uid)
+        .snapshots()
+    .map((snapshot) {
+      Map<String, dynamic>? map = snapshot.data();
+      if(map == null) {
+        return null;
+      }
+      User user = User.fromMap(map, uid);
+      return user;
+    });
   }
 
   Future setUserInfo(String uid, UserInfo userInfo) async {
