@@ -5,13 +5,10 @@ import 'package:lendme/routes/main_routes.dart';
 import 'package:lendme/screens/settings/edit_profile.dart';
 import 'package:lendme/services/auth_service.dart';
 import 'package:provider/provider.dart';
-
 import 'other/splash.dart';
 
 // Enum representing parts of application which may be visible
-enum _Screen {
-  splash, auth, main, fillProfile
-}
+enum _Screen { splash, auth, main, fillProfile }
 
 // Top widget showing proper part of application based on current user state. Actively listening
 class Proxy extends StatefulWidget {
@@ -22,7 +19,6 @@ class Proxy extends StatefulWidget {
 }
 
 class _ProxyState extends State<Proxy> {
-
   final AuthService _authRepository = AuthService();
 
   late _Screen _screen;
@@ -30,7 +26,10 @@ class _ProxyState extends State<Proxy> {
 
   final Map<_Screen, Widget> _screenViews = {
     _Screen.splash: const Splash(),
-    _Screen.auth: PreMadeNavigator(routes: authRoutes, key: UniqueKey(),),
+    _Screen.auth: PreMadeNavigator(
+      routes: authRoutes,
+      key: UniqueKey(),
+    ),
     _Screen.main: PreMadeNavigator(routes: mainRoutes, key: UniqueKey()),
     _Screen.fillProfile: const EditProfile(afterLoginVariant: true),
   };
@@ -47,7 +46,7 @@ class _ProxyState extends State<Proxy> {
     final uid = _authRepository.getUid();
     final user = Provider.of<User?>(context);
     _Screen newScreen = _getScreen(uid, user);
-    if(_screen != newScreen) {
+    if (_screen != newScreen) {
       _screen = newScreen;
       _screenView = _screenViews[_screen]!;
     }
@@ -55,27 +54,24 @@ class _ProxyState extends State<Proxy> {
   }
 
   _Screen _getScreen(String? uid, User? user) {
-    if(uid == null) {
+    if (uid == null) {
       return _Screen.auth;
-    }
-    else {
-      if(user == null) {
+    } else {
+      if (user == null) {
         return _Screen.splash;
-      }
-      else if(!user.info.isFilled()) {
+      } else if (!user.info.isFilled()) {
         return _Screen.fillProfile;
-      }
-      else {
+      } else {
         return _Screen.main;
       }
     }
   }
 }
 
-
 // Generally just a navigator, but with added support to hardware back button
 class PreMadeNavigator extends StatelessWidget {
-  PreMadeNavigator({required this.routes, this.initialRoute='/', Key? key}) : super(key: key);
+  PreMadeNavigator({required this.routes, this.initialRoute = '/', Key? key})
+      : super(key: key);
 
   final GlobalKey<NavigatorState> _navigator = GlobalKey();
   final String initialRoute;
