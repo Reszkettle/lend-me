@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lendme/services/auth.dart';
+import 'package:lendme/services/auth_service.dart';
 
 class Settings extends StatelessWidget {
   Settings({Key? key}) : super(key: key);
@@ -20,19 +20,19 @@ class Settings extends StatelessWidget {
             children: [
               ElevatedButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, '/edit_profile');
+                    Navigator.of(context).pushNamed('/edit_profile');
                   },
                   child: const Text('Edit profile')
               ),
               ElevatedButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, '/change_theme');
+                    Navigator.of(context).pushNamed('/change_theme');
                   },
                   child: const Text('Change theme')
               ),
               ElevatedButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, '/credits');
+                    Navigator.of(context).pushNamed('/credits');
                   },
                   child: const Text('Credits')
               ),

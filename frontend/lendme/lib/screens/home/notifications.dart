@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class Profile extends StatefulWidget {
-  const Profile({Key? key}) : super(key: key);
+class Notifications extends StatefulWidget {
+  const Notifications({Key? key}) : super(key: key);
 
   @override
-  _ProfileState createState() => _ProfileState();
+  _NotificationsState createState() => _NotificationsState();
 }
 
-class _ProfileState extends State<Profile> {
+class _NotificationsState extends State<Notifications> {
   @override
   Widget build(BuildContext context) {
     return Stack(
