@@ -25,28 +25,28 @@ class _AddItemState extends State<AddItem> {
   @override
   Widget build(BuildContext context) {
     Future getImage() async {
-      final _storage = FirebaseStorage.instance;
-      File _image;
-      final _picker = ImagePicker();
+      final storage = FirebaseStorage.instance;
+      File imagePath;
+      final picker = ImagePicker();
       //Check Permissions
       await Permission.photos.request();
       var permissionStatus = await Permission.photos.status;
       if (permissionStatus.isGranted) {
         //Select Image
-        final image = await _picker.pickImage(source: ImageSource.gallery);
+        final image = await picker.pickImage(source: ImageSource.gallery);
 
         setState(() {
           isLoading = true;
         });
         if (image != null) {
-          _image = File(image.path);
+          imagePath = File(image.path);
         } else {
           isLoading = false;
           return;
         }
         //Upload to Firebase
         var snapshot =
-            await _storage.ref().child('images/items/itemName').putFile(_image);
+            await storage.ref().child('images/items/itemName').putFile(imagePath);
 
         var downloadUrl = await snapshot.ref.getDownloadURL();
         setState(() {
