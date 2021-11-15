@@ -191,10 +191,9 @@ class _AddItemState extends State<AddItem> {
   Future saveImage() async {
     String? downloadUrl;
     if (localImage != null) {
-      itemRepository.addImage(localImage).then((value){
+      await ItemRepository().addImage(localImage).then((value){
         downloadUrl = value;
       });
-      print("saveImg: " + downloadUrl!);
       setState(() {
         imageUrl = downloadUrl;
       });

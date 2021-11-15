@@ -37,7 +37,6 @@ class ItemRepository {
       try {
         var snapshot = await storage.ref().child('images/items/itemName').putFile(localImagePath);
         downloadUrl = await snapshot.ref.getDownloadURL();
-        print("addImg" + downloadUrl);
       } catch (e) {
         throw UnknownException();
       }
