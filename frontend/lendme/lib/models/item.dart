@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Item {
-  final String? id;
-  final String ownerId;
+  final String? ownerId;
   final Timestamp? createdAt;
 
   final String? description;
@@ -12,7 +11,7 @@ class Item {
   String? imageUrl;
 
   Item(
-      {this.id,
+      {
       required this.ownerId,
       this.createdAt,
       this.description,
@@ -22,7 +21,6 @@ class Item {
 
   static Item fromMap(Map<String, dynamic> json) {
     return Item(
-        id: json['uid'] as String?,
         ownerId: json['ownerId'] as String,
         createdAt: json['createdAt'] as Timestamp,
         description: json['description'] as String?,
