@@ -52,6 +52,7 @@ dependencies:
   cached_network_image: ^3.1.0
   timeago: ^3.1.0
   flutter_svg: ^0.23.0+1
+  uuid: ^3.0.5
 
 dev_dependencies:
   flutter_test:

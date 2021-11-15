@@ -3,12 +3,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:lendme/models/item.dart';
 import 'package:lendme/exceptions/exceptions.dart';
+import 'package:uuid/uuid.dart';
 
 class ItemRepository {
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   final FirebaseStorage storage = FirebaseStorage.instance;
-
+  var uuid = Uuid();
   Stream<List<Item?>> getStreamOfCurrentUserItems() {
     return firestore
         .collection('items')
@@ -35,7 +36,7 @@ class ItemRepository {
     String downloadUrl;
     if (localImagePath != null) {
       try {
-        var snapshot = await storage.ref().child('images/items/itemName').putFile(localImagePath);
+        var snapshot = await storage.ref().child('images/items/' + uuid.v4()).putFile(localImagePath);
         downloadUrl = await snapshot.ref.getDownloadURL();
       } catch (e) {
         throw UnknownException();
