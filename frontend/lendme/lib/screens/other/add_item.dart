@@ -39,119 +39,121 @@ class _AddItemState extends State<AddItem> {
           child: SingleChildScrollView(
             child: Form(
               key: _formKey,
-              child: Column(
-                children: [
-                  const SizedBox(height: 15.0),
-                  Row(
-                    children: <Widget>[
-                      Flexible(
-                        child: TextFormField(
-                          controller: _titleController,
-                          onChanged: (val) => {_formKey.currentState!.validate()},
-                          validator: validateTitle,
-                          decoration: const InputDecoration(
-                              enabledBorder: OutlineInputBorder(
-                                // width: 0.0 produces a thin "hairline" border
-                                borderSide: BorderSide(color: Colors.blueAccent, width: 2.0),
-                              ),
-                              border: OutlineInputBorder(),
-                              labelStyle: TextStyle(color: Colors.blueAccent),
-                              labelText: 'Title'),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 15.0),
-                  Row(
-                    children: <Widget>[
-                      Flexible(
-                        child: TextFormField(
-                          controller: _descriptionController,
-                          onChanged: (val) => {_formKey.currentState!.validate()},
-                          validator: validateDescription,
-                          decoration: const InputDecoration(
-                              enabledBorder: OutlineInputBorder(
-                                // width: 0.0 produces a thin "hairline" border
-                                borderSide: BorderSide(color: Colors.blueAccent, width: 2.0),
-                              ),
-                              alignLabelWithHint: true,
-                              border: OutlineInputBorder(),
-                              labelStyle: TextStyle(fontSize: 17.0, color: Colors.blueAccent),
-                              labelText: 'Description'),
-                          keyboardType: TextInputType.multiline,
-                          minLines: 5,
-                          maxLines: null,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 25.0),
-                  Row(children: <Widget>[
-                    Expanded(
-                      flex: 3, // takes 30% of available width
-                      child: Column(
-                        children: [
-                          localImage != null
-                              ? Image.file(
-                                  localImage,
-                                  height: 150,
-                                  width: 350,
-                                )
-                              : Container(
-                                  decoration: BoxDecoration(color: Colors.blueGrey[200]),
-                                  height: 150,
-                                  width: 350,
-                                  child: Icon(
-                                    Icons.camera_alt,
-                                    color: Colors.grey[800],
-                                  ),
+              child: Container(
+                margin: EdgeInsets.only(left: 20, top: 10, right: 20),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 15.0),
+                    Row(
+                      children: <Widget>[
+                        Flexible(
+                          child: TextFormField(
+                            controller: _titleController,
+                            onChanged: (val) => {_formKey.currentState!.validate()},
+                            validator: validateTitle,
+                            decoration: const InputDecoration(
+                                enabledBorder: OutlineInputBorder(
+                                  // width: 0.0 produces a thin "hairline" border
+                                  borderSide: BorderSide(color: Colors.blueAccent, width: 2.0),
                                 ),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      flex: 3, // takes 70% of available width
-                      child: Column(
-                        children: [
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                primary: Colors.blueAccent,
-                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                                textStyle: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
-                            onPressed: () => getLocalImage(),
-                            child: const Text('Add Image'),
+                                border: OutlineInputBorder(),
+                                labelStyle: TextStyle(color: Colors.blueAccent),
+                                labelText: 'Title'),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                  ]),
-                  const SizedBox(height: 130.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Column(
-                        children: [
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                primary: Colors.blueAccent,
-                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                                textStyle: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
-                            onPressed: () async {
-                              if (_formKey.currentState!.validate()) {
-                                saveImage();
-                                _loadableAreaController.setState(LoadableAreaState.pending);
-                                await Future.delayed(const Duration(seconds: 4));
-                                _loadableAreaController.setState(LoadableAreaState.main);
-                                saveItem();
-                              }
-                            },
-                            child: const Text('Save Item'),
+                    const SizedBox(height: 15.0),
+                    Row(
+                      children: <Widget>[
+                        Flexible(
+                          child: TextFormField(
+                            controller: _descriptionController,
+                            onChanged: (val) => {_formKey.currentState!.validate()},
+                            decoration: const InputDecoration(
+                                enabledBorder: OutlineInputBorder(
+                                  // width: 0.0 produces a thin "hairline" border
+                                  borderSide: BorderSide(color: Colors.blueAccent, width: 2.0),
+                                ),
+                                alignLabelWithHint: true,
+                                border: OutlineInputBorder(),
+                                labelStyle: TextStyle(fontSize: 17.0, color: Colors.blueAccent),
+                                labelText: 'Description'),
+                            keyboardType: TextInputType.multiline,
+                            minLines: 5,
+                            maxLines: null,
                           ),
-                        ],
-                      )
-                    ],
-                  ),
-                ],
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 25.0),
+                    Row(children: <Widget>[
+                      Expanded(
+                        flex: 3, // takes 30% of available width
+                        child: Column(
+                          children: [
+                            localImage != null
+                                ? Image.file(
+                              localImage,
+                              height: 150,
+                              width: 350,
+                            )
+                                : Container(
+                              decoration: BoxDecoration(color: Colors.blueGrey[200]),
+                              height: 150,
+                              width: 350,
+                              child: Icon(
+                                Icons.camera_alt,
+                                color: Colors.grey[800],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        flex: 3, // takes 70% of available width
+                        child: Column(
+                          children: [
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  primary: Colors.blueAccent,
+                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                  textStyle: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+                              onPressed: () => getLocalImage(),
+                              child: const Text('Add Image'),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ]),
+                    const SizedBox(height: 130.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Column(
+                          children: [
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  primary: Colors.blueAccent,
+                                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                                  textStyle: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+                              onPressed: () async {
+                                if (_formKey.currentState!.validate()) {
+                                  saveImage();
+                                  _loadableAreaController.setState(LoadableAreaState.pending);
+                                  await Future.delayed(const Duration(seconds: 4));
+                                  _loadableAreaController.setState(LoadableAreaState.main);
+                                  saveItem();
+                                }
+                              },
+                              child: const Text('Save Item'),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -161,13 +163,6 @@ class _AddItemState extends State<AddItem> {
   String? validateTitle(String? name) {
     if (name!.isEmpty) {
       return 'Enter title';
-    }
-    return null;
-  }
-
-  String? validateDescription(String? name) {
-    if (name!.isEmpty) {
-      return 'Enter description';
     }
     return null;
   }
@@ -191,7 +186,7 @@ class _AddItemState extends State<AddItem> {
   Future saveImage() async {
     String? downloadUrl;
     if (localImage != null) {
-      await ItemRepository().addImage(localImage).then((value){
+      await ItemRepository().addImage(localImage).then((value) {
         downloadUrl = value;
       });
       setState(() {
