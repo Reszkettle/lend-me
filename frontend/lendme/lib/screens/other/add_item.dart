@@ -200,7 +200,7 @@ class _AddItemState extends State<AddItem> {
       final title = _titleController.text;
       var description;
       if(_descriptionController.text.isNotEmpty) {
-        description = _descriptionController.text.isNotEmpty;
+        description = _descriptionController.text;
       }
       var ownerId = AuthService().getUid();
       final itemInfo = Item(
