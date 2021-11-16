@@ -198,7 +198,10 @@ class _AddItemState extends State<AddItem> {
   void saveItem() async {
     if (_formKey.currentState!.validate()) {
       final title = _titleController.text;
-      final description = _descriptionController.text;
+      var description;
+      if(_descriptionController.text.isNotEmpty) {
+        description = _descriptionController.text.isNotEmpty;
+      }
       var ownerId = AuthService().getUid();
       final itemInfo = Item(
         title: title,
