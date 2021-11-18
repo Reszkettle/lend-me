@@ -10,6 +10,7 @@ class ItemRepository {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   final FirebaseStorage storage = FirebaseStorage.instance;
   var uuid = Uuid();
+
   Stream<List<Item?>> getStreamOfCurrentUserItems() {
     return firestore
         .collection('items')
@@ -18,6 +19,7 @@ class ItemRepository {
         .map((snapshot) {
       return snapshot.docs.map((queryDocumentSnapshot) {
         Map<String, dynamic> map = queryDocumentSnapshot.data();
+        map['id'] = queryDocumentSnapshot.id;
         return Item.fromMap(map);
       }).toList();
     });
@@ -32,6 +34,7 @@ class ItemRepository {
         .map((snapshot) {
       return snapshot.docs.map((queryDocumentSnapshot) {
         Map<String, dynamic> map = queryDocumentSnapshot.data();
+        map['id'] = queryDocumentSnapshot.id;
         return Item.fromMap(map);
       }).toList();
     });
@@ -46,6 +49,7 @@ class ItemRepository {
         .map((snapshot) {
       return snapshot.docs.map((queryDocumentSnapshot) {
         Map<String, dynamic> map = queryDocumentSnapshot.data();
+        map['id'] = queryDocumentSnapshot.id;
         return Item.fromMap(map);
       }).toList();
     });

@@ -1,5 +1,4 @@
 class UserInfo {
-
   final String? firstName;
   final String? lastName;
   final String? phone;
@@ -8,8 +7,13 @@ class UserInfo {
   UserInfo({this.firstName, this.lastName, this.phone, this.email});
 
   bool isFilled() {
-    return firstName != null && lastName != null && phone != null && email != null;
+    return firstName != null &&
+        lastName != null &&
+        phone != null &&
+        email != null;
   }
+
+  String get fullName => '$firstName $lastName';
 
   @override
   String toString() {
@@ -21,8 +25,7 @@ class UserInfo {
         firstName: map['firstName'] as String?,
         lastName: map['lastName'] as String?,
         phone: map['phone'] as String?,
-        email: map['email'] as String?
-    );
+        email: map['email'] as String?);
   }
 
   Map<String, dynamic> toMap() {

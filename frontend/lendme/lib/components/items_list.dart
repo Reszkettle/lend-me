@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lendme/components/borrowed_item_tile.dart';
 import 'package:lendme/components/lent_item_tile.dart';
 import 'package:lendme/components/my_item_tile.dart';
 import 'package:lendme/models/item.dart';
@@ -30,9 +31,9 @@ class _ItemsListState extends State<ItemsList> {
               if (widget.itemsOrigin == ItemsOrigin.my) {
                 return MyItemTile(item: itemSnapshots.data![index]!);
               }
-              // TODO Implement different tiles for 'lent' and 'borrowed' items
+
               return widget.itemsOrigin == ItemsOrigin.borrowed
-                  ? MyItemTile(item: itemSnapshots.data![index]!)
+                  ? BorrowedItemTile(item: itemSnapshots.data![index]!)
                   : LentItemTile(item: itemSnapshots.data![index]!);
             },
             separatorBuilder: (BuildContext context, int index) {
