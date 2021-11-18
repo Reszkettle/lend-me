@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lendme/components/lent_item_tile.dart';
 import 'package:lendme/components/my_item_tile.dart';
 import 'package:lendme/models/item.dart';
 import 'package:lendme/utils/ui/enums.dart';
@@ -32,7 +33,7 @@ class _ItemsListState extends State<ItemsList> {
               // TODO Implement different tiles for 'lent' and 'borrowed' items
               return widget.itemsOrigin == ItemsOrigin.borrowed
                   ? MyItemTile(item: itemSnapshots.data![index]!)
-                  : MyItemTile(item: itemSnapshots.data![index]!);
+                  : LentItemTile(item: itemSnapshots.data![index]!);
             },
             separatorBuilder: (BuildContext context, int index) {
               return const SizedBox(height: 9);
