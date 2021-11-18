@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:lendme/components/items_list.dart';
+import 'package:lendme/repositories/item_repository.dart';
+import 'package:lendme/utils/ui/enums.dart';
 
 class Borrowed extends StatefulWidget {
   const Borrowed({Key? key}) : super(key: key);
@@ -10,14 +13,10 @@ class Borrowed extends StatefulWidget {
 class _BorrowedState extends State<Borrowed> {
   @override
   Widget build(BuildContext context) {
-    return Stack(children: const [
-      Placeholder(),
-      Center(
-          child: Text("Borrowed",
-              style: TextStyle(
-                  fontSize: 40,
-                  color: Colors.grey,
-                  backgroundColor: Colors.white)))
-    ]);
+    return Scaffold(
+        floatingActionButton: null,
+        body: ItemsList(
+            itemsStream: ItemRepository().getStreamOfBorrowedItems(),
+            itemsOrigin: ItemsOrigin.borrowed));
   }
 }

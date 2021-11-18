@@ -37,6 +37,20 @@ class ItemRepository {
     });
   }
 
+  Stream<List<Item?>> getStreamOfBorrowedItems() {
+    return firestore
+        .collection('items')
+        .where('available', isEqualTo: false)
+        .where('lentById', isEqualTo: firebaseAuth.currentUser!.uid)
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((queryDocumentSnapshot) {
+        Map<String, dynamic> map = queryDocumentSnapshot.data();
+        return Item.fromMap(map);
+      }).toList();
+    });
+  }
+
   Future addItem(Item item) async {
     try {
       CollectionReference items =
