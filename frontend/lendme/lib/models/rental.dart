@@ -8,9 +8,13 @@ class Rental {
   final Timestamp endDate;
   final Timestamp startDate;
   final String status;
+  final String? borrowerFullname;
+  final String? ownerFullname;
 
   Rental(
       {this.id,
+      this.borrowerFullname,
+      this.ownerFullname,
       required this.borrowerId,
       required this.ownerId,
       required this.itemId,
@@ -22,6 +26,8 @@ class Rental {
     return Rental(
         id: json['id'] as String?,
         ownerId: json['ownerId'] as String,
+        borrowerFullname: json['borrowerFullname'] as String?,
+        ownerFullname: json['ownerFullname'] as String?,
         itemId: json['itemId'] as String,
         borrowerId: json['borrowerId'] as String,
         status: json['status'] as String,
@@ -37,7 +43,9 @@ class Rental {
       'borrowerId': borrowerId,
       'status': status,
       'startDate': startDate,
-      'endDate': endDate
+      'endDate': endDate,
+      'borrowerFullname': borrowerFullname,
+      'ownerFullname': ownerFullname
     };
   }
 }
