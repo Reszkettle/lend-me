@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:lendme/components/items_list.dart';
-import 'package:lendme/repositories/item_repository.dart';
+import 'package:lendme/components/rentals_list.dart';
+import 'package:lendme/repositories/rental_repository.dart';
+import 'package:lendme/services/auth_service.dart';
 import 'package:lendme/utils/ui/enums.dart';
 
 class Lent extends StatefulWidget {
@@ -15,8 +16,9 @@ class _LentState extends State<Lent> {
   Widget build(BuildContext context) {
     return Scaffold(
         floatingActionButton: null,
-        body: ItemsList(
-            itemsStream: ItemRepository().getStreamOfLentItems(),
+        body: RentalsList(
+            rentalsStream: RentalRepository()
+                .getStreamOfLentItemsWithRentals(AuthService().getUid()!),
             rentalOrigin: RentalOrigin.lent));
   }
 }
