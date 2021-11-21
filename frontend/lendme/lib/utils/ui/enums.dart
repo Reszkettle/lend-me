@@ -1,1 +1,1 @@
-enum ItemsOrigin { my, lent, borrowed }
+enum RentalOrigin { lent, borrowed }

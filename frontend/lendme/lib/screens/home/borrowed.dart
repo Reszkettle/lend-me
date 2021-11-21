@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:lendme/components/items_list.dart';
+import 'package:lendme/components/rentals_list.dart';
 import 'package:lendme/repositories/item_repository.dart';
+import 'package:lendme/repositories/rental_repository.dart';
 import 'package:lendme/utils/ui/enums.dart';
 
 class Borrowed extends StatefulWidget {
@@ -15,8 +16,9 @@ class _BorrowedState extends State<Borrowed> {
   Widget build(BuildContext context) {
     return Scaffold(
         floatingActionButton: null,
-        body: ItemsList(
-            itemsStream: ItemRepository().getStreamOfBorrowedItems(),
-            itemsOrigin: ItemsOrigin.borrowed));
+        body: RentalsList(
+            rentalsStream:
+                RentalRepository().getStreamOfBorrowedItemsWithRentals(uid),
+            rentalOrigin: RentalOrigin.borrowed));
   }
 }

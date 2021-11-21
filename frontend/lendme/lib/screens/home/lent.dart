@@ -17,6 +17,6 @@ class _LentState extends State<Lent> {
         floatingActionButton: null,
         body: ItemsList(
             itemsStream: ItemRepository().getStreamOfLentItems(),
-            itemsOrigin: ItemsOrigin.lent));
+            rentalOrigin: RentalOrigin.lent));
   }
 }

@@ -1,9 +1,9 @@
 import 'package:lendme/models/item.dart';
 import 'package:lendme/models/rental.dart';
 
-class ItemRentals {
+class ItemRental {
   final Item item;
-  final List<Rental>? rentals;
+  final Rental rental;
 
-  ItemRentals({required this.item, this.rentals});
+  ItemRental(this.item, this.rental);
 }

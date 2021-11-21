@@ -17,6 +17,6 @@ class _ItemsState extends State<Items> {
         floatingActionButton: null,
         body: ItemsList(
             itemsStream: ItemRepository().getStreamOfCurrentUserItems(),
-            itemsOrigin: ItemsOrigin.my));
+            rentalOrigin: RentalOrigin.my));
   }
 }

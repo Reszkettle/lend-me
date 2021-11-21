@@ -1,16 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:lendme/components/borrowed_item_tile.dart';
-import 'package:lendme/components/lent_item_tile.dart';
 import 'package:lendme/components/my_item_tile.dart';
 import 'package:lendme/models/item.dart';
-import 'package:lendme/utils/ui/enums.dart';
 
 class ItemsList extends StatefulWidget {
-  const ItemsList(
-      {Key? key, required this.itemsStream, required this.itemsOrigin})
-      : super(key: key);
+  const ItemsList({Key? key, required this.itemsStream}) : super(key: key);
   final Stream<List<Item?>> itemsStream;
-  final ItemsOrigin itemsOrigin;
 
   @override
   _ItemsListState createState() => _ItemsListState();
@@ -28,13 +22,7 @@ class _ItemsListState extends State<ItemsList> {
           return ListView.separated(
             padding: const EdgeInsets.all(9),
             itemBuilder: (context, index) {
-              if (widget.itemsOrigin == ItemsOrigin.my) {
-                return MyItemTile(item: itemSnapshots.data![index]!);
-              }
-
-              return widget.itemsOrigin == ItemsOrigin.borrowed
-                  ? BorrowedItemTile(item: itemSnapshots.data![index]!)
-                  : LentItemTile(item: itemSnapshots.data![index]!);
+              return MyItemTile(item: itemSnapshots.data![index]!);
             },
             separatorBuilder: (BuildContext context, int index) {
               return const SizedBox(height: 9);
