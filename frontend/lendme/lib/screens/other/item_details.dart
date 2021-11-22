@@ -4,12 +4,21 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lendme/models/item.dart';
+import 'package:lendme/models/user.dart';
 import 'package:lendme/services/auth_service.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:lendme/repositories/item_repository.dart';
 import 'package:lendme/exceptions/exceptions.dart';
 import 'package:lendme/components/loadable_area.dart';
 import 'package:lendme/utils/ui/error_snackbar.dart';
+import 'package:provider/provider.dart';
+
+enum ItemStatus {
+  lentFromMe,
+  borrowedByMe,
+  myAvailableItem,
+  notPermitted,
+}
 
 class ItemDetails extends StatefulWidget {
   const ItemDetails({required this.itemId, Key? key}) : super(key: key);
@@ -22,7 +31,6 @@ class ItemDetails extends StatefulWidget {
 
 class _ItemDetailsState extends State<ItemDetails> {
 
-  final LoadableAreaController _loadableAreaController = LoadableAreaController();
   final ItemRepository _itemRepository = ItemRepository();
 
   @override
@@ -35,6 +43,16 @@ class _ItemDetailsState extends State<ItemDetails> {
 
   Widget _buildFromItem(BuildContext context, AsyncSnapshot<Item?> itemSnap) {
     final item = itemSnap.data;
+
+    final user = Provider.of<User?>(context);
+    if(user == null) {
+      return Container();
+    }
+
+    ItemStatus? itemStatus;
+    if(item != null) {
+      itemStatus = getItemStatus(item, user);
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -101,7 +119,10 @@ class _ItemDetailsState extends State<ItemDetails> {
                             ],
                           ),
                         ],
-                      )
+                      ),
+                    const SizedBox(height: 32.0,),
+                    if(itemStatus != null)
+                      actionButtons(itemStatus)
                   ],
                 ),
               ),
@@ -109,4 +130,93 @@ class _ItemDetailsState extends State<ItemDetails> {
       ),
     );
   }
+
+  ItemStatus getItemStatus(Item item, User user) {
+    if(item.lentById == user.uid) {
+      return ItemStatus.borrowedByMe;
+    } else if(item.lentById == null && item.ownerId == user.uid) {
+      return ItemStatus.myAvailableItem;
+    } else if(item.lentById != null && item.ownerId == user.uid) {
+      return ItemStatus.lentFromMe;
+    } else {
+      return ItemStatus.notPermitted;
+    }
+  }
+
+  Widget actionButtons(ItemStatus itemStatus) {
+    if(itemStatus == ItemStatus.borrowedByMe) {
+      return actionButtonsBorrowed();
+    } else if(itemStatus == ItemStatus.lentFromMe) {
+      return actionButtonsLent();
+    } else if(itemStatus == ItemStatus.myAvailableItem) {
+      return actionButtonsAvailable();
+    } else {
+      return Container();
+    }
+  }
+
+  Widget actionButtonsAvailable() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        ElevatedButton(
+            child: const Text('Lend'),
+            onPressed: () {
+              // TODO: Lent action
+            },
+        ),
+        ElevatedButton(
+            child: const Text('Show History'),
+            onPressed: () {
+              // TODO: Show history action
+            },
+        ),
+        ElevatedButton(
+            child: const Text('Delete'),
+            style: ElevatedButton.styleFrom(
+              primary: Colors.redAccent, // background
+              onPrimary: Colors.white, // foreground
+            ),
+            onPressed: () {
+              // TODO: Delete action
+            },
+        ),
+      ],
+    );
+  }
+
+  Widget actionButtonsLent() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        ElevatedButton(
+          child: const Text('Confirm Return'),
+          onPressed: () {
+            // TODO: Confirm return action
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget actionButtonsBorrowed() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        ElevatedButton(
+          child: const Text('Extend Time'),
+          onPressed: () {
+            // TODO: Extend time action
+          },
+        ),
+        ElevatedButton(
+          child: const Text('Transfer'),
+          onPressed: () {
+            // TODO: Transfer action
+          },
+        ),
+      ],
+    );
+  }
+
 }
