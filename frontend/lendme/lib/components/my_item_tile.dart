@@ -24,6 +24,9 @@ class _MyItemTileState extends State<MyItemTile> {
   }
 
   void _onItemTap() {
-    Navigator.of(context).pushNamed('/item_details', arguments: 'item_id');
+    final itemId = widget.item.id;
+    if(itemId != null) {
+      Navigator.of(context).pushNamed('/item_details', arguments: itemId);
+    }
   }
 }

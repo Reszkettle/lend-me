@@ -15,16 +15,15 @@ class LoadableAreaController extends ChangeNotifier {
 }
 
 class LoadableArea extends StatefulWidget {
-  const LoadableArea(
+  LoadableArea(
       {
-        required this.controller,
+        this.controller,
         required this.child,
         this.initialState = LoadableAreaState.main,
-        Key? key
       }
-    ) : super(key: key);
+    ) : super(key: UniqueKey());
 
-  final LoadableAreaController controller;
+  final LoadableAreaController? controller;
   final Widget child;
   final LoadableAreaState initialState;
 
@@ -39,12 +38,7 @@ class _LoadableAreaState extends State<LoadableArea> {
   @override
   void initState() {
     _state = widget.initialState;
-
-    widget.controller.addListener(() {
-      setState(() {
-        _state = widget.controller._state;
-      });
-    });
+    widget.controller?.addListener(_stateListener);
     super.initState();
   }
 
@@ -94,5 +88,20 @@ class _LoadableAreaState extends State<LoadableArea> {
         )
       ],
     );
+  }
+
+  void _stateListener() {
+    setState(() {
+      final controller = widget.controller;
+      if(controller != null) {
+        _state = controller._state;
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    widget.controller?.removeListener(_stateListener);
   }
 }
