@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:lendme/screens/home/home.dart';
 import 'package:lendme/screens/other/add_item.dart';
+import 'package:lendme/screens/other/item_details.dart';
 import 'package:lendme/screens/settings/change_theme.dart';
 import 'package:lendme/screens/settings/credits.dart';
 import 'package:lendme/screens/settings/edit_profile.dart';
 import 'package:lendme/screens/settings/settings.dart';
 
-Route? mainRoutes(settings) {
+Route? mainRoutes(RouteSettings settings) {
   if(settings.name == '/') {
     return MaterialPageRoute(builder: (context) {return const Home();});
   }
@@ -24,5 +25,9 @@ Route? mainRoutes(settings) {
   }
   else if(settings.name == '/add_item') {
     return MaterialPageRoute(builder: (context) {return const AddItem();});
+  }
+  else if(settings.name == '/item_details') {
+    var itemIdd = settings.arguments! as String;
+    return MaterialPageRoute(builder: (context) {return ItemDetails(itemId: itemIdd);});
   }
 }
