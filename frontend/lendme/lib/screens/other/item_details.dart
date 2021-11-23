@@ -1,16 +1,10 @@
-import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:lendme/components/loadable_area.dart';
 import 'package:lendme/models/item.dart';
 import 'package:lendme/models/user.dart';
-import 'package:lendme/services/auth_service.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:lendme/repositories/item_repository.dart';
-import 'package:lendme/exceptions/exceptions.dart';
-import 'package:lendme/components/loadable_area.dart';
-import 'package:lendme/utils/ui/error_snackbar.dart';
 import 'package:provider/provider.dart';
 
 enum ItemStatus {
@@ -86,8 +80,9 @@ class _ItemDetailsState extends State<ItemDetails> {
         if (item?.description != null)
           _description(context, item),
         const SizedBox(height: 16.0),
-        if (itemStatus != null)
-          actionButtons(itemStatus)
+        _statusPanel(item, itemStatus),
+        const SizedBox(height: 16.0),
+        _historyButton(),
       ],
     );
   }
@@ -204,6 +199,53 @@ class _ItemDetailsState extends State<ItemDetails> {
     );
   }
 
+  Widget _statusPanel(Item? item, ItemStatus? itemStatus) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Container(
+          decoration: BoxDecoration(
+              color: Theme.of(context).primaryColor,
+              borderRadius: const BorderRadius.all(Radius.circular(10))
+          ),
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  const Text("Status:",
+                    style: TextStyle(
+                      fontSize: 16,
+                    )
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _historyButton() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        ElevatedButton.icon(
+          label: const Text('Show Item History'),
+          icon: const Icon(Icons.history_rounded),
+          style: ElevatedButton.styleFrom(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+          ),
+          onPressed: () {
+            // TODO: Extend time action
+          },
+        ),
+      ],
+    );
+  }
+
   ItemStatus getItemStatus(Item item, User user) {
     if (item.lentById == user.uid) {
       return ItemStatus.borrowedByMe;
@@ -216,63 +258,4 @@ class _ItemDetailsState extends State<ItemDetails> {
     }
   }
 
-  Widget actionButtons(ItemStatus itemStatus) {
-    if (itemStatus == ItemStatus.borrowedByMe) {
-      return actionButtonsBorrowed();
-    } else if (itemStatus == ItemStatus.lentFromMe) {
-      return actionButtonsLent();
-    } else if (itemStatus == ItemStatus.myAvailableItem) {
-      return actionButtonsAvailable();
-    } else {
-      return Container();
-    }
-  }
-
-  Widget actionButtonsAvailable() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        ElevatedButton(
-          child: const Text('Lend'),
-          onPressed: () {
-            // TODO: Lent action
-          },
-        ),
-      ],
-    );
-  }
-
-  Widget actionButtonsLent() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        ElevatedButton(
-          child: const Text('Confirm Return'),
-          onPressed: () {
-            // TODO: Confirm return action
-          },
-        ),
-      ],
-    );
-  }
-
-  Widget actionButtonsBorrowed() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        ElevatedButton(
-          child: const Text('Extend Time'),
-          onPressed: () {
-            // TODO: Extend time action
-          },
-        ),
-        ElevatedButton(
-          child: const Text('Transfer'),
-          onPressed: () {
-            // TODO: Transfer action
-          },
-        ),
-      ],
-    );
-  }
 }
