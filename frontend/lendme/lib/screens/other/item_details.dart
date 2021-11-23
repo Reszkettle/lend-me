@@ -213,8 +213,8 @@ class _ItemDetailsState extends State<ItemDetails> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
-                children: [
-                  const Text("Status:",
+                children: const [
+                  Text("Status:",
                     style: TextStyle(
                       fontSize: 16,
                     )
