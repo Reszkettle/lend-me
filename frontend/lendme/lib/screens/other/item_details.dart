@@ -30,7 +30,6 @@ class ItemDetails extends StatefulWidget {
 }
 
 class _ItemDetailsState extends State<ItemDetails> {
-
   final ItemRepository _itemRepository = ItemRepository();
 
   @override
@@ -45,12 +44,12 @@ class _ItemDetailsState extends State<ItemDetails> {
     final item = itemSnap.data;
 
     final user = Provider.of<User?>(context);
-    if(user == null) {
+    if (user == null) {
       return Container();
     }
 
     ItemStatus? itemStatus;
-    if(item != null) {
+    if (item != null) {
       itemStatus = getItemStatus(item, user);
     }
 
@@ -59,84 +58,158 @@ class _ItemDetailsState extends State<ItemDetails> {
           title: Row(
             children: [
               const Text('Item: '),
-              if(item != null)
-                Text(item.title),
+              if (item != null) Text(item.title),
             ],
           ),
-          elevation: 0.0
-      ),
+          elevation: 0.0),
       body: LoadableArea(
-          initialState: item == null ? LoadableAreaState.loading : LoadableAreaState.main,
+          initialState:
+              item == null ? LoadableAreaState.loading : LoadableAreaState.main,
           child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          item?.title ?? '',
-                          style: const TextStyle(
-                            fontSize: 21,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                    if(item?.imageUrl != null)
-                      Column(
-                        children: [
-                          const SizedBox(height: 8.0),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              CachedNetworkImage(
-                                  imageUrl: item?.imageUrl ?? '',
-                                  height: 200,
-                                  fit: BoxFit.fitHeight,
-                                  errorWidget: (context, url, error) =>
-                                  const Icon(Icons.error, size: 45)
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-                    if(item?.description != null)
-                      Row(
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(height: 16.0),
-                              const Text(
-                                'Description:',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold
-                                ),
-                              ),
-                              Text(item?.description ?? ''),
-                            ],
-                          ),
-                        ],
-                      ),
-                    const SizedBox(height: 32.0,),
-                    if(itemStatus != null)
-                      actionButtons(itemStatus)
-                  ],
-                ),
-              ),
-          )
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              child: _mainLayout(context, item, itemStatus),
+            ),
+          )),
+    );
+  }
+
+  Widget _mainLayout(BuildContext context, Item? item, ItemStatus? itemStatus) {
+    return Column(
+      children: [
+        _topRow(itemStatus),
+        const SizedBox(height: 16.0),
+        _itemImage(context, item),
+        const SizedBox(height: 16.0),
+        _title(item),
+        if (item?.description != null)
+          _description(context, item),
+        const SizedBox(height: 16.0),
+        if (itemStatus != null)
+          actionButtons(itemStatus)
+      ],
+    );
+  }
+
+  Widget _topRow(ItemStatus? itemStatus) {
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        const SizedBox(height: 8),
+        Row(
+          children: [
+            _addedTime(),
+            const Spacer(),
+            if(itemStatus == ItemStatus.myAvailableItem)
+              _deleteButton(),
+          ],
+        )
+      ],
+    );
+  }
+
+  Text _addedTime() {
+    return const Text(
+      "Added 23/10/2021",
+      style: TextStyle(
+          color: Colors.grey
       ),
     );
   }
 
+  Widget _deleteButton() {
+    return IconButton(
+      icon: const Icon(
+        Icons.delete,
+        color: Colors.red,
+      ),
+      padding: const EdgeInsets.all(0.0),
+      splashRadius: 25,
+      visualDensity: const VisualDensity(
+        horizontal: VisualDensity.minimumDensity,
+        vertical: VisualDensity.minimumDensity,
+      ),
+      onPressed: () {
+
+      },
+    );
+  }
+
+  Widget _itemImage(BuildContext context, Item? item) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          decoration: BoxDecoration(
+              color: Theme.of(context).primaryColor,
+              border: Border.all(
+                color: Theme.of(context).primaryColor,
+                width: 3,
+              ),
+              borderRadius: const BorderRadius.all(
+                  Radius.circular(20))),
+          child: ClipRRect(
+              borderRadius: BorderRadius.circular(18),
+              child: item?.imageUrl != null ?
+              CachedNetworkImage(
+                  imageUrl: item?.imageUrl ?? '',
+                  height: 200,
+                  fit: BoxFit.fitHeight,
+                  errorWidget: (context, url, error) =>
+                  const Icon(Icons.error, size: 45)) :
+              Image.asset('assets/images/item_default.jpg', height: 200,)
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget _title(Item? item) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          item?.title ?? '',
+          style: const TextStyle(
+            fontSize: 23,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _description(BuildContext context, Item? item) {
+    return Column(
+      children: [
+        const SizedBox(height: 16),
+        Container(
+          decoration: BoxDecoration(
+              color: Theme.of(context).primaryColor,
+              borderRadius: const BorderRadius.all(Radius.circular(10))
+          ),
+          child: ExpansionTile(
+            title: const Text('Description'),
+            textColor: Colors.black,
+            iconColor: Colors.black,
+            collapsedIconColor: Colors.black,
+            childrenPadding: const EdgeInsets.all(0),
+            children: <Widget>[
+              ListTile(title: Text(item?.description ?? '')),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
   ItemStatus getItemStatus(Item item, User user) {
-    if(item.lentById == user.uid) {
+    if (item.lentById == user.uid) {
       return ItemStatus.borrowedByMe;
-    } else if(item.lentById == null && item.ownerId == user.uid) {
+    } else if (item.lentById == null && item.ownerId == user.uid) {
       return ItemStatus.myAvailableItem;
-    } else if(item.lentById != null && item.ownerId == user.uid) {
+    } else if (item.lentById != null && item.ownerId == user.uid) {
       return ItemStatus.lentFromMe;
     } else {
       return ItemStatus.notPermitted;
@@ -144,11 +217,11 @@ class _ItemDetailsState extends State<ItemDetails> {
   }
 
   Widget actionButtons(ItemStatus itemStatus) {
-    if(itemStatus == ItemStatus.borrowedByMe) {
+    if (itemStatus == ItemStatus.borrowedByMe) {
       return actionButtonsBorrowed();
-    } else if(itemStatus == ItemStatus.lentFromMe) {
+    } else if (itemStatus == ItemStatus.lentFromMe) {
       return actionButtonsLent();
-    } else if(itemStatus == ItemStatus.myAvailableItem) {
+    } else if (itemStatus == ItemStatus.myAvailableItem) {
       return actionButtonsAvailable();
     } else {
       return Container();
@@ -160,26 +233,10 @@ class _ItemDetailsState extends State<ItemDetails> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         ElevatedButton(
-            child: const Text('Lend'),
-            onPressed: () {
-              // TODO: Lent action
-            },
-        ),
-        ElevatedButton(
-            child: const Text('Show History'),
-            onPressed: () {
-              // TODO: Show history action
-            },
-        ),
-        ElevatedButton(
-            child: const Text('Delete'),
-            style: ElevatedButton.styleFrom(
-              primary: Colors.redAccent, // background
-              onPrimary: Colors.white, // foreground
-            ),
-            onPressed: () {
-              // TODO: Delete action
-            },
+          child: const Text('Lend'),
+          onPressed: () {
+            // TODO: Lent action
+          },
         ),
       ],
     );
@@ -218,5 +275,4 @@ class _ItemDetailsState extends State<ItemDetails> {
       ],
     );
   }
-
 }
