@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lendme/screens/home/home.dart';
 import 'package:lendme/screens/other/add_item.dart';
-import 'package:lendme/screens/other/item_details.dart';
+import 'package:lendme/screens/other/item_details/item_details.dart';
 import 'package:lendme/screens/settings/change_theme.dart';
 import 'package:lendme/screens/settings/credits.dart';
 import 'package:lendme/screens/settings/edit_profile.dart';

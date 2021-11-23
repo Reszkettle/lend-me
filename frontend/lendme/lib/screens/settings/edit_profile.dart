@@ -11,7 +11,7 @@ import 'package:lendme/models/user.dart';
 import 'package:lendme/models/user_info.dart';
 import 'package:lendme/repositories/user_repository.dart';
 import 'package:lendme/services/auth_service.dart';
-import 'package:lendme/utils/ui/error_snackbar.dart';
+import 'package:lendme/utils/error_snackbar.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 

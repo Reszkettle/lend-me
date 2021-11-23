@@ -5,6 +5,7 @@ import 'package:lendme/components/loadable_area.dart';
 import 'package:lendme/models/item.dart';
 import 'package:lendme/models/user.dart';
 import 'package:lendme/repositories/item_repository.dart';
+import 'package:lendme/screens/other/item_details/panel_available.dart';
 import 'package:provider/provider.dart';
 
 enum ItemStatus {
@@ -213,12 +214,8 @@ class _ItemDetailsState extends State<ItemDetails> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
-                children: const [
-                  Text("Status:",
-                    style: TextStyle(
-                      fontSize: 16,
-                    )
-                  ),
+                children: [
+                  _getProperStatusPanel(item, itemStatus),
                 ],
               ),
             ],
@@ -226,6 +223,17 @@ class _ItemDetailsState extends State<ItemDetails> {
         ),
       ],
     );
+  }
+
+  Widget _getProperStatusPanel(Item? item, ItemStatus? itemStatus) {
+    if(item == null || itemStatus == null) {
+      return Container();
+  }
+    if(itemStatus == ItemStatus.myAvailableItem) {
+      return PanelAvailable(itemId: item.id!);
+    } else {
+      return Container();
+    }
   }
 
   Widget _historyButton() {

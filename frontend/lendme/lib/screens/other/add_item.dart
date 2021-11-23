@@ -8,7 +8,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:lendme/repositories/item_repository.dart';
 import 'package:lendme/exceptions/exceptions.dart';
 import 'package:lendme/components/loadable_area.dart';
-import 'package:lendme/utils/ui/error_snackbar.dart';
+import 'package:lendme/utils/error_snackbar.dart';
 
 class AddItem extends StatefulWidget {
   const AddItem({Key? key}) : super(key: key);
