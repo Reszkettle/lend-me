@@ -23,7 +23,7 @@ class Item {
 
   static Item fromMap(Map<String, dynamic> json) {
     return Item(
-        id: json['id'] as String,
+        id: json['id'] as String?,
         ownerId: json['ownerId'] as String,
         createdAt: json['createdAt'] as Timestamp,
         description: json['description'] as String?,

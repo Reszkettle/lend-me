@@ -18,7 +18,6 @@ class RentalsList extends StatefulWidget {
 class _RentalsListState extends State<RentalsList> {
   @override
   Widget build(BuildContext context) {
-    // add fetching current user
     return StreamBuilder<List<ItemRental>>(
         stream: widget.rentalsStream,
         builder: (context, rentalSnapshots) {
@@ -29,8 +28,8 @@ class _RentalsListState extends State<RentalsList> {
             padding: const EdgeInsets.all(9),
             itemBuilder: (context, index) {
               return widget.rentalOrigin == RentalOrigin.borrowed
-                  ? BorrowedItemTile(itemRental: rentalSnapshots.data![index]!)
-                  : LentItemTile(itemRental: rentalSnapshots.data![index]!);
+                  ? BorrowedItemTile(itemRental: rentalSnapshots.data![index])
+                  : LentItemTile(itemRental: rentalSnapshots.data![index]);
             },
             separatorBuilder: (BuildContext context, int index) {
               return const SizedBox(height: 9);

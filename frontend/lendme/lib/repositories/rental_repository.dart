@@ -1,7 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
-import 'package:lendme/exceptions/exceptions.dart';
 import 'package:lendme/models/item.dart';
 import 'package:lendme/models/item_rental.dart';
 import 'package:lendme/models/rental.dart';
@@ -22,7 +20,7 @@ class RentalRepository {
               Stream<Rental> rental = Stream.value(queryDocSnapshot)
                   .map<Rental>((document) => Rental.fromMap(document.data()));
               Stream<Item> item = firestore
-                  .collection('item')
+                  .collection('items')
                   .doc(queryDocSnapshot.data()['itemId'])
                   .snapshots()
                   .map<Item>((document) => Item.fromMap(document.data()!));
@@ -47,7 +45,7 @@ class RentalRepository {
               Stream<Rental> rental = Stream.value(queryDocSnapshot)
                   .map<Rental>((document) => Rental.fromMap(document.data()));
               Stream<Item> item = firestore
-                  .collection('item')
+                  .collection('items')
                   .doc(queryDocSnapshot.data()['itemId'])
                   .snapshots()
                   .map<Item>((document) => Item.fromMap(document.data()!));
