@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:lendme/models/item.dart';
 
 class PanelAvailable extends StatelessWidget {
-  const PanelAvailable({required this.itemId, Key? key}) : super(key: key);
+  const PanelAvailable({required this.item, Key? key}) : super(key: key);
 
-  final String itemId;
+  final Item item;
 
   @override
   Widget build(BuildContext context) {

@@ -1,4 +1,3 @@
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:lendme/components/loadable_area.dart';
@@ -6,12 +5,14 @@ import 'package:lendme/models/item.dart';
 import 'package:lendme/models/user.dart';
 import 'package:lendme/repositories/item_repository.dart';
 import 'package:lendme/screens/other/item_details/panel_available.dart';
+import 'package:lendme/screens/other/item_details/panel_borrowed.dart';
+import 'package:lendme/screens/other/item_details/panel_lent.dart';
 import 'package:provider/provider.dart';
 
 enum ItemStatus {
-  lentFromMe,
-  borrowedByMe,
-  myAvailableItem,
+  lent,
+  borrowed,
+  available,
   notPermitted,
 }
 
@@ -78,8 +79,7 @@ class _ItemDetailsState extends State<ItemDetails> {
         _itemImage(context, item),
         const SizedBox(height: 16.0),
         _title(item),
-        if (item?.description != null)
-          _description(context, item),
+        if (item?.description != null) _description(context, item),
         const SizedBox(height: 16.0),
         _statusPanel(item, itemStatus),
         const SizedBox(height: 16.0),
@@ -97,8 +97,7 @@ class _ItemDetailsState extends State<ItemDetails> {
           children: [
             _addedTime(),
             const Spacer(),
-            if(itemStatus == ItemStatus.myAvailableItem)
-              _deleteButton(),
+            if (itemStatus == ItemStatus.available) _deleteButton(),
           ],
         )
       ],
@@ -108,9 +107,7 @@ class _ItemDetailsState extends State<ItemDetails> {
   Text _addedTime() {
     return const Text(
       "Added 23/10/2021",
-      style: TextStyle(
-          color: Colors.grey
-      ),
+      style: TextStyle(color: Colors.grey),
     );
   }
 
@@ -126,9 +123,7 @@ class _ItemDetailsState extends State<ItemDetails> {
         horizontal: VisualDensity.minimumDensity,
         vertical: VisualDensity.minimumDensity,
       ),
-      onPressed: () {
-
-      },
+      onPressed: () {},
     );
   }
 
@@ -143,19 +138,20 @@ class _ItemDetailsState extends State<ItemDetails> {
                 color: Theme.of(context).primaryColor,
                 width: 3,
               ),
-              borderRadius: const BorderRadius.all(
-                  Radius.circular(20))),
+              borderRadius: const BorderRadius.all(Radius.circular(20))),
           child: ClipRRect(
               borderRadius: BorderRadius.circular(18),
-              child: item?.imageUrl != null ?
-              CachedNetworkImage(
-                  imageUrl: item?.imageUrl ?? '',
-                  height: 200,
-                  fit: BoxFit.fitHeight,
-                  errorWidget: (context, url, error) =>
-                  const Icon(Icons.error, size: 45)) :
-              Image.asset('assets/images/item_default.jpg', height: 200,)
-          ),
+              child: item?.imageUrl != null
+                  ? CachedNetworkImage(
+                      imageUrl: item?.imageUrl ?? '',
+                      height: 200,
+                      fit: BoxFit.fitHeight,
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error, size: 45))
+                  : Image.asset(
+                      'assets/images/item_default.jpg',
+                      height: 200,
+                    )),
         )
       ],
     );
@@ -183,8 +179,7 @@ class _ItemDetailsState extends State<ItemDetails> {
         Container(
           decoration: BoxDecoration(
               color: Theme.of(context).primaryColor,
-              borderRadius: const BorderRadius.all(Radius.circular(10))
-          ),
+              borderRadius: const BorderRadius.all(Radius.circular(10))),
           child: ExpansionTile(
             title: const Text('Description'),
             textColor: Colors.black,
@@ -207,30 +202,24 @@ class _ItemDetailsState extends State<ItemDetails> {
         Container(
           decoration: BoxDecoration(
               color: Theme.of(context).primaryColor,
-              borderRadius: const BorderRadius.all(Radius.circular(10))
-          ),
+              borderRadius: const BorderRadius.all(Radius.circular(10))),
           padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  _getProperStatusPanel(item, itemStatus),
-                ],
-              ),
-            ],
-          ),
+          child: _getProperStatusPanel(item, itemStatus),
         ),
       ],
     );
   }
 
   Widget _getProperStatusPanel(Item? item, ItemStatus? itemStatus) {
-    if(item == null || itemStatus == null) {
+    if (item == null || itemStatus == null) {
       return Container();
-  }
-    if(itemStatus == ItemStatus.myAvailableItem) {
-      return PanelAvailable(itemId: item.id!);
+    }
+    if (itemStatus == ItemStatus.available) {
+      return PanelAvailable(item: item);
+    } else if (itemStatus == ItemStatus.lent) {
+      return PanelLent(item: item);
+    } else if (itemStatus == ItemStatus.borrowed) {
+      return PanelBorrowed(item: item);
     } else {
       return Container();
     }
@@ -244,7 +233,8 @@ class _ItemDetailsState extends State<ItemDetails> {
           label: const Text('Show Item History'),
           icon: const Icon(Icons.history_rounded),
           style: ElevatedButton.styleFrom(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
           ),
           onPressed: () {
             // TODO: Extend time action
@@ -256,14 +246,13 @@ class _ItemDetailsState extends State<ItemDetails> {
 
   ItemStatus getItemStatus(Item item, User user) {
     if (item.lentById == user.uid) {
-      return ItemStatus.borrowedByMe;
+      return ItemStatus.borrowed;
     } else if (item.lentById == null && item.ownerId == user.uid) {
-      return ItemStatus.myAvailableItem;
+      return ItemStatus.available;
     } else if (item.lentById != null && item.ownerId == user.uid) {
-      return ItemStatus.lentFromMe;
+      return ItemStatus.lent;
     } else {
       return ItemStatus.notPermitted;
     }
   }
-
 }
