@@ -78,7 +78,8 @@ class _ItemDetailsState extends State<ItemDetails> {
         const SizedBox(height: 16.0),
         _statusPanel(item, itemStatus),
         const SizedBox(height: 16.0),
-        _historyButton(),
+        if(itemStatus != ItemStatus.borrowed)
+          _historyButton(),
       ],
     );
   }
