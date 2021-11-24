@@ -52,7 +52,7 @@ class _BaseTileState extends State<BaseTile> {
                     : widget.icon),
             title: Text(widget.title,
                 style: TextStyle(
-                    fontSize: widget.thirdLine != null ? 14 : 20,
+                    fontSize: 20,
                     fontFamily: fontFamily,
                     fontWeight: FontWeight.bold,
                     color: textColor)),
