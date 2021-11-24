@@ -43,7 +43,7 @@ class PanelAvailable extends StatelessWidget {
         SizedBox(
           width: 300,
           child: OutlinedButton.icon(
-            label: const Text('Lent'),
+            label: const Text('Lend'),
             icon: const Icon(Icons.qr_code_rounded),
             style: OutlinedButton.styleFrom(
                 primary: Colors.white,

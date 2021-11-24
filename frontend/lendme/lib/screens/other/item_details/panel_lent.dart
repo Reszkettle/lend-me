@@ -40,7 +40,7 @@ class PanelLent extends StatelessWidget {
         const SizedBox(height: 16),
         _lentTimes(rental),
         const SizedBox(height: 16),
-        UserView(userId: rental.borrowerId, showContactButtons: true),
+        UserView(userId: rental.borrowerId),
         const SizedBox(height: 16),
         _buttons(context, rental),
       ],
@@ -54,8 +54,8 @@ class PanelLent extends StatelessWidget {
         Row(
           children: [
             const SizedBox(
-              width: 100,
-              child: Text('Lent from: '),
+              width: 60,
+              child: Text('From: '),
             ),
             Text(dateTimeFormat.format(rental.startDate.toDate())),
           ],
@@ -63,8 +63,8 @@ class PanelLent extends StatelessWidget {
         Row(
           children: [
             const SizedBox(
-              width: 100,
-              child: Text('Lent to: '),
+              width: 60,
+              child: Text('To: '),
             ),
             Text(dateTimeFormat.format(rental.endDate.toDate())),
           ],

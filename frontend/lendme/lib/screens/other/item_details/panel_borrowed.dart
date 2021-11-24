@@ -39,7 +39,7 @@ class PanelBorrowed extends StatelessWidget {
         const SizedBox(height: 16),
         _borrowTimes(rental),
         const SizedBox(height: 16),
-        UserView(userId: rental.ownerId, showContactButtons: true),
+        UserView(userId: rental.ownerId),
         const SizedBox(height: 16),
         _buttons(),
       ],
@@ -53,8 +53,8 @@ class PanelBorrowed extends StatelessWidget {
         Row(
           children: [
             const SizedBox(
-              width: 100,
-              child: Text('Borrow from: '),
+              width: 60,
+              child: Text('From: '),
             ),
             Text(dateTimeFormat.format(rental.startDate.toDate())),
           ],
@@ -62,8 +62,8 @@ class PanelBorrowed extends StatelessWidget {
         Row(
           children: [
             const SizedBox(
-              width: 100,
-              child: Text('Borrow to: '),
+              width: 60,
+              child: Text('To: '),
             ),
             Text(dateTimeFormat.format(rental.endDate.toDate())),
           ],

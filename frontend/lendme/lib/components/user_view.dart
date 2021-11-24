@@ -4,15 +4,12 @@ import 'package:lendme/models/user.dart';
 import 'package:lendme/repositories/user_repository.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-// Horizontal widget representing particular user
-// Contains avatar, name, surname, phone, email
-// and optionally buttons to call and send email
+
 class UserView extends StatelessWidget {
-  UserView({required this.userId, this.showContactButtons = false, Key? key})
+  UserView({required this.userId, Key? key})
       : super(key: key);
 
   final String userId;
-  final bool showContactButtons;
   final UserRepository _userRepository = UserRepository();
 
   @override
@@ -26,16 +23,6 @@ class UserView extends StatelessWidget {
   Widget _buildFromUser(BuildContext context, AsyncSnapshot<User?> rentalSnap) {
     final user = rentalSnap.data;
 
-    return Column(
-      children: [
-        _userCard(user),
-        if (showContactButtons)
-          _contactButtons(user),
-      ],
-    );
-  }
-
-  Widget _userCard(User? user) {
     return Container(
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
@@ -46,14 +33,15 @@ class UserView extends StatelessWidget {
         ),
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Avatar(url: user?.avatarUrl),
+              Avatar(url: user?.avatarUrl, size: 60.0),
               const SizedBox(width: 16),
-              _userInfo(user)
+              _rightColumn(user)
             ],
           ),
         ],
@@ -61,26 +49,19 @@ class UserView extends StatelessWidget {
     );
   }
 
-  Widget _userInfo(User? user) {
+  Widget _rightColumn(User? user) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        RichText(
-          text: TextSpan(
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
-              children: [
-                TextSpan(text: user?.info.firstName ?? ''),
-                const TextSpan(text: ' '),
-                TextSpan(text: user?.info.lastName ?? '')
-              ]),
-        ),
-        Text(user?.info.email ?? ''),
+        Text(
+          '${user?.info.firstName ?? ''} ${user?.info.lastName ?? ''}',
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          )),
         const SizedBox(height: 2),
-        Text(user?.info.phone ?? ''),
+        _contactButtons(user),
       ],
     );
   }
