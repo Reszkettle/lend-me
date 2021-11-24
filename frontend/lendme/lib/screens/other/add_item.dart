@@ -31,7 +31,7 @@ class _AddItemState extends State<AddItem> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Lend me'),
+          title: const Text('Add item'),
         ),
         body: LoadableArea(
           controller: _loadableAreaController,
