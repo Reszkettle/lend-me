@@ -81,7 +81,7 @@ class _ItemDetailsState extends State<ItemDetails> {
         _statusPanel(item, itemStatus),
         const SizedBox(height: 16.0),
         if(itemStatus != ItemStatus.borrowed)
-          _historyButton(),
+          _historyButton(item),
       ],
     );
   }
@@ -227,7 +227,7 @@ class _ItemDetailsState extends State<ItemDetails> {
     }
   }
 
-  Widget _historyButton() {
+  Widget _historyButton(Item? item) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -239,7 +239,9 @@ class _ItemDetailsState extends State<ItemDetails> {
                 borderRadius: BorderRadius.circular(10.0)),
           ),
           onPressed: () {
-            // TODO: Extend time action
+            if(item != null) {
+              Navigator.of(context).pushNamed('/history', arguments: item.id!);
+            }
           },
         ),
       ],
