@@ -10,6 +10,7 @@ class ItemRepository {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   final FirebaseStorage storage = FirebaseStorage.instance;
   var uuid = Uuid();
+
   Stream<List<Item?>> getStreamOfCurrentUserItems() {
     return firestore
         .collection('items')
@@ -18,14 +19,46 @@ class ItemRepository {
         .map((snapshot) {
       return snapshot.docs.map((queryDocumentSnapshot) {
         Map<String, dynamic> map = queryDocumentSnapshot.data();
+        map['id'] = queryDocumentSnapshot.id;
+        return Item.fromMap(map);
+      }).toList();
+    });
+  }
+
+  Stream<List<Item?>> getStreamOfLentItems() {
+    return firestore
+        .collection('items')
+        .where('ownerId', isEqualTo: firebaseAuth.currentUser!.uid)
+        .where('lentById', isNull: false)
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((queryDocumentSnapshot) {
+        Map<String, dynamic> map = queryDocumentSnapshot.data();
+        map['id'] = queryDocumentSnapshot.id;
+        return Item.fromMap(map);
+      }).toList();
+    });
+  }
+
+  Stream<List<Item?>> getStreamOfBorrowedItems() {
+    return firestore
+        .collection('items')
+        .where('available', isEqualTo: false)
+        .where('lentById', isEqualTo: firebaseAuth.currentUser!.uid)
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((queryDocumentSnapshot) {
+        Map<String, dynamic> map = queryDocumentSnapshot.data();
+        map['id'] = queryDocumentSnapshot.id;
         return Item.fromMap(map);
       }).toList();
     });
   }
 
   Future addItem(Item item) async {
-    try{
-      CollectionReference items = FirebaseFirestore.instance.collection('items');
+    try {
+      CollectionReference items =
+          FirebaseFirestore.instance.collection('items');
       await items.add(item.toMap());
     } catch (e) {
       throw UnknownException();
@@ -36,7 +69,10 @@ class ItemRepository {
     String downloadUrl;
     if (localImagePath != null) {
       try {
-        var snapshot = await storage.ref().child('images/items/' + uuid.v4()).putFile(localImagePath);
+        var snapshot = await storage
+            .ref()
+            .child('images/items/' + uuid.v4())
+            .putFile(localImagePath);
         downloadUrl = await snapshot.ref.getDownloadURL();
       } catch (e) {
         throw UnknownException();
