@@ -21,6 +21,15 @@ class _LentItemTileState extends State<LentItemTile> {
         title: widget.itemRental.item.title,
         subtitle: "Lent by: " + widget.itemRental.rental.borrowerFullname!,
         thirdLine: capitalize(startDate),
-        imageUrl: widget.itemRental.item.imageUrl);
+        imageUrl: widget.itemRental.item.imageUrl,
+        onTap: _onItemTap,
+    );
+  }
+
+  void _onItemTap() {
+    final itemId = widget.itemRental.item.id;
+    if(itemId != null) {
+      Navigator.of(context).pushNamed('/item_details', arguments: itemId);
+    }
   }
 }
