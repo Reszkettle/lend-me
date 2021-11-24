@@ -4,6 +4,7 @@ import 'package:lendme/components/user_view.dart';
 import 'package:lendme/models/item.dart';
 import 'package:lendme/models/rental.dart';
 import 'package:lendme/repositories/rental_repository.dart';
+import 'package:lendme/utils/constants.dart';
 
 class PanelLent extends StatelessWidget {
   PanelLent({required this.item, Key? key}) : super(key: key);
@@ -33,16 +34,42 @@ class PanelLent extends StatelessWidget {
   Column _mainLayout(Rental rental) {
     return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      _header(rental),
-      const SizedBox(height: 16),
-      _LentTimes(rental),
-      const SizedBox(height: 16),
-      UserView(userId: rental.borrowerId, showContactButtons: true),
-      const SizedBox(height: 16),
-      _buttons(),
-    ],
-  );
+      children: [
+        _header(rental),
+        const SizedBox(height: 16),
+        _lentTimes(rental),
+        const SizedBox(height: 16),
+        UserView(userId: rental.borrowerId, showContactButtons: true),
+        const SizedBox(height: 16),
+        _buttons(),
+      ],
+    );
+  }
+
+  Widget _lentTimes(Rental rental) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            const SizedBox(
+              width: 100,
+              child: Text('Lent from: '),
+            ),
+            Text(dateTimeFormat.format(rental.startDate.toDate())),
+          ],
+        ),
+        Row(
+          children: [
+            const SizedBox(
+              width: 100,
+              child: Text('Lent to: '),
+            ),
+            Text(dateTimeFormat.format(rental.endDate.toDate())),
+          ],
+        ),
+      ],
+    );
   }
 
   Widget _header(Rental rental) {
@@ -83,42 +110,5 @@ class PanelLent extends StatelessWidget {
           )
         ],
       );
-  }
-}
-
-class _LentTimes extends StatelessWidget {
-  _LentTimes(this.rental, {Key? key}) : super(key: key);
-
-  final Rental rental;
-  final DateFormat format = DateFormat('yyyy/MM/dd kk:mm');
-
-  @override
-  Widget build(BuildContext context) {
-    String start = format.format(rental.startDate.toDate());
-    String end = format.format(rental.endDate.toDate());
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            const SizedBox(
-              width: 100,
-              child: Text('Lent from: '),
-            ),
-            Text(start),
-          ],
-        ),
-        Row(
-          children: [
-            const SizedBox(
-              width: 100,
-              child: Text('Lent to: '),
-            ),
-            Text(end),
-          ],
-        ),
-      ],
-    );
   }
 }

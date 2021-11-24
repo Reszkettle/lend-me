@@ -4,6 +4,7 @@ import 'package:lendme/components/user_view.dart';
 import 'package:lendme/models/item.dart';
 import 'package:lendme/models/rental.dart';
 import 'package:lendme/repositories/rental_repository.dart';
+import 'package:lendme/utils/constants.dart';
 
 class PanelBorrowed extends StatelessWidget {
   PanelBorrowed({required this.item, Key? key}) : super(key: key);
@@ -36,11 +37,37 @@ class PanelBorrowed extends StatelessWidget {
       children: [
         _header(rental),
         const SizedBox(height: 16),
-        _BorrowTimes(rental),
+        _borrowTimes(rental),
         const SizedBox(height: 16),
         UserView(userId: rental.ownerId, showContactButtons: true),
         const SizedBox(height: 16),
         _buttons(),
+      ],
+    );
+  }
+
+  Widget _borrowTimes(Rental rental) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            const SizedBox(
+              width: 100,
+              child: Text('Borrow from: '),
+            ),
+            Text(dateTimeFormat.format(rental.startDate.toDate())),
+          ],
+        ),
+        Row(
+          children: [
+            const SizedBox(
+              width: 100,
+              child: Text('Borrow to: '),
+            ),
+            Text(dateTimeFormat.format(rental.endDate.toDate())),
+          ],
+        ),
       ],
     );
   }
@@ -92,43 +119,6 @@ class PanelBorrowed extends StatelessWidget {
           onPressed: () {
             // TODO: Transfer loan
           },
-        ),
-      ],
-    );
-  }
-}
-
-class _BorrowTimes extends StatelessWidget {
-  _BorrowTimes(this.rental, {Key? key}) : super(key: key);
-
-  final Rental rental;
-  final DateFormat format = DateFormat('yyyy/MM/dd kk:mm');
-
-  @override
-  Widget build(BuildContext context) {
-    String start = format.format(rental.startDate.toDate());
-    String end = format.format(rental.endDate.toDate());
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            const SizedBox(
-              width: 100,
-              child: Text('Borrow from: '),
-            ),
-            Text(start),
-          ],
-        ),
-        Row(
-          children: [
-            const SizedBox(
-              width: 100,
-              child: Text('Borrow to: '),
-            ),
-            Text(end),
-          ],
         ),
       ],
     );

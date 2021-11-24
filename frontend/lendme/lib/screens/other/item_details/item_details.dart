@@ -7,6 +7,7 @@ import 'package:lendme/repositories/item_repository.dart';
 import 'package:lendme/screens/other/item_details/panel_available.dart';
 import 'package:lendme/screens/other/item_details/panel_borrowed.dart';
 import 'package:lendme/screens/other/item_details/panel_lent.dart';
+import 'package:lendme/utils/constants.dart';
 import 'package:lendme/utils/enums.dart';
 import 'package:provider/provider.dart';
 import 'dart:developer';
@@ -69,7 +70,7 @@ class _ItemDetailsState extends State<ItemDetails> {
   Widget _mainLayout(BuildContext context, Item? item, ItemStatus? itemStatus) {
     return Column(
       children: [
-        _topRow(itemStatus),
+        _topRow(item, itemStatus),
         const SizedBox(height: 16.0),
         _itemImage(context, item),
         const SizedBox(height: 16.0),
@@ -84,14 +85,14 @@ class _ItemDetailsState extends State<ItemDetails> {
     );
   }
 
-  Widget _topRow(ItemStatus? itemStatus) {
+  Widget _topRow(Item? item, ItemStatus? itemStatus) {
     return Column(
       mainAxisSize: MainAxisSize.max,
       children: [
         const SizedBox(height: 8),
         Row(
           children: [
-            _addedTime(),
+            _timeWhenAdded(item),
             const Spacer(),
             if (itemStatus == ItemStatus.available) _deleteButton(),
           ],
@@ -100,10 +101,13 @@ class _ItemDetailsState extends State<ItemDetails> {
     );
   }
 
-  Text _addedTime() {
-    return const Text(
-      "Added 23/10/2021",
-      style: TextStyle(color: Colors.grey),
+  Widget _timeWhenAdded(Item? item) {
+    if(item == null) {
+      return Container();
+    }
+    return Text(
+      'Added: ' + dateTimeFormat.format(item.createdAt!.toDate()),
+      style: const TextStyle(color: Colors.grey),
     );
   }
 
@@ -251,5 +255,15 @@ class _ItemDetailsState extends State<ItemDetails> {
       log('Inconsistent database state! unable to conclude item ${item.id} status!');
       return ItemStatus.available;  // Shouldn't happen, but lets say it's available!
     }
+  }
+}
+
+
+class _TimeWhenAdded extends StatelessWidget {
+  const _TimeWhenAdded({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
   }
 }
