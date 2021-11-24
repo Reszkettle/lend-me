@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:lendme/components/confirm_dialog.dart';
 import 'package:lendme/components/user_view.dart';
 import 'package:lendme/models/item.dart';
 import 'package:lendme/models/rental.dart';
@@ -27,11 +28,11 @@ class PanelLent extends StatelessWidget {
     if(rental == null) {
       return Container();
     } else {
-      return _mainLayout(rental);
+      return _mainLayout(context, rental);
     }
   }
 
-  Column _mainLayout(Rental rental) {
+  Column _mainLayout(BuildContext context, Rental rental) {
     return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -41,7 +42,7 @@ class PanelLent extends StatelessWidget {
         const SizedBox(height: 16),
         UserView(userId: rental.borrowerId, showContactButtons: true),
         const SizedBox(height: 16),
-        _buttons(),
+        _buttons(context, rental),
       ],
     );
   }
@@ -92,7 +93,7 @@ class PanelLent extends StatelessWidget {
     );
   }
 
-  Row _buttons() {
+  Row _buttons(BuildContext context, Rental rental) {
     return Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -105,10 +106,22 @@ class PanelLent extends StatelessWidget {
               side: const BorderSide(width: 1.0, color: Colors.white)
             ),
             onPressed: () {
-              // TODO: Confirm return
+              _showConfirmReturnEnsureDialog(context, rental);
             },
           )
         ],
       );
+  }
+
+  void _showConfirmReturnEnsureDialog(BuildContext context, Rental rental) {
+    showConfirmDialog(
+        context: context,
+        message: 'Are you sure that this item was returned?',
+        yesCallback: () => _confirmReturn(item, rental)
+    );
+  }
+
+  void _confirmReturn(Item item, Rental rental) {
+    // TODO: Confirm return
   }
 }
