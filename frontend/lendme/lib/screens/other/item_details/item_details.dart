@@ -7,14 +7,9 @@ import 'package:lendme/repositories/item_repository.dart';
 import 'package:lendme/screens/other/item_details/panel_available.dart';
 import 'package:lendme/screens/other/item_details/panel_borrowed.dart';
 import 'package:lendme/screens/other/item_details/panel_lent.dart';
+import 'package:lendme/utils/enums.dart';
 import 'package:provider/provider.dart';
-
-enum ItemStatus {
-  lent,
-  borrowed,
-  available,
-  notPermitted,
-}
+import 'dart:developer';
 
 class ItemDetails extends StatefulWidget {
   const ItemDetails({required this.itemId, Key? key}) : super(key: key);
@@ -252,7 +247,8 @@ class _ItemDetailsState extends State<ItemDetails> {
     } else if (item.lentById != null && item.ownerId == user.uid) {
       return ItemStatus.lent;
     } else {
-      return ItemStatus.notPermitted;
+      log('Inconsistent database state! unable to conclude item ${item.id} status!');
+      return ItemStatus.available;  // Shouldn't happen, but lets say it's available!
     }
   }
 }

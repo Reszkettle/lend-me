@@ -18,7 +18,6 @@ class RentalRepository {
         .where('itemId', isEqualTo: itemId)
         .snapshots()
         .map((snapshot) {
-      print('mapping');
       if (snapshot.docs.isEmpty) {
         return null;
       }
