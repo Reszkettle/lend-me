@@ -12,7 +12,10 @@ class History extends StatelessWidget {
           title: const Text('Item history'),
           elevation: 0.0
       ),
-      body: Container(),
+      body: Padding(
+        padding: const EdgeInsets.all(32.0),
+        child: Text("History of item $itemId"),
+      ),
     );
   }
 }

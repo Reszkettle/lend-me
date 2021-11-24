@@ -47,8 +47,10 @@ class _ProxyState extends State<Proxy> {
     final user = Provider.of<User?>(context);
     _Screen newScreen = _getScreen(uid, user);
     if (_screen != newScreen) {
-      _screen = newScreen;
-      _screenView = _screenViews[_screen]!;
+      setState(() {
+        _screen = newScreen;
+        _screenView = _screenViews[_screen]!;
+      });
     }
     return _screenView;
   }

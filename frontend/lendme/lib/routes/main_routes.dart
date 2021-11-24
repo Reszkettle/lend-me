@@ -7,13 +7,14 @@ import 'package:lendme/screens/settings/change_theme.dart';
 import 'package:lendme/screens/settings/credits.dart';
 import 'package:lendme/screens/settings/edit_profile.dart';
 import 'package:lendme/screens/settings/settings.dart';
+import 'package:page_transition/page_transition.dart';
 
 Route? mainRoutes(RouteSettings settings) {
   if(settings.name == '/') {
     return MaterialPageRoute(builder: (context) {return const Home();});
   }
   else if(settings.name == '/settings') {
-    return MaterialPageRoute(builder: (context) {return Settings();});
+    return PageTransition(child: Settings(), type: PageTransitionType.rightToLeft);
   }
   else if(settings.name == '/edit_profile') {
     return MaterialPageRoute(builder: (context) {return const EditProfile();});
@@ -33,6 +34,7 @@ Route? mainRoutes(RouteSettings settings) {
   }
   else if(settings.name == '/history') {
     var itemId = settings.arguments! as String;
-    return MaterialPageRoute(builder: (context) {return History(itemId: itemId);});
+    return PageTransition(child: History(itemId: itemId), type: PageTransitionType.fade);
+    // return MaterialPageRoute(builder: (context) {return History(itemId: itemId);});
   }
 }
