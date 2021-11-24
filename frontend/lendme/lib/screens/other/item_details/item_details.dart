@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:lendme/components/confirm_dialog.dart';
 import 'package:lendme/components/loadable_area.dart';
 import 'package:lendme/models/item.dart';
 import 'package:lendme/models/user.dart';
@@ -92,7 +93,7 @@ class _ItemDetailsState extends State<ItemDetails> {
       children: [
         _timeWhenAdded(item),
         const Spacer(),
-        if (itemStatus == ItemStatus.available) _deleteButton(),
+        if (itemStatus == ItemStatus.available) _deleteButton(item),
       ],
     );
   }
@@ -112,7 +113,7 @@ class _ItemDetailsState extends State<ItemDetails> {
     );
   }
 
-  Widget _deleteButton() {
+  Widget _deleteButton(Item? item) {
     return TextButton.icon(
       icon: const Icon(
         Icons.delete,
@@ -124,9 +125,23 @@ class _ItemDetailsState extends State<ItemDetails> {
       ),
       // splashRadius: 25,
       onPressed: () {
-        // TODO: Delete item
+        if(item != null) {
+          _showDeleteConfirmDialog(item);
+        }
       },
     );
+  }
+
+  void _showDeleteConfirmDialog(Item item) {
+    showConfirmDialog(
+      context: context,
+      message: 'Are you sure that you want to delete this item?',
+      yesCallback: () => _deleteItem(item)
+    );
+  }
+
+  void _deleteItem(Item item) {
+    // TODO: Delete item
   }
 
   Widget _itemImage(BuildContext context, Item? item) {
@@ -259,15 +274,5 @@ class _ItemDetailsState extends State<ItemDetails> {
       log('Inconsistent database state! unable to conclude item ${item.id} status!');
       return ItemStatus.available;  // Shouldn't happen, but lets say it's available!
     }
-  }
-}
-
-
-class _TimeWhenAdded extends StatelessWidget {
-  const _TimeWhenAdded({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container();
   }
 }

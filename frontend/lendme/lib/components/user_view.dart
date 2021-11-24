@@ -4,6 +4,9 @@ import 'package:lendme/models/user.dart';
 import 'package:lendme/repositories/user_repository.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+// Horizontal widget representing particular user
+// Contains avatar, name, surname, phone, email
+// and optionally buttons to call and send email
 class UserView extends StatelessWidget {
   UserView({required this.userId, this.showContactButtons = false, Key? key})
       : super(key: key);
