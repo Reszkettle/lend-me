@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lendme/models/item.dart';
 import 'package:lendme/screens/home/home.dart';
 import 'package:lendme/screens/other/add_item.dart';
 import 'package:lendme/screens/other/history.dart';
@@ -33,8 +34,8 @@ Route? mainRoutes(RouteSettings settings) {
     return MaterialPageRoute(builder: (context) {return ItemDetails(itemId: itemId);});
   }
   else if(settings.name == '/history') {
-    var itemId = settings.arguments! as String;
-    return PageTransition(child: History(itemId: itemId), type: PageTransitionType.fade);
+    var item = settings.arguments! as Item;
+    return PageTransition(child: History(item: item), type: PageTransitionType.fade);
     // return MaterialPageRoute(builder: (context) {return History(itemId: itemId);});
   }
 }

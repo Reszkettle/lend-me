@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:lendme/models/item.dart';
 
 class History extends StatelessWidget {
-  const History({required this.itemId, Key? key}) : super(key: key);
+  const History({required this.item, Key? key}) : super(key: key);
 
-  final String itemId;
+  final Item item;
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +15,7 @@ class History extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(32.0),
-        child: Text("History of item $itemId"),
+        child: Text("History of item ${item.id}"),
       ),
     );
   }

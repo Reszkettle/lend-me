@@ -240,7 +240,7 @@ class _ItemDetailsState extends State<ItemDetails> {
           ),
           onPressed: () {
             if(item != null) {
-              Navigator.of(context).pushNamed('/history', arguments: item.id!);
+              Navigator.of(context).pushNamed('/history', arguments: item);
             }
           },
         ),
