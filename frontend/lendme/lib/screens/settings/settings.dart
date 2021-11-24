@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lendme/components/confirm_dialog.dart';
 import 'package:lendme/services/auth_service.dart';
 
 class Settings extends StatelessWidget {
@@ -37,9 +38,7 @@ class Settings extends StatelessWidget {
                   child: const Text('Credits')
               ),
               ElevatedButton(
-                  onPressed: () {
-                    _auth.signOut();
-                  },
+                  onPressed: () => _showLogOutConfirmDialog(context),
                   child: const Text('Log out')
               ),
             ],
@@ -47,4 +46,13 @@ class Settings extends StatelessWidget {
         ),
     );
   }
+
+  void _showLogOutConfirmDialog(BuildContext context) {
+    showConfirmDialog(
+        context: context,
+        message: 'Are you sure that you want to log out?',
+        yesCallback: () => _auth.signOut()
+    );
+  }
+
 }
