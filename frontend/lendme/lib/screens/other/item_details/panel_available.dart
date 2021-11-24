@@ -8,16 +8,16 @@ class PanelAvailable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _mainLayout();
+    return _mainLayout(context);
   }
 
-  Column _mainLayout() {
+  Column _mainLayout(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _header(),
         const SizedBox(height: 16),
-        _buttons(),
+        _buttons(context),
       ],
     );
   }
@@ -35,7 +35,7 @@ class PanelAvailable extends StatelessWidget {
     );
   }
 
-  Row _buttons() {
+  Row _buttons(BuildContext context) {
     return Row(
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -49,7 +49,7 @@ class PanelAvailable extends StatelessWidget {
                 primary: Colors.white,
                 side: const BorderSide(width: 1.0, color: Colors.white)),
             onPressed: () {
-              // TODO: Lent
+              Navigator.of(context).pushNamed('/lent_qr', arguments: item);
             },
           ),
         )
