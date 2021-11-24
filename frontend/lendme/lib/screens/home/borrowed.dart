@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:lendme/components/rentals_list.dart';
+import 'package:lendme/repositories/rental_repository.dart';
+import 'package:lendme/services/auth_service.dart';
+import 'package:lendme/utils/enums.dart';
 
 class Borrowed extends StatefulWidget {
   const Borrowed({Key? key}) : super(key: key);
@@ -10,14 +14,11 @@ class Borrowed extends StatefulWidget {
 class _BorrowedState extends State<Borrowed> {
   @override
   Widget build(BuildContext context) {
-    return Stack(children: const [
-      Placeholder(),
-      Center(
-          child: Text("Borrowed",
-              style: TextStyle(
-                  fontSize: 40,
-                  color: Colors.grey,
-                  backgroundColor: Colors.white)))
-    ]);
+    return Scaffold(
+        floatingActionButton: null,
+        body: RentalsList(
+            rentalsStream: RentalRepository()
+                .getStreamOfBorrowedItemsWithRentals(AuthService().getUid()!),
+            rentalOrigin: RentalOrigin.borrowed));
   }
 }
