@@ -60,7 +60,7 @@ class _ItemDetailsState extends State<ItemDetails> {
           child: SingleChildScrollView(
             child: Padding(
               padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                  const EdgeInsets.only(left: 16.0, right: 16.0, top: 0, bottom: 16.0),
               child: _mainLayout(context, item, itemStatus),
             ),
           )),
@@ -69,6 +69,7 @@ class _ItemDetailsState extends State<ItemDetails> {
 
   Widget _mainLayout(BuildContext context, Item? item, ItemStatus? itemStatus) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _topRow(item, itemStatus),
         const SizedBox(height: 16.0),
@@ -86,17 +87,12 @@ class _ItemDetailsState extends State<ItemDetails> {
   }
 
   Widget _topRow(Item? item, ItemStatus? itemStatus) {
-    return Column(
-      mainAxisSize: MainAxisSize.max,
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 8),
-        Row(
-          children: [
-            _timeWhenAdded(item),
-            const Spacer(),
-            if (itemStatus == ItemStatus.available) _deleteButton(),
-          ],
-        )
+        _timeWhenAdded(item),
+        const Spacer(),
+        if (itemStatus == ItemStatus.available) _deleteButton(),
       ],
     );
   }
@@ -105,25 +101,31 @@ class _ItemDetailsState extends State<ItemDetails> {
     if(item == null) {
       return Container();
     }
-    return Text(
-      'Added: ' + dateTimeFormat.format(item.createdAt!.toDate()),
-      style: const TextStyle(color: Colors.grey),
+    return Column(
+      children: [
+        const SizedBox(height: 16),
+        Text(
+          'Added: ' + dateTimeFormat.format(item.createdAt!.toDate()),
+          style: const TextStyle(color: Colors.grey),
+        ),
+      ],
     );
   }
 
   Widget _deleteButton() {
-    return IconButton(
+    return TextButton.icon(
       icon: const Icon(
         Icons.delete,
         color: Colors.red,
       ),
-      padding: const EdgeInsets.all(0.0),
-      splashRadius: 25,
-      visualDensity: const VisualDensity(
-        horizontal: VisualDensity.minimumDensity,
-        vertical: VisualDensity.minimumDensity,
+      label: const Text('Delete'),
+      style: TextButton.styleFrom(
+        primary: Colors.red,
       ),
-      onPressed: () {},
+      // splashRadius: 25,
+      onPressed: () {
+        // TODO: Delete item
+      },
     );
   }
 
