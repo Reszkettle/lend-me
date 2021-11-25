@@ -1,3 +1,3 @@
 import 'package:intl/intl.dart';
 
-final dateTimeFormat = DateFormat('yyyy/MM/dd kk:mm');
+final dateTimeFormat = DateFormat('dd.MM.yyyy kk:mm');
