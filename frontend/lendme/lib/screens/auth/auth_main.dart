@@ -5,7 +5,7 @@ import 'package:flutter_signin_button/button_view.dart';
 import 'package:lendme/components/loadable_area.dart';
 import 'package:lendme/exceptions/exceptions.dart';
 import 'package:lendme/services/auth_service.dart';
-import 'package:lendme/utils/ui/error_snackbar.dart';
+import 'package:lendme/utils/error_snackbar.dart';
 
 class AuthMain extends StatefulWidget {
   const AuthMain({Key? key}) : super(key: key);

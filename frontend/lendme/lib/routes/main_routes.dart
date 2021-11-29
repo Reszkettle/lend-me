@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:lendme/models/item.dart';
 import 'package:lendme/screens/home/home.dart';
 import 'package:lendme/screens/other/add_item.dart';
+import 'package:lendme/screens/other/history.dart';
+import 'package:lendme/screens/other/item_details/item_details.dart';
+import 'package:lendme/screens/other/lent_qr.dart';
 import 'package:lendme/screens/settings/change_theme.dart';
 import 'package:lendme/screens/settings/credits.dart';
 import 'package:lendme/screens/settings/edit_profile.dart';
 import 'package:lendme/screens/settings/settings.dart';
+import 'package:page_transition/page_transition.dart';
 
-Route? mainRoutes(settings) {
+Route? mainRoutes(RouteSettings settings) {
   if(settings.name == '/') {
     return MaterialPageRoute(builder: (context) {return const Home();});
   }
   else if(settings.name == '/settings') {
-    return MaterialPageRoute(builder: (context) {return Settings();});
+    return PageTransition(child: Settings(), type: PageTransitionType.rightToLeft);
   }
   else if(settings.name == '/edit_profile') {
     return MaterialPageRoute(builder: (context) {return const EditProfile();});
@@ -24,5 +29,17 @@ Route? mainRoutes(settings) {
   }
   else if(settings.name == '/add_item') {
     return MaterialPageRoute(builder: (context) {return const AddItem();});
+  }
+  else if(settings.name == '/item_details') {
+    var itemId = settings.arguments! as String;
+    return MaterialPageRoute(builder: (context) {return ItemDetails(itemId: itemId);});
+  }
+  else if(settings.name == '/history') {
+    var item = settings.arguments! as Item;
+    return PageTransition(child: History(item: item), type: PageTransitionType.fade);
+  }
+  else if(settings.name == '/lent_qr') {
+    var item = settings.arguments! as Item;
+    return PageTransition(child: LentQr(item: item), type: PageTransitionType.fade);
   }
 }

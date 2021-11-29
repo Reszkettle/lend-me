@@ -18,6 +18,15 @@ class _MyItemTileState extends State<MyItemTile> {
     return BaseTile(
         title: widget.item.title,
         subtitle: "Added: " + timeAdded,
-        imageUrl: widget.item.imageUrl);
+        imageUrl: widget.item.imageUrl,
+        onTap: _onItemTap,
+    );
+  }
+
+  void _onItemTap() {
+    final itemId = widget.item.id;
+    if(itemId != null) {
+      Navigator.of(context).pushNamed('/item_details', arguments: itemId);
+    }
   }
 }

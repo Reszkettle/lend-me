@@ -7,6 +7,7 @@ class BaseTile extends StatefulWidget {
   final String? thirdLine;
   final String? imageUrl;
   final Icon? icon;
+  final GestureTapCallback? onTap;
 
   const BaseTile(
       {Key? key,
@@ -14,7 +15,8 @@ class BaseTile extends StatefulWidget {
       required this.subtitle,
       this.thirdLine,
       this.imageUrl,
-      this.icon})
+      this.icon,
+      this.onTap})
       : super(key: key);
 
   @override
@@ -22,6 +24,7 @@ class BaseTile extends StatefulWidget {
 }
 
 class _BaseTileState extends State<BaseTile> {
+
   final Color textColor = const Color(0xFF000000);
   final Color borderColor = const Color(0xFF6200EE);
   final String fontFamily = 'Roboto';
@@ -69,6 +72,7 @@ class _BaseTileState extends State<BaseTile> {
                 ])),
             contentPadding:
                 const EdgeInsets.symmetric(vertical: 8, horizontal: 5),
-            horizontalTitleGap: 13));
+            horizontalTitleGap: 13,
+            onTap: widget.onTap));
   }
 }

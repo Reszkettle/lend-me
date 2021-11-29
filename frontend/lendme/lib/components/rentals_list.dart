@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lendme/components/borrowed_item_tile.dart';
 import 'package:lendme/components/lent_item_tile.dart';
 import 'package:lendme/models/item_rental.dart';
-import 'package:lendme/utils/ui/enums.dart';
+import 'package:lendme/utils/enums.dart';
 
 class RentalsList extends StatefulWidget {
   const RentalsList(

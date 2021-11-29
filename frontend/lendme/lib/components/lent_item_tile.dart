@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lendme/components/base_tile.dart';
 import 'package:lendme/models/item_rental.dart';
-import 'package:lendme/utils/ui/string_utils.dart';
+import 'package:lendme/utils/string_utils.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class LentItemTile extends StatefulWidget {
@@ -21,6 +21,15 @@ class _LentItemTileState extends State<LentItemTile> {
         title: widget.itemRental.item.title,
         subtitle: "Lent by: " + widget.itemRental.rental.borrowerFullname!,
         thirdLine: capitalize(startDate),
-        imageUrl: widget.itemRental.item.imageUrl);
+        imageUrl: widget.itemRental.item.imageUrl,
+        onTap: _onItemTap,
+    );
+  }
+
+  void _onItemTap() {
+    final itemId = widget.itemRental.item.id;
+    if(itemId != null) {
+      Navigator.of(context).pushNamed('/item_details', arguments: itemId);
+    }
   }
 }

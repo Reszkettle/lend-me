@@ -1,13 +1,34 @@
+import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:lendme/models/rental.dart';
 import 'package:lendme/models/item.dart';
 import 'package:lendme/models/item_rental.dart';
-import 'package:lendme/models/rental.dart';
 import 'package:rxdart/rxdart.dart';
+
 
 class RentalRepository {
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  Stream<Rental?> getItemActiveRentalStream(String itemId) {
+    return firestore
+        .collection('rentals')
+        .where('status', isEqualTo: 'pending')
+        .where('itemId', isEqualTo: itemId)
+        .snapshots()
+        .map((snapshot) {
+      if (snapshot.docs.isEmpty) {
+        return null;
+      }
+      if (snapshot.docs.length > 1) {
+        log('Inconsistent database state! Item $itemId is rented multiple times!');
+      }
+      final data = snapshot.docs[0].data();
+      final rental = Rental.fromMap(data);
+      return rental;
+    });
+  }
 
   Stream<List<ItemRental>> getStreamOfBorrowedItemsWithRentals(String uid) {
     return firestore
@@ -17,16 +38,16 @@ class RentalRepository {
         .orderBy('startDate', descending: true)
         .snapshots()
         .map((querySnapshot) => querySnapshot.docs.map((queryDocSnapshot) {
-              Stream<Rental> rental = Stream.value(queryDocSnapshot)
-                  .map<Rental>((document) => Rental.fromMap(document.data()));
-              Stream<Item> item = firestore
-                  .collection('items')
-                  .doc(queryDocSnapshot.data()['itemId'])
-                  .snapshots()
-                  .map<Item>((document) => Item.fromMap(document.data()!));
-              return Rx.combineLatest2<Item, Rental, ItemRental>(
-                  item, rental, (item, rental) => ItemRental(item, rental));
-            }))
+      Stream<Rental> rental = Stream.value(queryDocSnapshot)
+          .map<Rental>((document) => Rental.fromMap(document.data()));
+      Stream<Item> item = firestore
+          .collection('items')
+          .doc(queryDocSnapshot.data()['itemId'])
+          .snapshots()
+          .map<Item>((document) => Item.fromMap(document.data()!, document.id)!);
+      return Rx.combineLatest2<Item, Rental, ItemRental>(
+          item, rental, (item, rental) => ItemRental(item, rental));
+    }))
         .switchMap((observables) {
       return observables.isNotEmpty
           ? Rx.combineLatestList(observables)
@@ -42,20 +63,21 @@ class RentalRepository {
         .orderBy('startDate', descending: true)
         .snapshots()
         .map((querySnapshot) => querySnapshot.docs.map((queryDocSnapshot) {
-              Stream<Rental> rental = Stream.value(queryDocSnapshot)
-                  .map<Rental>((document) => Rental.fromMap(document.data()));
-              Stream<Item> item = firestore
-                  .collection('items')
-                  .doc(queryDocSnapshot.data()['itemId'])
-                  .snapshots()
-                  .map<Item>((document) => Item.fromMap(document.data()!));
-              return Rx.combineLatest2<Item, Rental, ItemRental>(
-                  item, rental, (item, rental) => ItemRental(item, rental));
-            }))
+      Stream<Rental> rental = Stream.value(queryDocSnapshot)
+          .map<Rental>((document) => Rental.fromMap(document.data()));
+      Stream<Item> item = firestore
+          .collection('items')
+          .doc(queryDocSnapshot.data()['itemId'])
+          .snapshots()
+          .map<Item>((document) => Item.fromMap(document.data()!, document.id)!);
+      return Rx.combineLatest2<Item, Rental, ItemRental>(
+          item, rental, (item, rental) => ItemRental(item, rental));
+    }))
         .switchMap((observables) {
       return observables.isNotEmpty
           ? Rx.combineLatestList(observables)
           : Stream.value([]);
     });
   }
+
 }

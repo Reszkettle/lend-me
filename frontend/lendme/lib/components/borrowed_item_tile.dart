@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lendme/models/item_rental.dart';
-import 'package:lendme/utils/ui/string_utils.dart';
+import 'package:lendme/utils/string_utils.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'base_tile.dart';
 
@@ -22,6 +22,15 @@ class _BorrowedItemTileState extends State<BorrowedItemTile> {
         title: widget.itemRental.item.title,
         subtitle: "Borrowed from: " + widget.itemRental.rental.ownerFullname!,
         thirdLine: capitalize(startDate),
-        imageUrl: widget.itemRental.item.imageUrl);
+        imageUrl: widget.itemRental.item.imageUrl,
+        onTap: _onItemTap,
+    );
+  }
+
+  void _onItemTap() {
+    final itemId = widget.itemRental.item.id;
+    if(itemId != null) {
+      Navigator.of(context).pushNamed('/item_details', arguments: itemId);
+    }
   }
 }

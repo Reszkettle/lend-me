@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lendme/components/rentals_list.dart';
 import 'package:lendme/repositories/rental_repository.dart';
 import 'package:lendme/services/auth_service.dart';
-import 'package:lendme/utils/ui/enums.dart';
+import 'package:lendme/utils/enums.dart';
 
 class Borrowed extends StatefulWidget {
   const Borrowed({Key? key}) : super(key: key);

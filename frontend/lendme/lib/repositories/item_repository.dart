@@ -6,10 +6,12 @@ import 'package:lendme/exceptions/exceptions.dart';
 import 'package:uuid/uuid.dart';
 
 class ItemRepository {
+
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   final FirebaseStorage storage = FirebaseStorage.instance;
-  var uuid = Uuid();
+
+  var uuid = const Uuid();
 
   Stream<List<Item?>> getStreamOfCurrentUserItems() {
     return firestore
@@ -19,8 +21,7 @@ class ItemRepository {
         .map((snapshot) {
       return snapshot.docs.map((queryDocumentSnapshot) {
         Map<String, dynamic> map = queryDocumentSnapshot.data();
-        map['id'] = queryDocumentSnapshot.id;
-        return Item.fromMap(map);
+        return Item.fromMap(map, queryDocumentSnapshot.id);
       }).toList();
     });
   }
@@ -34,8 +35,7 @@ class ItemRepository {
         .map((snapshot) {
       return snapshot.docs.map((queryDocumentSnapshot) {
         Map<String, dynamic> map = queryDocumentSnapshot.data();
-        map['id'] = queryDocumentSnapshot.id;
-        return Item.fromMap(map);
+        return Item.fromMap(map, queryDocumentSnapshot.id);
       }).toList();
     });
   }
@@ -50,9 +50,19 @@ class ItemRepository {
       return snapshot.docs.map((queryDocumentSnapshot) {
         Map<String, dynamic> map = queryDocumentSnapshot.data();
         map['id'] = queryDocumentSnapshot.id;
-        return Item.fromMap(map);
+        return Item.fromMap(map, queryDocumentSnapshot.id);
       }).toList();
     });
+  }
+
+  Stream<Item?> getItemStream(String itemId) {
+    return firestore
+        .collection('items')
+        .doc(itemId)
+        .snapshots()
+        .map((snapshot) {
+          return Item.fromMap(snapshot.data(), snapshot.id);
+      });
   }
 
   Future addItem(Item item) async {
@@ -77,7 +87,6 @@ class ItemRepository {
       } catch (e) {
         throw UnknownException();
       }
-
       return downloadUrl;
     }
   }
