@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:lendme/repositories/user_repository.dart';
 import 'package:lendme/screens/proxy.dart';
 import 'package:lendme/services/auth_service.dart';
 import 'package:provider/provider.dart';
 import 'package:stream_transform/stream_transform.dart';
-
+import 'package:lendme/services/theme_service.dart';
+import 'package:lendme/utils/themes.dart';
 import 'models/user.dart';
 
 
@@ -39,9 +41,11 @@ class _LentMeAppState extends State<LentMeApp> {
     return StreamProvider<User?>.value(
         value: _userStream,
         initialData: null,
-        child: MaterialApp(
+        child: GetMaterialApp(
           title: 'Lend Me',
-          theme: ThemeData(primarySwatch: Colors.blue),
+          theme: Themes.light,
+          darkTheme: Themes.dark,
+          themeMode: ThemeService().theme,
           home: const Proxy(),
         )
     );
