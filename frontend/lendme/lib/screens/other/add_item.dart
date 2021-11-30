@@ -9,6 +9,8 @@ import 'package:lendme/repositories/item_repository.dart';
 import 'package:lendme/exceptions/exceptions.dart';
 import 'package:lendme/components/loadable_area.dart';
 import 'package:lendme/utils/error_snackbar.dart';
+import 'package:lendme/utils/constants.dart';
+import 'package:get_storage/get_storage.dart';
 
 class AddItem extends StatefulWidget {
   const AddItem({Key? key}) : super(key: key);
@@ -24,11 +26,14 @@ class _AddItemState extends State<AddItem> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final LoadableAreaController _loadableAreaController = LoadableAreaController();
+  final _box = GetStorage();
+  final _key = 'isDarkMode';
   var imageUrl = null;
   var localImage;
 
   @override
   Widget build(BuildContext context) {
+    bool isDark() => _box.read(_key) ?? false;
     return Scaffold(
         appBar: AppBar(
           title: const Text('Add item'),
@@ -51,13 +56,12 @@ class _AddItemState extends State<AddItem> {
                             controller: _titleController,
                             onChanged: (val) => {_formKey.currentState!.validate()},
                             validator: validateTitle,
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                                 enabledBorder: OutlineInputBorder(
                                   // width: 0.0 produces a thin "hairline" border
-                                  borderSide: BorderSide(color: Colors.blueAccent, width: 2.0),
+                                  borderSide: BorderSide(color: isDark() ? darkBorderColor : lightBorderColor, width: 2.0),
                                 ),
                                 border: OutlineInputBorder(),
-                                labelStyle: TextStyle(color: Colors.blueAccent),
                                 labelText: 'Title'),
                           ),
                         ),
@@ -70,14 +74,13 @@ class _AddItemState extends State<AddItem> {
                           child: TextFormField(
                             controller: _descriptionController,
                             onChanged: (val) => {_formKey.currentState!.validate()},
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                                 enabledBorder: OutlineInputBorder(
                                   // width: 0.0 produces a thin "hairline" border
-                                  borderSide: BorderSide(color: Colors.blueAccent, width: 2.0),
+                                  borderSide: BorderSide(color: isDark() ? darkBorderColor : lightBorderColor, width: 2.0),
                                 ),
                                 alignLabelWithHint: true,
                                 border: OutlineInputBorder(),
-                                labelStyle: TextStyle(fontSize: 17.0, color: Colors.blueAccent),
                                 labelText: 'Description'),
                             keyboardType: TextInputType.multiline,
                             minLines: 5,
@@ -116,7 +119,6 @@ class _AddItemState extends State<AddItem> {
                           children: [
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                  primary: Colors.blueAccent,
                                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                                   textStyle: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
                               onPressed: () => getLocalImage(),
@@ -134,7 +136,6 @@ class _AddItemState extends State<AddItem> {
                           children: [
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                  primary: Colors.blueAccent,
                                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                                   textStyle: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
                               onPressed: () async {

@@ -2,11 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 final dateTimeFormat = DateFormat('dd.MM.yyyy kk:mm');
-const iconColor = Color(0xFFBB86FC); //kolor dolnych ikonek
-const floatingButtonColor = Color(0xFF03DAC6); //floating button
-const backgroundColor = Color(0xFF404040); //tło
-// const kContentColorDarkTheme = Color(0xFFF5FCF9);
-// const kWarninngColor = Color(0xFFF3BB1C);
-// const kErrorColor = Color(0xFFF03738);
 
-const kDefaultPadding = 20.0;
+// consts for base_tile.dart
+const tileTextColor = Colors.white;
+const tileBorderColor = Color(0xFFAB89E7); //kolor dolnych ikonek
+
+
+// text colors
+const textColorWhite = Colors.white;
+
+//Light mode only:
+const lightBorderColor = Color(0xFF3F7CE5);
+const lightAppBarColor = Colors.lightBlue;
+//Dark mode only:
+const darkPrimaryColor = Color(0xFF8443E7);
+const darkSecondaryColor = Color(0xFF06A4C7); //floating button etc
+const darkBackgroundColor = Color(0xFF404040); //tło
+const darkBorderColor = Color(0xFF8443E7);
