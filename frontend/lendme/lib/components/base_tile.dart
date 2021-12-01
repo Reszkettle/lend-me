@@ -58,8 +58,7 @@ class _BaseTileState extends State<BaseTile> {
                 style: TextStyle(
                     fontSize: 20,
                     fontFamily: fontFamily,
-                    fontWeight: FontWeight.bold,
-                    color: textColor)),
+                    fontWeight: FontWeight.bold)),
             subtitle: Padding(
                 padding: const EdgeInsets.only(top: 10),
                 child: Wrap(direction: Axis.vertical, spacing: 5, children: [
