@@ -4,6 +4,8 @@ import 'borrowed.dart';
 import 'items.dart';
 import 'lent.dart';
 import 'notifications.dart';
+import 'package:lendme/screens/other/scanner/scanner.dart';
+
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -87,7 +89,9 @@ class _HomeState extends State<Home> {
       return FloatingActionButton(
           child: const Icon(Icons.qr_code_scanner_rounded),
           onPressed: () {
-
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => const QRViewScreen(),
+            ));
           }
       );
     }

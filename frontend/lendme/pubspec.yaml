@@ -56,6 +56,9 @@ dependencies:
   intl: ^0.17.0
   rxdart: ^0.27.3
   page_transition: ^2.0.4
+  qr_flutter: ^4.0.0
+  qr_code_scanner: ^0.6.1
+
 
 dev_dependencies:
   flutter_test:

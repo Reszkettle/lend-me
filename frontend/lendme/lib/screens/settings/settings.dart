@@ -7,8 +7,10 @@ class Settings extends StatelessWidget {
 
   final AuthService _auth = AuthService();
 
+
   @override
   Widget build(BuildContext context) {
+    var width = MediaQuery.of(context).size.width;
     return Scaffold(
         appBar: AppBar(
             title: const Text('Settings'),
@@ -19,27 +21,116 @@ class Settings extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pushNamed('/edit_profile');
-                  },
-                  child: const Text('Edit profile')
+              RaisedButton(
+              onPressed: () => {
+              Navigator.of(context).pushNamed('/edit_profile'),
+        },
+            // padding: const EdgeInsets.all(0.0),
+            child: Container(
+              padding: const EdgeInsets.only(top: 20.0, bottom: 20 ),
+              child:Row(
+                children: [
+                  Align(
+                      alignment: Alignment.centerLeft,
+                      child: Icon(Icons.mode_edit)
+                  ),
+                  Container(
+                      margin: const EdgeInsets.only( left: 10.0 ),
+                      child: Text(
+                        "Edit profile",
+                        style: TextStyle( fontSize: 20.0),
+                      )
+                  )
+                ],
               ),
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pushNamed('/change_theme');
+            ),
+            shape: new RoundedRectangleBorder(
+                borderRadius: new BorderRadius.circular(5.0)
+            )
+        ),
+
+              const SizedBox(height: 16.0),
+              RaisedButton(
+                  onPressed: () => {
+                  Navigator.of(context).pushNamed('/change_theme'),
                   },
-                  child: const Text('Change theme')
+                  // padding: const EdgeInsets.all(0.0),
+                  child: Container(
+                    padding: const EdgeInsets.only(top: 20.0, bottom: 20 ),
+                    child:Row(
+                      children: [
+                        Align(
+                            alignment: Alignment.centerLeft,
+                            child: Icon(Icons.mode_night)
+                        ),
+                        Container(
+                            margin: const EdgeInsets.only( left: 10.0 ),
+                            child: Text(
+                              "Change theme",
+                              style: TextStyle( fontSize: 20.0),
+                            )
+                        )
+                      ],
+                    ),
+                  ),
+                  shape: new RoundedRectangleBorder(
+                      borderRadius: new BorderRadius.circular(5.0)
+                  )
               ),
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pushNamed('/credits');
+              const SizedBox(height: 16.0),
+
+              RaisedButton(
+                  onPressed: () => {
+                  Navigator.of(context).pushNamed('/credits'),
                   },
-                  child: const Text('Credits')
+                  // padding: const EdgeInsets.all(0.0),
+                  child: Container(
+                    padding: const EdgeInsets.only(top: 20.0, bottom: 20 ),
+                    child:Row(
+                      children: [
+                        Align(
+                            alignment: Alignment.centerLeft,
+                            child: Icon(Icons.favorite)
+                        ),
+                        Container(
+                            margin: const EdgeInsets.only( left: 10.0 ),
+                            child: Text(
+                              "Credits",
+                              style: TextStyle( fontSize: 20.0),
+                            )
+                        )
+                      ],
+                    ),
+                  ),
+                  shape: new RoundedRectangleBorder(
+                      borderRadius: new BorderRadius.circular(5.0)
+                  )
               ),
-              ElevatedButton(
+              const SizedBox(height: 16.0),
+              RaisedButton(
                   onPressed: () => _showLogOutConfirmDialog(context),
-                  child: const Text('Log out')
+                  // padding: const EdgeInsets.all(0.0),
+                  child: Container(
+                    padding: const EdgeInsets.only(top: 20.0, bottom: 20 ),
+                    child:Row(
+                      children: [
+                        Align(
+                            alignment: Alignment.centerLeft,
+                            child: Icon(Icons.logout)
+                        ),
+                        Container(
+                            margin: const EdgeInsets.only( left: 10.0 ),
+                            child: Text(
+                              "Log out",
+                              style: TextStyle( fontSize: 20.0),
+                            )
+                        )
+                      ],
+                    ),
+                  ),
+                  shape: new RoundedRectangleBorder(
+                      borderRadius: new BorderRadius.circular(5.0)
+                  )
               ),
             ],
           ),
