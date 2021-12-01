@@ -22,6 +22,7 @@ class Item {
       this.imageUrl
   });
 
+
   static Item? fromMap(Map<String, dynamic>? json, String? id) {
     if(json == null) {
       return null;
@@ -46,4 +47,7 @@ class Item {
       'imageUrl': imageUrl
     };
   }
+
+
+
 }
