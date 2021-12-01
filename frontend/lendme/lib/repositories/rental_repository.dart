@@ -6,6 +6,7 @@ import 'package:lendme/models/item.dart';
 import 'package:lendme/models/item_rental.dart';
 import 'package:rxdart/rxdart.dart';
 
+import 'package:lendme/exceptions/exceptions.dart';
 
 class RentalRepository {
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
@@ -79,5 +80,17 @@ class RentalRepository {
           : Stream.value([]);
     });
   }
+
+
+  Future addBorrow(Rental rental) async {
+    try {
+      CollectionReference rentals =
+      FirebaseFirestore.instance.collection('rentals');
+      await rentals.add(rental.toMap());
+    } catch (e) {
+      throw UnknownException();
+    }
+  }
+
 
 }

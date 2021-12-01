@@ -58,6 +58,8 @@ dependencies:
   page_transition: ^2.0.4
   get: ^4.5.1
   get_storage: ^2.0.3
+  qr_flutter: ^4.0.0
+  qr_code_scanner: ^0.6.1
 
 dev_dependencies:
   flutter_test:

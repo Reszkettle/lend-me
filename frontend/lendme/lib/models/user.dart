@@ -24,4 +24,6 @@ class User {
         info: UserInfo.fromMap(map['info'])
     );
   }
+
+
 }
