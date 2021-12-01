@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:lendme/utils/constants.dart';
 import 'borrowed.dart';
 import 'items.dart';
 import 'lent.dart';
@@ -50,7 +50,6 @@ class _HomeState extends State<Home> {
         ),
         floatingActionButton: _floatingActionButton(),
         bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: Colors.blue,
           type: BottomNavigationBarType.fixed,
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(

@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:lendme/utils/constants.dart';
 
 class BaseTile extends StatefulWidget {
   final String title;
@@ -25,8 +26,8 @@ class BaseTile extends StatefulWidget {
 
 class _BaseTileState extends State<BaseTile> {
 
-  final Color textColor = const Color(0xFF000000);
-  final Color borderColor = const Color(0xFF6200EE);
+  final Color textColor = tileTextColor;
+  final Color borderColor = tileBorderColor;
   final String fontFamily = 'Roboto';
   final BorderRadius tileBorderRadius = BorderRadius.circular(6);
   final BorderRadius imageBorderRadius = BorderRadius.circular(12);
@@ -34,7 +35,7 @@ class _BaseTileState extends State<BaseTile> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-        splashColor: const Color(0x557D00EE),
+        splashColor: darkPrimaryColor,
         onTap: () {},
         child: ListTile(
             shape: RoundedRectangleBorder(
