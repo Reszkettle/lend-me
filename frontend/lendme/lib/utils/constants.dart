@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-final dateTimeFormat = DateFormat('dd.MM.yyyy kk:mm');
+final dateTimeFormat = DateFormat('dd.MM.yyyy');
 
 // consts for base_tile.dart
 const tileTextColor = Colors.white;
