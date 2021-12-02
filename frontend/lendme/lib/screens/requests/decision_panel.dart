@@ -79,7 +79,7 @@ class RequestDecisionPanel extends StatelessWidget {
               ),
             ],
           ),
-          if(message != null)
+          if(message != null && message.isNotEmpty)
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
