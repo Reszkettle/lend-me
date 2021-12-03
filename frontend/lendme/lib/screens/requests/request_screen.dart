@@ -60,7 +60,7 @@ class RequestScreen extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _userPanel(context, request),
+        _userPanel(context, request, user),
         _itemPanel(context, request),
         _requestPanel(context, request, user, item),
         if(item != null)
@@ -79,7 +79,7 @@ class RequestScreen extends StatelessWidget {
     }
   }
 
-  Widget _userPanel(BuildContext context, Request request) {
+  Widget _userPanel(BuildContext context, Request request, User user) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -96,11 +96,32 @@ class RequestScreen extends StatelessWidget {
               color: Theme.of(context).primaryColor,
               borderRadius: const BorderRadius.all(Radius.circular(10))),
           padding: const EdgeInsets.all(16),
-          child: UserView(userId: request.issuerId),
+          child: _userPanelContent(context, request, user),
         ),
         const SizedBox(height: 16),
       ],
     );
+  }
+
+  Widget _userPanelContent(BuildContext context, Request request, User user) {
+    final requestedBeMe = request.issuerId == user.uid;
+    if(requestedBeMe) {
+      return Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: const [
+          Text(
+            'You',
+            style: TextStyle(
+              fontSize: 40,
+            ),
+          ),
+        ],
+      );
+    }
+    else {
+      return UserView(userId: request.issuerId);
+    }
   }
 
   Widget _itemPanel(BuildContext context, Request request) {
