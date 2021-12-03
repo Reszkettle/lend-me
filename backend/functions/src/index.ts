@@ -2,6 +2,11 @@ import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 
 admin.initializeApp();
+
+// Include functions from requests.ts
+import * as requests from "./requests";
+exports.requests = requests;
+
 const firestore = admin.firestore();
 
 exports.onUserCreated = functions.auth.user().onCreate(async (user) => {
