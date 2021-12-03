@@ -10,16 +10,32 @@ class Notifications extends StatefulWidget {
 class _NotificationsState extends State<Notifications> {
   @override
   Widget build(BuildContext context) {
-    return Stack(
-        children: const [
-          Placeholder(),
-          Center(child:
-          Text(
-              "Notifications",
-              style: TextStyle(fontSize: 40, color: Colors.grey, backgroundColor: Colors.white)
-          )
-          )
-        ]
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const Text("Sample requests:"),
+          const SizedBox(height: 16,),
+          ElevatedButton(
+              onPressed: () => showNotification("borrow"),
+              child: const Text('Borrow request')
+          ),
+          ElevatedButton(
+              onPressed: () => showNotification("transfer"),
+              child: const Text('Transfer request')
+          ),
+          ElevatedButton(
+              onPressed: () => showNotification("extend"),
+              child: const Text('Extend request')
+          ),
+        ],
+      ),
     );
   }
+
+  void showNotification(String id) {
+    Navigator.of(context).pushNamed('/request', arguments: id);
+  }
+
 }

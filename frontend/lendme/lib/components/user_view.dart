@@ -40,8 +40,7 @@ class UserView extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Avatar(url: user?.avatarUrl, size: 60.0),
-              const SizedBox(width: 16),
-              _rightColumn(user)
+              Expanded(child: _rightColumn(user))
             ],
           ),
         ],
@@ -53,6 +52,7 @@ class UserView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
+        const SizedBox(height: 8),
         Text(
           '${user?.info.firstName ?? ''} ${user?.info.lastName ?? ''}',
           style: const TextStyle(
@@ -69,6 +69,7 @@ class UserView extends StatelessWidget {
   Row _contactButtons(User? user) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
       children: [
         TextButton.icon(
           label: const Text('Call'),
