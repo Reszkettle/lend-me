@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:lendme/exceptions/exceptions.dart';
 import 'package:lendme/models/request.dart';
 import 'package:lendme/models/user.dart';
-import 'package:lendme/screens/requests/handlers.dart';
+import 'package:lendme/repositories/request_repository.dart';
 
 class AcceptRejectPanel extends StatefulWidget {
   AcceptRejectPanel({required this.request, required this.user, Key? key}):
@@ -12,7 +12,7 @@ class AcceptRejectPanel extends StatefulWidget {
   final Request request;
   final User user;
 
-  final RequestHandlers handlers = RequestHandlers();
+  final RequestRepository _requestRepository = RequestRepository();
 
   @override
   _AcceptRejectPanelState createState() => _AcceptRejectPanelState();
@@ -21,10 +21,21 @@ class AcceptRejectPanel extends StatefulWidget {
 class _AcceptRejectPanelState extends State<AcceptRejectPanel> {
 
   bool _pendingOperation = false;
+  TextEditingController _messageController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    return _pendingOperation ? _spinner() : _buttons();
+    return _pendingOperation ? _spinner() : _mainLayout();
+  }
+
+  Widget _mainLayout() {
+    return Column(
+      children: [
+        _buttons(),
+        const SizedBox(height: 12),
+        _messageArea(),
+      ],
+    );
   }
 
   Widget _buttons() {
@@ -61,6 +72,31 @@ class _AcceptRejectPanelState extends State<AcceptRejectPanel> {
     );
   }
 
+  Widget _messageArea() {
+    return Row(
+      children: <Widget>[
+        Flexible(
+          child: TextFormField(
+            controller: _messageController,
+            decoration: InputDecoration(
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Theme.of(context).primaryColor,
+                    width: 2.0,
+                  ),
+                ),
+                alignLabelWithHint: true,
+                border: const OutlineInputBorder(),
+                labelText: 'Justification'),
+            keyboardType: TextInputType.multiline,
+            minLines: 3,
+            maxLines: null,
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _spinner() {
     return Row(
       mainAxisSize: MainAxisSize.max,
@@ -78,10 +114,9 @@ class _AcceptRejectPanelState extends State<AcceptRejectPanel> {
   Future _performAccept() async {
     try {
       setPending(true);
-      await widget.handlers.accept(widget.request, widget.user);
-      Navigator.of(context).pop();
-    } catch (e) {
-      // Do nothing, no time to implement
+      await widget._requestRepository.acceptRequest(widget.request.id!, _getMessage());
+    } on DomainException catch (e) {
+      print("Error: ${e.message}");
     } finally {
       setPending(false);
     }
@@ -90,13 +125,17 @@ class _AcceptRejectPanelState extends State<AcceptRejectPanel> {
   Future _performReject() async {
     try {
       setPending(true);
-      await widget.handlers.reject(widget.request, widget.user);
-      Navigator.of(context).pop();
-    } catch (e) {
-      // Do nothing, no time to implement
+      await widget._requestRepository.rejectRequest(widget.request.id!, _getMessage());
+    } on DomainException catch (e) {
+      print("Error: ${e.message}");
     } finally {
       setPending(false);
     }
+  }
+
+  String? _getMessage() {
+    final text = _messageController.text;
+    return text.isEmpty ? null : text;
   }
 
   void setPending(bool pending) {

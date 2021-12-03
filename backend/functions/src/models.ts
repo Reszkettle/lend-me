@@ -1,5 +1,7 @@
 import * as admin from "firebase-admin";
 
+export type RequestOperation = "accept" | "reject";
+
 export interface UserUpdate {
   avatarUrl: string | null;
   createdAt: admin.firestore.Timestamp | admin.firestore.FieldValue;
@@ -17,8 +19,8 @@ export interface UserInfo {
   phone: string | null;
 }
 
-export interface Item {
-  createdAt: admin.firestore.Timestamp;
+export interface ItemUpdate {
+  createdAt: admin.firestore.Timestamp | admin.firestore.FieldValue;
   description: string | null;
   imageUrl: string | null;
   lentById: string | null;
@@ -26,14 +28,21 @@ export interface Item {
   title: string;
 }
 
+export interface Item extends ItemUpdate {
+  createdAt: admin.firestore.Timestamp;
+}
+
+export type RentalStatus = "pending" | "finished";
+
 export interface RentalUpdate {
-  borrowerFullname: string | null;
-  borrowerId: string;
-  endDate: admin.firestore.Timestamp | admin.firestore.FieldValue;
   itemId: string;
-  ownerFullname: string;
+  borrowerId: string;
+  ownerId: string;
+  ownerFullname: string | null;
+  borrowerFullname: string | null;
   startDate: admin.firestore.Timestamp | admin.firestore.FieldValue;
-  status: string;
+  endDate: admin.firestore.Timestamp | admin.firestore.FieldValue;
+  status: RentalStatus;
 }
 
 export interface Rental extends RentalUpdate {
@@ -41,14 +50,18 @@ export interface Rental extends RentalUpdate {
   startDate: admin.firestore.Timestamp;
 }
 
+export type RequestStatus = "pending" | "accepted" | "rejected";
+
+export type RequestType = "borrow" | "extend" | "transfer";
+
 export interface RequestUpdate {
   endDate: admin.firestore.Timestamp | admin.firestore.FieldValue;
   issuerId: string;
   itemId: string;
   requestMessage: string | null;
   responseMessage: string | null;
-  status: string;
-  type: string;
+  status: RequestStatus;
+  type: RequestType;
 }
 
 export interface Request extends RequestUpdate {
