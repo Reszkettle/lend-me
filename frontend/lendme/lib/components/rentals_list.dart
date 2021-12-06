@@ -22,7 +22,7 @@ class _RentalsListState extends State<RentalsList> {
     return StreamBuilder<List<ItemRental>>(
         stream: widget.rentalsStream,
         builder: (context, rentalSnapshots) {
-          if (!rentalSnapshots.hasData) {
+          if (!rentalSnapshots.hasData || rentalSnapshots.data!.isEmpty) {
             return widget.rentalOrigin == RentalOrigin.borrowed
                 ? const EmptyState(placement: EmptyStatePlacement.borrowedItems)
                 : const EmptyState(placement: EmptyStatePlacement.lentItems);

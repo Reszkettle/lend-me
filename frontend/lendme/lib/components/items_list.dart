@@ -19,7 +19,7 @@ class _ItemsListState extends State<ItemsList> {
     return StreamBuilder<List<Item?>>(
         stream: widget.itemsStream,
         builder: (context, itemSnapshots) {
-          if (!itemSnapshots.hasData) {
+          if (!itemSnapshots.hasData || itemSnapshots.data!.isEmpty) {
             return const EmptyState(placement: EmptyStatePlacement.myItems);
           }
           return ListView.separated(

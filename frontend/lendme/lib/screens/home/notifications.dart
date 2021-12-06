@@ -20,7 +20,7 @@ class _NotificationsState extends State<Notifications> {
       child: StreamBuilder<List<Request?>>(
           stream: RequestRepository().getStreamOfCurrentUserRequests(),
           builder: (context, requestSnapshots) {
-            if (!requestSnapshots.hasData) {
+            if (!requestSnapshots.hasData || requestSnapshots.data!.isEmpty) {
               return const EmptyState(
                   placement: EmptyStatePlacement.notifications);
             }
