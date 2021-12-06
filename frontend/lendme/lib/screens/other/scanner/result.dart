@@ -14,9 +14,8 @@ import 'package:lendme/repositories/user_repository.dart';
 import 'package:lendme/exceptions/exceptions.dart';
 import 'package:lendme/utils/error_snackbar.dart';
 
-
 class ItemDetails extends StatefulWidget {
-  const ItemDetails({Key? key,required this.itemId}) : super(key: key);
+  const ItemDetails({Key? key, required this.itemId}) : super(key: key);
 
   final String itemId;
 
@@ -28,7 +27,6 @@ class _ItemDetailsState extends State<ItemDetails> {
   final ItemRepository _itemRepository = ItemRepository();
   final RentalRepository _rentalRepository = RentalRepository();
   final UserRepository _userRepository = UserRepository();
-
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +44,6 @@ class _ItemDetailsState extends State<ItemDetails> {
       return Container();
     }
 
-
     return Scaffold(
       appBar: AppBar(
           title: Row(
@@ -58,11 +55,10 @@ class _ItemDetailsState extends State<ItemDetails> {
           elevation: 0.0),
       body: LoadableArea(
           initialState:
-          item == null ? LoadableAreaState.loading : LoadableAreaState.main,
+              item == null ? LoadableAreaState.loading : LoadableAreaState.main,
           child: SingleChildScrollView(
             child: Padding(
-              padding:
-              const EdgeInsets.only(
+              padding: const EdgeInsets.only(
                   left: 16.0, right: 16.0, top: 0, bottom: 16.0),
               child: _mainLayout(context, item),
             ),
@@ -90,13 +86,9 @@ class _ItemDetailsState extends State<ItemDetails> {
       children: [
         Container(
           decoration: BoxDecoration(
-              color: Theme
-                  .of(context)
-                  .primaryColor,
+              color: Theme.of(context).primaryColor,
               border: Border.all(
-                color: Theme
-                    .of(context)
-                    .primaryColor,
+                color: Theme.of(context).primaryColor,
                 width: 3,
               ),
               borderRadius: const BorderRadius.all(Radius.circular(20))),
@@ -104,15 +96,15 @@ class _ItemDetailsState extends State<ItemDetails> {
               borderRadius: BorderRadius.circular(18),
               child: item?.imageUrl != null
                   ? CachedNetworkImage(
-                  imageUrl: item?.imageUrl ?? '',
-                  height: 200,
-                  fit: BoxFit.fitHeight,
-                  errorWidget: (context, url, error) =>
-                  const Icon(Icons.error, size: 45))
+                      imageUrl: item?.imageUrl ?? '',
+                      height: 200,
+                      fit: BoxFit.fitHeight,
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error, size: 45))
                   : Image.asset(
-                'assets/images/item_default.jpg',
-                height: 200,
-              )),
+                      'assets/images/item_default.jpg',
+                      height: 200,
+                    )),
         )
       ],
     );
@@ -139,9 +131,7 @@ class _ItemDetailsState extends State<ItemDetails> {
         const SizedBox(height: 16),
         Container(
           decoration: BoxDecoration(
-              color: Theme
-                  .of(context)
-                  .primaryColor,
+              color: Theme.of(context).primaryColor,
               borderRadius: const BorderRadius.all(Radius.circular(10))),
           child: ExpansionTile(
             title: const Text('Description'),
@@ -157,13 +147,13 @@ class _ItemDetailsState extends State<ItemDetails> {
       ],
     );
   }
+
   void _showBorrowDialog(Item item) {
     //_borrowItem(item);
     showConfirmDialog(
         context: context,
         message: 'Are you sure that you want to borrow this item?',
-        yesCallback: () => _borrowItem(item)
-    );
+        yesCallback: () => _borrowItem(item));
   }
 
   Widget _borrowButton(Item? item) {
@@ -186,44 +176,30 @@ class _ItemDetailsState extends State<ItemDetails> {
     );
   }
 
-
   void _borrowItem(Item item) async {
-
-    var ownerId = AuthService().getUid();
     var today = DateTime.now();
     var end = today.add(const Duration(days: 30));
     var borrowedId = AuthService().getUid();
-    User user = await _userRepository.getUser(borrowedId.toString());
-    var borrowedFullname = user.info.firstName.toString() + " " + user.info.lastName.toString();
-
-    User user2 = await _userRepository.getUser(borrowedId.toString());
-    var ownerFullname = user2.info.firstName.toString() + " " + user2.info.lastName.toString();
     await _itemRepository.setLentById(widget.itemId, borrowedId.toString());
 
-      final itemInfo = Rental(
-          borrowerFullname: borrowedFullname,
-          borrowerId: borrowedId.toString(),
-          ownerId: item.ownerId.toString(),
-          ownerFullname: ownerFullname,
-          itemId: widget.itemId,
-          startDate: Timestamp.fromDate(today),
-          endDate: Timestamp.fromDate(end),
-          status: "pending"
-      );
+    final itemInfo = Rental(
+        borrowerId: borrowedId.toString(),
+        ownerId: item.ownerId.toString(),
+        itemId: widget.itemId,
+        startDate: Timestamp.fromDate(today),
+        endDate: Timestamp.fromDate(end),
+        status: "pending");
 
-      try {
-        await _rentalRepository.addBorrow(itemInfo);
-      } on DomainException catch (e) {
-        showErrorSnackBar(context, "Failed to borrow Item. ${e.message}");
-        return;
-      }
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text("Item borrowed"),
-      ));
-      Navigator.pop(context);
-      //}
+    try {
+      await _rentalRepository.addBorrow(itemInfo);
+    } on DomainException catch (e) {
+      showErrorSnackBar(context, "Failed to borrow Item. ${e.message}");
+      return;
     }
-
-
-
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text("Item borrowed"),
+    ));
+    Navigator.pop(context);
+    //}
   }
+}
