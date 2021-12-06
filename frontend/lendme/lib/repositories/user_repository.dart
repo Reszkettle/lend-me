@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fa;
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:lendme/exceptions/exceptions.dart';
 import 'package:lendme/models/user.dart';
@@ -12,6 +13,7 @@ class UserRepository {
   final fa.FirebaseAuth _auth = fa.FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
+  final FirebaseMessaging _messaging = FirebaseMessaging.instance;
 
   Future<User> getUser(String uid) async {
     try {
@@ -83,6 +85,21 @@ class UserRepository {
     }
   }
 
-
+  Future updateToken() async {
+    final uid = _auth.currentUser?.uid;
+    if(uid == null) {
+      return;
+    }
+    String? token = await _messaging.getToken();
+    if(token != null) {
+      Map<String, dynamic> data = {
+        'token': token
+      };
+      await _firestore.runTransaction((transaction) async {
+        DocumentReference ref = _firestore.collection("users").doc(uid);
+        transaction.update(ref, data);
+      });
+    }
+  }
 
 }
