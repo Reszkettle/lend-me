@@ -3,51 +3,51 @@ import * as admin from "firebase-admin";
 export type RequestOperation = "accept" | "reject";
 
 export interface UserUpdate {
-  avatarUrl: string | null;
-  createdAt: admin.firestore.Timestamp | admin.firestore.FieldValue;
-  info: UserInfo;
+	avatarUrl: string | null;
+	createdAt: admin.firestore.Timestamp | admin.firestore.FieldValue;
+	info: UserInfo;
 }
 
 export interface User extends UserUpdate {
-  createdAt: admin.firestore.Timestamp
+	createdAt: admin.firestore.Timestamp;
 }
 
 export interface UserInfo {
-  email: string | null;
-  firstName: string | null;
-  lastName: string | null;
-  phone: string | null;
+	email: string | null;
+	firstName: string | null;
+	lastName: string | null;
+	phone: string | null;
 }
 
 export interface ItemUpdate {
-  createdAt: admin.firestore.Timestamp | admin.firestore.FieldValue;
-  description: string | null;
-  imageUrl: string | null;
-  lentById: string | null;
-  ownerId: string;
-  title: string;
+	createdAt: admin.firestore.Timestamp | admin.firestore.FieldValue;
+	description: string | null;
+	imageUrl: string | null;
+	lentById: string | null;
+	ownerId: string;
+	title: string;
 }
 
 export interface Item extends ItemUpdate {
-  createdAt: admin.firestore.Timestamp;
+	createdAt: admin.firestore.Timestamp;
 }
 
 export type RentalStatus = "pending" | "finished";
 
 export interface RentalUpdate {
-  itemId: string;
-  borrowerId: string;
-  ownerId: string;
-  ownerFullname: string | null;
-  borrowerFullname: string | null;
-  startDate: admin.firestore.Timestamp | admin.firestore.FieldValue;
-  endDate: admin.firestore.Timestamp | admin.firestore.FieldValue;
-  status: RentalStatus;
+	itemId: string;
+	borrowerId: string;
+	ownerId: string;
+	ownerFullname: string | null;
+	borrowerFullname: string | null;
+	startDate: admin.firestore.Timestamp | admin.firestore.FieldValue;
+	endDate: admin.firestore.Timestamp | admin.firestore.FieldValue;
+	status: RentalStatus;
 }
 
 export interface Rental extends RentalUpdate {
-  endDate: admin.firestore.Timestamp;
-  startDate: admin.firestore.Timestamp;
+	endDate: admin.firestore.Timestamp;
+	startDate: admin.firestore.Timestamp;
 }
 
 export type RequestStatus = "pending" | "accepted" | "rejected";
@@ -55,15 +55,18 @@ export type RequestStatus = "pending" | "accepted" | "rejected";
 export type RequestType = "borrow" | "extend" | "transfer";
 
 export interface RequestUpdate {
-  endDate: admin.firestore.Timestamp | admin.firestore.FieldValue;
-  issuerId: string;
-  itemId: string;
-  requestMessage: string | null;
-  responseMessage: string | null;
-  status: RequestStatus;
-  type: RequestType;
+	endDate: admin.firestore.Timestamp | admin.firestore.FieldValue;
+	issuerId: string;
+	itemId: string;
+	requestMessage: string | null;
+	responseMessage: string | null;
+	title?: string;
+	subtitle?: string;
+	receivers: Array<String>;
+	status: RequestStatus;
+	type: RequestType;
 }
 
 export interface Request extends RequestUpdate {
-  endDate: admin.firestore.Timestamp
+	endDate: admin.firestore.Timestamp;
 }
