@@ -7,6 +7,7 @@ class BaseTile extends StatefulWidget {
   final String subtitle;
   final String? thirdLine;
   final String? imageUrl;
+  final Color? backgroundColor;
   final Icon? icon;
   final GestureTapCallback? onTap;
 
@@ -17,7 +18,8 @@ class BaseTile extends StatefulWidget {
       this.thirdLine,
       this.imageUrl,
       this.icon,
-      this.onTap})
+      this.onTap,
+      this.backgroundColor})
       : super(key: key);
 
   @override
@@ -25,7 +27,6 @@ class BaseTile extends StatefulWidget {
 }
 
 class _BaseTileState extends State<BaseTile> {
-
   final Color textColor = tileTextColor;
   final Color borderColor = tileBorderColor;
   final String fontFamily = 'Roboto';
@@ -38,6 +39,7 @@ class _BaseTileState extends State<BaseTile> {
         splashColor: darkPrimaryColor,
         onTap: () {},
         child: ListTile(
+            tileColor: widget.backgroundColor,
             shape: RoundedRectangleBorder(
                 side: BorderSide(color: borderColor),
                 borderRadius: tileBorderRadius),
