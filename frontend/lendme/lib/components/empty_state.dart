@@ -43,36 +43,28 @@ class _EmptyStateState extends State<EmptyState> {
   }
 
   Image properImage() {
-    return Image.asset(
-        widget.placement == EmptyStatePlacement.borrowedItems
-            ? 'assets/images/empty_state_borrow.png'
-            : 'assets/images/empty_state_lend.png',
-        fit: BoxFit.contain,
-        color: Colors.white);
+    final Map<EmptyStatePlacement, String> imageUriMap = {
+      EmptyStatePlacement.borrowedItems: 'assets/images/empty_state_borrow.png',
+      EmptyStatePlacement.lentItems: 'assets/images/empty_state_lend.png',
+      EmptyStatePlacement.myItems: 'assets/images/empty_state_lend.png',
+      EmptyStatePlacement.notifications:
+          'assets/images/empty_state_notifications.png'
+    };
+
+    return Image.asset(imageUriMap[widget.placement]!,
+        fit: BoxFit.contain, color: Colors.white);
   }
 
   Text properText() {
-    const String noBorrowedItems = "You don't have any borrowed items";
-    const String noLentItems = "You don't have any lent items";
-    const String noItems = "You don't have any items";
-    const TextStyle textStyle = TextStyle(
-        fontSize: 20, fontWeight: FontWeight.bold, color: Colors.grey);
+    final Map<EmptyStatePlacement, String> textMap = {
+      EmptyStatePlacement.borrowedItems: "You don't have any borrowed items",
+      EmptyStatePlacement.lentItems: "You don't have any lent items",
+      EmptyStatePlacement.myItems: "You don't have any items",
+      EmptyStatePlacement.notifications: "You don't have any requests"
+    };
 
-    if (widget.placement == EmptyStatePlacement.borrowedItems) {
-      return const Text(
-        noBorrowedItems,
-        style: textStyle,
-      );
-    }
-
-    return widget.placement == EmptyStatePlacement.lentItems
-        ? const Text(
-            noLentItems,
-            style: textStyle,
-          )
-        : const Text(
-            noItems,
-            style: textStyle,
-          );
+    return Text(textMap[widget.placement]!,
+        style: const TextStyle(
+            fontSize: 20, fontWeight: FontWeight.bold, color: Colors.grey));
   }
 }
