@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lendme/components/empty_state.dart';
 import 'package:lendme/components/notification_tile.dart';
