@@ -1,4 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:lendme/components/empty_state.dart';
+import 'package:lendme/components/notification_tile.dart';
+import 'package:lendme/models/request.dart';
+import 'package:lendme/repositories/request_repository.dart';
+import 'package:lendme/utils/enums.dart';
 
 class Notifications extends StatefulWidget {
   const Notifications({Key? key}) : super(key: key);
@@ -12,30 +18,25 @@ class _NotificationsState extends State<Notifications> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const Text("Sample requests:"),
-          const SizedBox(height: 16,),
-          ElevatedButton(
-              onPressed: () => showNotification("borrow"),
-              child: const Text('Borrow request')
-          ),
-          ElevatedButton(
-              onPressed: () => showNotification("transfer"),
-              child: const Text('Transfer request')
-          ),
-          ElevatedButton(
-              onPressed: () => showNotification("extend"),
-              child: const Text('Extend request')
-          ),
-        ],
-      ),
+      child: StreamBuilder<List<Request?>>(
+          stream: RequestRepository().getStreamOfCurrentUserRequests(),
+          builder: (context, requestSnapshots) {
+            if (!requestSnapshots.hasData) {
+              return const EmptyState(
+                  placement: EmptyStatePlacement.notifications);
+            }
+            return ListView.separated(
+              padding: const EdgeInsets.all(9),
+              itemBuilder: (context, index) {
+                return NotificationTile(
+                    request: requestSnapshots.data![index]!);
+              },
+              separatorBuilder: (BuildContext context, int index) {
+                return const SizedBox(height: 9);
+              },
+              itemCount: requestSnapshots.data!.length,
+            );
+          }),
     );
   }
-
-  void showNotification(String id) {
-    Navigator.of(context).pushNamed('/request', arguments: id);
-  }
-
 }
