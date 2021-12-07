@@ -97,6 +97,7 @@ class AuthService {
   // sign out
   Future signOut() async {
     try {
+      await _userRepository.clearToken();
       return await _auth.signOut();
     } catch (e) {
       throw _mapAuthException(e);

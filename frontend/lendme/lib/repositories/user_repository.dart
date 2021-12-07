@@ -86,7 +86,6 @@ class UserRepository {
   }
 
   Future updateToken() async {
-    print('Upading token');
     final uid = _auth.currentUser?.uid;
     if(uid == null) {
       return;
@@ -95,6 +94,23 @@ class UserRepository {
     if(token != null) {
       Map<String, dynamic> data = {
         'token': token
+      };
+      await _firestore.runTransaction((transaction) async {
+        DocumentReference ref = _firestore.collection("users").doc(uid);
+        transaction.update(ref, data);
+      });
+    }
+  }
+
+  Future clearToken() async {
+    final uid = _auth.currentUser?.uid;
+    if(uid == null) {
+      return;
+    }
+    String? token = await _messaging.getToken();
+    if(token != null) {
+      Map<String, dynamic> data = {
+        'token': null
       };
       await _firestore.runTransaction((transaction) async {
         DocumentReference ref = _firestore.collection("users").doc(uid);
