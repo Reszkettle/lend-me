@@ -1,6 +1,7 @@
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
-import {Request, RequestUpdate, Item, RequestOperation, RequestStatus, RentalUpdate} from "./models";
+import {Request, RequestUpdate, Item, RequestOperation, RequestStatus, RentalUpdate, RequestType} from "./models";
+import {getItem} from "./items";
 
 const firestore = admin.firestore();
 
@@ -187,5 +188,34 @@ async function updateStatusAndMessage(requestId: string, status: RequestStatus,
     status: status,
     responseMessage: message,
   };
+  await firestore.collection("requests").doc(requestId).update(requestUpdate);
+}
+
+
+export const onWriteUpdateDisplayedTitleAndSubtitleOnTile = functions.firestore.document("requests/{request}").onWrite(async (snapshot) => {
+  const request: Request = snapshot.after.data() as Request;
+  const requestId = snapshot.after.id;
+
+  const item = await getItem(request.itemId);
+  const title = await getTitleFromType(request.type);
+  const subtitle = `Item: ${item.title}`;
+
+  await updateRequest(requestId, title, subtitle, [
+    request.issuerId,
+    item.ownerId,
+  ]);
+});
+
+async function getTitleFromType(type: RequestType): Promise<string> {
+  return type === "extend" ? "Time extend request" : "Borrow request";
+}
+
+async function updateRequest(requestId: string, title: string, subtitle: string, receivers: Array<string>) {
+  const requestUpdate: Partial<RequestUpdate> = {
+    title,
+    subtitle,
+    receivers,
+  };
+
   await firestore.collection("requests").doc(requestId).update(requestUpdate);
 }
