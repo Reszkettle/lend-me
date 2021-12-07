@@ -5,7 +5,7 @@ import 'package:lendme/screens/other/add_item.dart';
 import 'package:lendme/screens/other/history.dart';
 import 'package:lendme/screens/other/item_details/item_details.dart';
 import 'package:lendme/screens/other/lent_qr.dart';
-import 'package:lendme/screens/requests/request_screen.dart';
+import 'package:lendme/screens/other/requests/request_screen.dart';
 import 'package:lendme/screens/settings/change_theme.dart';
 import 'package:lendme/screens/settings/credits.dart';
 import 'package:lendme/screens/settings/edit_profile.dart';

@@ -7,9 +7,10 @@ import 'package:lendme/models/request_type.dart';
 import 'package:lendme/models/user.dart';
 import 'package:lendme/repositories/item_repository.dart';
 import 'package:lendme/repositories/request_repository.dart';
-import 'package:lendme/screens/requests/decision_panel.dart';
-import 'package:lendme/screens/requests/request_panel.dart';
+import 'package:lendme/screens/other/requests/request_panel.dart';
 import 'package:provider/provider.dart';
+
+import 'decision_panel.dart';
 
 class RequestScreen extends StatelessWidget {
   RequestScreen({required this.requestId, Key? key}) : super(key: key);
