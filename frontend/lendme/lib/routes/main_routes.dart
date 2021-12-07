@@ -12,6 +12,8 @@ import 'package:lendme/screens/settings/edit_profile.dart';
 import 'package:lendme/screens/settings/settings.dart';
 import 'package:page_transition/page_transition.dart';
 
+final GlobalKey<NavigatorState> mainNavigator = GlobalKey();
+
 Route? mainRoutes(RouteSettings settings) {
   if(settings.name == '/') {
     return MaterialPageRoute(builder: (context) {return const Home();});

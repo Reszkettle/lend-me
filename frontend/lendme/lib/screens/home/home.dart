@@ -5,8 +5,10 @@ import 'package:url_launcher/url_launcher.dart';
 import 'borrowed.dart';
 import 'items.dart';
 import 'lent.dart';
-import 'notifications.dart';
 import 'package:lendme/screens/other/scanner/scanner.dart';
+import 'package:lendme/services/notification_service.dart';
+
+import 'notifications.dart';
 
 
 class Home extends StatefulWidget {
@@ -33,9 +35,24 @@ class _HomeState extends State<Home> {
     });
   }
 
+  Future config() async {
+    await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+      alert: true, // Required to display a heads up notification
+      badge: true,
+      sound: true,
+    );
+  }
+
+  Future initNotifications() async {
+    await NotificationService.init();
+  }
+
   @override
   void initState() {
     super.initState();
+
+    initNotifications();
+
     // Killed
     FirebaseMessaging.instance.getInitialMessage().then((value) {
       if(value != null) {
@@ -49,13 +66,6 @@ class _HomeState extends State<Home> {
       Navigator.of(context).pushNamed('/request', arguments: 'borrow');
     });
 
-    // Foreground
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print('Got a message whilst in the foreground!');
-      if (message.notification != null) {
-        print('Notification: ${message.notification}');
-      }
-    });
   }
 
   @override
