@@ -54,18 +54,25 @@ class _HomeState extends State<Home> {
     initNotifications();
 
     // Killed
-    FirebaseMessaging.instance.getInitialMessage().then((value) {
-      if(value != null) {
-        Navigator.of(context).pushNamed('/request', arguments: 'borrow');
+    FirebaseMessaging.instance.getInitialMessage().then((message) {
+      if(message != null) {
+        _handleMessage(message);
       }
     });
 
     // Background
-    FirebaseMessaging.onMessageOpenedApp.forEach((element) {
-      print("Msg2: ${element.notification?.title}");
-      Navigator.of(context).pushNamed('/request', arguments: 'borrow');
+    FirebaseMessaging.onMessageOpenedApp.forEach((message) {
+      _handleMessage(message);
     });
+  }
 
+  void _handleMessage(RemoteMessage message) {
+    final requestId = message.data['requestId'] as String?;
+    if(requestId == null) {
+      return;
+    }
+    print("Message received: $message");
+    Navigator.of(context).pushNamed('/request', arguments: requestId);
   }
 
   @override

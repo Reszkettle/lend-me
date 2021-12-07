@@ -2,6 +2,7 @@ import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 import {Request, RequestUpdate, Item, RequestOperation, RequestStatus, RentalUpdate, RequestType} from "./models";
 import {getItem} from "./items";
+import {sendStateChangeNotifications} from "./notifications";
 
 const firestore = admin.firestore();
 
@@ -37,6 +38,8 @@ async function acceptOrReject(data: any, context: functions.https.CallableContex
   } else if (operation == "reject") {
     await rejectRequest(requestId, uid, message);
   }
+
+  await sendStateChangeNotifications(requestId);
 }
 
 
