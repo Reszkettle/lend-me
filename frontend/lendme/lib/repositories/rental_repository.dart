@@ -24,7 +24,7 @@ class RentalRepository {
       }
       if (snapshot.docs.length > 1) {
         log('Inconsistent database state! Item $itemId is rented multiple times!');
-      }s
+      }
       final data = snapshot.docs[0].data();
       data['id']=snapshot.docs[0].id;
       final rental = Rental.fromMap(data);
