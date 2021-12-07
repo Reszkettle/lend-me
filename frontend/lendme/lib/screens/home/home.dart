@@ -1,10 +1,14 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:lendme/utils/constants.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'borrowed.dart';
 import 'items.dart';
 import 'lent.dart';
-import 'notifications.dart';
 import 'package:lendme/screens/other/scanner/scanner.dart';
+import 'package:lendme/services/notification_service.dart';
+
+import 'notifications.dart';
 
 
 class Home extends StatefulWidget {
@@ -29,6 +33,46 @@ class _HomeState extends State<Home> {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  Future config() async {
+    await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+      alert: true, // Required to display a heads up notification
+      badge: true,
+      sound: true,
+    );
+  }
+
+  Future initNotifications() async {
+    await NotificationService.init();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    initNotifications();
+
+    // Killed
+    FirebaseMessaging.instance.getInitialMessage().then((message) {
+      if(message != null) {
+        _handleMessage(message);
+      }
+    });
+
+    // Background
+    FirebaseMessaging.onMessageOpenedApp.forEach((message) {
+      _handleMessage(message);
+    });
+  }
+
+  void _handleMessage(RemoteMessage message) {
+    final requestId = message.data['requestId'] as String?;
+    if(requestId == null) {
+      return;
+    }
+    print("Message received: $message");
+    Navigator.of(context).pushNamed('/request', arguments: requestId);
   }
 
   @override

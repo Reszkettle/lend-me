@@ -6,6 +6,7 @@ export interface UserUpdate {
   avatarUrl: string | null;
   createdAt: admin.firestore.Timestamp | admin.firestore.FieldValue;
   info: UserInfo;
+  token: string | null;
 }
 
 export interface User extends UserUpdate {

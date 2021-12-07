@@ -3,7 +3,8 @@ import 'package:lendme/models/item.dart';
 import 'package:lendme/models/request.dart';
 import 'package:lendme/models/request_status.dart';
 import 'package:lendme/models/user.dart';
-import 'package:lendme/screens/requests/accept_reject_panel.dart';
+
+import 'accept_reject_panel.dart';
 
 class RequestDecisionPanel extends StatelessWidget {
   const RequestDecisionPanel({required this.request, required this.user,

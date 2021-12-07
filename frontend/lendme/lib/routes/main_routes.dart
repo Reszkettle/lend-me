@@ -5,12 +5,14 @@ import 'package:lendme/screens/other/add_item.dart';
 import 'package:lendme/screens/other/history.dart';
 import 'package:lendme/screens/other/item_details/item_details.dart';
 import 'package:lendme/screens/other/lent_qr.dart';
-import 'package:lendme/screens/requests/request_screen.dart';
+import 'package:lendme/screens/other/requests/request_screen.dart';
 import 'package:lendme/screens/settings/change_theme.dart';
 import 'package:lendme/screens/settings/credits.dart';
 import 'package:lendme/screens/settings/edit_profile.dart';
 import 'package:lendme/screens/settings/settings.dart';
 import 'package:page_transition/page_transition.dart';
+
+final GlobalKey<NavigatorState> mainNavigator = GlobalKey();
 
 Route? mainRoutes(RouteSettings settings) {
   if(settings.name == '/') {
