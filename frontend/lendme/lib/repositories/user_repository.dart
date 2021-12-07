@@ -86,6 +86,7 @@ class UserRepository {
   }
 
   Future updateToken() async {
+    print('Upading token');
     final uid = _auth.currentUser?.uid;
     if(uid == null) {
       return;

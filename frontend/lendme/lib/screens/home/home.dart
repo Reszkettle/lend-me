@@ -1,5 +1,7 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:lendme/utils/constants.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'borrowed.dart';
 import 'items.dart';
 import 'lent.dart';
@@ -28,6 +30,31 @@ class _HomeState extends State<Home> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // Killed
+    FirebaseMessaging.instance.getInitialMessage().then((value) {
+      if(value != null) {
+        Navigator.of(context).pushNamed('/request', arguments: 'borrow');
+      }
+    });
+
+    // Background
+    FirebaseMessaging.onMessageOpenedApp.forEach((element) {
+      print("Msg2: ${element.notification?.title}");
+      Navigator.of(context).pushNamed('/request', arguments: 'borrow');
+    });
+
+    // Foreground
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('Got a message whilst in the foreground!');
+      if (message.notification != null) {
+        print('Notification: ${message.notification}');
+      }
     });
   }
 
