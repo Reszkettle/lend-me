@@ -6,4 +6,4 @@ enum ItemStatus {
   available,
 }
 
-enum EmptyStatePlacement { myItems, lentItems, borrowedItems }
+enum EmptyStatePlacement { myItems, lentItems, borrowedItems, notifications }

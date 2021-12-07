@@ -62,6 +62,9 @@ export interface RequestUpdate {
   responseMessage: string | null;
   status: RequestStatus;
   type: RequestType;
+  receivers: Array<string>;
+  title?: string;
+  subtitle?: string;
 }
 
 export interface Request extends RequestUpdate {
