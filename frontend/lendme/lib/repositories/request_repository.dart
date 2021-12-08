@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
 import 'package:lendme/exceptions/exceptions.dart';
 import 'package:lendme/models/request.dart';
 import 'package:cloud_functions/cloud_functions.dart';
@@ -20,6 +21,15 @@ class RequestRepository {
         return Request.fromMap(map, queryDocumentSnapshot.id);
       }).toList();
     });
+  }
+
+  Future addRequest(Request request) async {
+    try {
+      await firestore.collection('requests').add(request.toMap());
+    } on PlatformException catch (exception) {
+      throw UnknownException(exception.message ??
+          'Something went wrong while creating transfer request');
+    }
   }
 
   Stream<Request?> getRequestStream(String requestId) {
