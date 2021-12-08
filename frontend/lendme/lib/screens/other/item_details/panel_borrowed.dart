@@ -17,19 +17,14 @@ class PanelBorrowed extends StatelessWidget {
   Widget build(BuildContext context) {
     return StreamBuilder(
       stream: _rentalRepository.getItemActiveRentalStream(item.id!),
-      builder: _buildFromRental,
+      builder: (BuildContext context, AsyncSnapshot<Rental?> rentalSnap) {
+        final rental = rentalSnap.data;
+        if(rental == null) {
+          return const Text("Rental is null");
+        }
+        return _mainLayout(context, rental);
+      },
     );
-  }
-
-  Widget _buildFromRental(
-      BuildContext context, AsyncSnapshot<Rental?> rentalSnap) {
-    final rental = rentalSnap.data;
-
-    if (rental == null) {
-      return Container();
-    } else {
-      return _mainLayout(context, rental);
-    }
   }
 
   Column _mainLayout(BuildContext context, Rental rental) {
@@ -37,11 +32,8 @@ class PanelBorrowed extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _header(rental),
-        const SizedBox(height: 16),
         _borrowTimes(rental),
-        const SizedBox(height: 16),
-        UserView(userId: rental.ownerId),
-        const SizedBox(height: 16),
+        _currentItemOwner(rental),
         _buttons(context),
       ],
     );
@@ -51,6 +43,7 @@ class PanelBorrowed extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        const SizedBox(height: 16),
         Row(
           children: [
             const SizedBox(
@@ -69,6 +62,15 @@ class PanelBorrowed extends StatelessWidget {
             Text(dateTimeFormat.format(rental.endDate.toDate())),
           ],
         ),
+      ],
+    );
+  }
+
+  Widget _currentItemOwner(Rental rental) {
+    return Column(
+      children: [
+        const SizedBox(height: 16),
+        UserView(userId: rental.ownerId),
       ],
     );
   }
@@ -92,31 +94,36 @@ class PanelBorrowed extends StatelessWidget {
     );
   }
 
-  Row _buttons(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.center,
+  Widget _buttons(BuildContext context) {
+    return Column(
       children: [
-        OutlinedButton.icon(
-          label: const Text('Extend time'),
-          icon: const Icon(Icons.more_time),
-          style: OutlinedButton.styleFrom(
-              primary: Colors.white,
-              side: const BorderSide(width: 1.0, color: Colors.white)),
-          onPressed: () {
-            // TODO: Extend time
-          },
-        ),
-        const SizedBox(width: 16),
-        OutlinedButton.icon(
-          label: const Text('Transfer loan'),
-          icon: const Icon(Icons.local_shipping),
-          style: OutlinedButton.styleFrom(
-              primary: Colors.white,
-              side: const BorderSide(width: 1.0, color: Colors.white)),
-          onPressed: () {
-            Navigator.of(context).pushNamed('/lent_qr', arguments: item);
-          },
+        const SizedBox(height: 16),
+        Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            OutlinedButton.icon(
+              label: const Text('Extend time'),
+              icon: const Icon(Icons.more_time),
+              style: OutlinedButton.styleFrom(
+                  primary: Colors.white,
+                  side: const BorderSide(width: 1.0, color: Colors.white)),
+              onPressed: () {
+                // TODO: Extend time
+              },
+            ),
+            const SizedBox(width: 16),
+            OutlinedButton.icon(
+              label: const Text('Transfer loan'),
+              icon: const Icon(Icons.local_shipping),
+              style: OutlinedButton.styleFrom(
+                  primary: Colors.white,
+                  side: const BorderSide(width: 1.0, color: Colors.white)),
+              onPressed: () {
+                Navigator.of(context).pushNamed('/lent_qr', arguments: item);
+              },
+            ),
+          ],
         ),
       ],
     );

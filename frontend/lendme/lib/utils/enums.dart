@@ -1,6 +1,6 @@
 enum RentalOrigin { lent, borrowed }
 
-enum ItemStatus {
+enum RelationToItem {
   lent,
   borrowed,
   available,
