@@ -4,6 +4,7 @@ import 'package:lendme/components/user_view.dart';
 import 'package:lendme/models/item.dart';
 import 'package:lendme/models/rental.dart';
 import 'package:lendme/repositories/rental_repository.dart';
+import 'package:lendme/repositories/request_repository.dart';
 import 'package:lendme/utils/constants.dart';
 
 class PanelBorrowed extends StatelessWidget {
@@ -12,6 +13,7 @@ class PanelBorrowed extends StatelessWidget {
   final Item item;
 
   final RentalRepository _rentalRepository = RentalRepository();
+  final RequestRepository _requestRepository = RequestRepository();
 
   @override
   Widget build(BuildContext context) {
@@ -22,19 +24,28 @@ class PanelBorrowed extends StatelessWidget {
         if(rental == null) {
           return const Text("Rental is null");
         }
-        return _mainLayout(context, rental);
+        return StreamBuilder(
+          stream: _requestRepository.userHasPendingRequestsForThisItemStream(rental.itemId),
+          builder: (BuildContext context, AsyncSnapshot<bool> hasPendingRequestsSnap) {
+            final hasPendingRequests = hasPendingRequestsSnap.data;
+            if(hasPendingRequests == null) {
+              return const Text("hasPendingRequests is null");
+            }
+            return _mainLayout(context, rental, hasPendingRequests);
+        },
+        );
       },
     );
   }
 
-  Column _mainLayout(BuildContext context, Rental rental) {
+  Column _mainLayout(BuildContext context, Rental rental, bool hasPendingRequests) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _header(rental),
         _borrowTimes(rental),
         _currentItemOwner(rental),
-        _buttons(context),
+        _buttonsOrNot(context, hasPendingRequests),
       ],
     );
   }
@@ -94,6 +105,14 @@ class PanelBorrowed extends StatelessWidget {
     );
   }
 
+  Widget _buttonsOrNot(BuildContext context, bool hasPendingRequests) {
+    if(!hasPendingRequests) {
+      return _buttons(context);
+    } else {
+      return _notButtons();
+    }
+  }
+
   Widget _buttons(BuildContext context) {
     return Column(
       children: [
@@ -125,6 +144,41 @@ class PanelBorrowed extends StatelessWidget {
             ),
           ],
         ),
+      ],
+    );
+  }
+
+  Widget _notButtons() {
+    return Column(
+      children: [
+        const SizedBox(height: 32),
+        Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            Text(
+                "You have pending request about this item",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
+        Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            Text(
+              "Wait for decision before requesting again",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
       ],
     );
   }

@@ -64,4 +64,13 @@ class RequestRepository {
       throw UnknownException();
     }
   }
+
+  Stream<bool> userHasPendingRequestsForThisItemStream(String itemId) {
+    return firestore
+        .collection('requests')
+        .where('issuerId', isEqualTo: firebaseAuth.currentUser!.uid)
+        .where('itemId', isEqualTo: itemId)
+        .snapshots()
+        .map((snapshot) => snapshot.docs.isNotEmpty);
+    }
 }
