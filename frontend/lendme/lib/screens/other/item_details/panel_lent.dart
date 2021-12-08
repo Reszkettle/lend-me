@@ -18,18 +18,14 @@ class PanelLent extends StatelessWidget {
   Widget build(BuildContext context) {
     return StreamBuilder(
       stream: _rentalRepository.getItemActiveRentalStream(item.id!),
-      builder: _buildFromRental,
+      builder: (BuildContext context, AsyncSnapshot<Rental?> rentalSnap) {
+        final rental = rentalSnap.data;
+        if(rental == null) {
+          return const Text("Item is lent, but any rental found");
+        }
+        return _mainLayout(context, rental);
+      },
     );
-  }
-
-  Widget _buildFromRental(BuildContext context, AsyncSnapshot<Rental?> rentalSnap) {
-    final rental = rentalSnap.data;
-
-    if(rental == null) {
-      return Container();
-    } else {
-      return _mainLayout(context, rental);
-    }
   }
 
   Column _mainLayout(BuildContext context, Rental rental) {
@@ -37,11 +33,8 @@ class PanelLent extends StatelessWidget {
     crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _header(rental),
-        const SizedBox(height: 16),
         _lentTimes(rental),
-        const SizedBox(height: 16),
-        UserView(userId: rental.borrowerId),
-        const SizedBox(height: 16),
+        _user(rental),
         _buttons(context, rental),
       ],
     );
@@ -53,6 +46,7 @@ class PanelLent extends StatelessWidget {
       children: [
         Row(
           children: [
+            const SizedBox(height: 16),
             const SizedBox(
               width: 60,
               child: Text('From: '),
@@ -69,6 +63,15 @@ class PanelLent extends StatelessWidget {
             Text(dateTimeFormat.format(rental.endDate.toDate())),
           ],
         ),
+      ],
+    );
+  }
+
+  Widget _user(Rental rental) {
+    return Column(
+      children: [
+        const SizedBox(height: 16),
+        UserView(userId: rental.borrowerId),
       ],
     );
   }
@@ -93,24 +96,29 @@ class PanelLent extends StatelessWidget {
     );
   }
 
-  Row _buttons(BuildContext context, Rental rental) {
-    return Row(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          OutlinedButton.icon(
-            label: const Text('Confirm return'),
-            icon: const Icon(Icons.done_rounded),
-            style: OutlinedButton.styleFrom(
-              primary: Colors.white,
-              side: const BorderSide(width: 1.0, color: Colors.white)
-            ),
-            onPressed: () {
-              _showConfirmReturnEnsureDialog(context, rental);
-            },
-          )
-        ],
-      );
+  Widget _buttons(BuildContext context, Rental rental) {
+    return Column(
+      children: [
+        const SizedBox(height: 16),
+        Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              OutlinedButton.icon(
+                label: const Text('Confirm return'),
+                icon: const Icon(Icons.done_rounded),
+                style: OutlinedButton.styleFrom(
+                  primary: Colors.white,
+                  side: const BorderSide(width: 1.0, color: Colors.white)
+                ),
+                onPressed: () {
+                  _showConfirmReturnEnsureDialog(context, rental);
+                },
+              )
+            ],
+          ),
+      ],
+    );
   }
 
   void _showConfirmReturnEnsureDialog(BuildContext context, Rental rental) {

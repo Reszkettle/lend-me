@@ -1,9 +1,10 @@
 enum RentalOrigin { lent, borrowed }
 
-enum ItemStatus {
+enum RelationToItem {
   lent,
   borrowed,
   available,
+  neutral,
 }
 
 enum EmptyStatePlacement { myItems, lentItems, borrowedItems, notifications }
