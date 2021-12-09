@@ -74,6 +74,13 @@ class ItemRepository {
       throw UnknownException();
     }
   }
+
+  Future<void> deleteItem(itemId) {
+    return firestore
+        .collection('items')
+        .doc(itemId)
+        .delete();
+  }
   // SET LENT BY ID
   Future setLentById(String itemId, String lentById) async {
     try {
