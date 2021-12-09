@@ -78,7 +78,7 @@ class _ItemDetailsState extends State<ItemDetails> {
       const SizedBox(height: 16.0),
       _title(item),
       if (item?.description != null) _description(context, item),
-      const SizedBox(height: 30.0),
+      const SizedBox(height: 16.0),
       _borrow(context, item)
     ]);
   }
@@ -86,7 +86,7 @@ class _ItemDetailsState extends State<ItemDetails> {
   Widget _borrow(BuildContext context, Item? item) {
     return Container(
         margin: const EdgeInsets.all(5.0),
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(20.0),
         decoration: BoxDecoration(
           border: Border.all(
             color: Colors.blue,
