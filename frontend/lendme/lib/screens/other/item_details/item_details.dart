@@ -17,7 +17,6 @@ class ItemDetails extends StatelessWidget {
 
   final String itemId;
   final ItemRepository _itemRepository = ItemRepository();
-
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
@@ -117,12 +116,18 @@ class ItemDetails extends StatelessWidget {
     showConfirmDialog(
       context: context,
       message: 'Are you sure that you want to delete this item?',
-      yesCallback: () => _deleteItem(item)
+      yesCallback: () {
+        _deleteItem(item);
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("Item deleted"),
+        ));
+      }
     );
   }
 
   void _deleteItem(Item item) {
-    // TODO: Delete item
+    _itemRepository.deleteItem(item.id);
   }
 
   Widget _itemImage(BuildContext context, Item item) {
