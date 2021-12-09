@@ -17,7 +17,6 @@ class ItemDetails extends StatelessWidget {
 
   final String itemId;
   final ItemRepository _itemRepository = ItemRepository();
-
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
@@ -122,7 +121,8 @@ class ItemDetails extends StatelessWidget {
   }
 
   void _deleteItem(Item item) {
-    // TODO: Delete item
+    _itemRepository.deleteItem(item.id);
+    print("deleted");
   }
 
   Widget _itemImage(BuildContext context, Item item) {
