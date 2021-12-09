@@ -21,18 +21,18 @@ class PanelBorrowed extends StatelessWidget {
       stream: _rentalRepository.getItemActiveRentalStream(item.id!),
       builder: (BuildContext context, AsyncSnapshot<Rental?> rentalSnap) {
         final rental = rentalSnap.data;
-        if(rental == null) {
+        if (rental == null) {
           return const Text("Rental is null");
         }
         return StreamBuilder(
           stream: _requestRepository.userHasPendingRequestsForThisItemStream(rental.itemId),
           builder: (BuildContext context, AsyncSnapshot<bool> hasPendingRequestsSnap) {
             final hasPendingRequests = hasPendingRequestsSnap.data;
-            if(hasPendingRequests == null) {
+            if (hasPendingRequests == null) {
               return const Text("hasPendingRequests is null");
             }
             return _mainLayout(context, rental, hasPendingRequests);
-        },
+          },
         );
       },
     );
@@ -96,17 +96,14 @@ class PanelBorrowed extends StatelessWidget {
                 color: Colors.black,
                 fontWeight: FontWeight.bold,
               ),
-              children: [
-                const TextSpan(text: 'Status: Borrowed from '),
-                TextSpan(text: rental.ownerFullname)
-              ]),
+              children: [const TextSpan(text: 'Status: Borrowed from '), TextSpan(text: rental.ownerFullname)]),
         ),
       ],
     );
   }
 
   Widget _buttonsOrNot(BuildContext context, bool hasPendingRequests) {
-    if(!hasPendingRequests) {
+    if (!hasPendingRequests) {
       return _buttons(context);
     } else {
       return _notButtons();
@@ -124,20 +121,17 @@ class PanelBorrowed extends StatelessWidget {
             OutlinedButton.icon(
               label: const Text('Extend time'),
               icon: const Icon(Icons.more_time),
-              style: OutlinedButton.styleFrom(
-                  primary: Colors.white,
-                  side: const BorderSide(width: 1.0, color: Colors.white)),
+              style: OutlinedButton.styleFrom(primary: Colors.white, side: const BorderSide(width: 1.0, color: Colors.white)),
               onPressed: () {
                 // TODO: Extend time
+                _showExtendDialog(context);
               },
             ),
             const SizedBox(width: 16),
             OutlinedButton.icon(
               label: const Text('Transfer loan'),
               icon: const Icon(Icons.local_shipping),
-              style: OutlinedButton.styleFrom(
-                  primary: Colors.white,
-                  side: const BorderSide(width: 1.0, color: Colors.white)),
+              style: OutlinedButton.styleFrom(primary: Colors.white, side: const BorderSide(width: 1.0, color: Colors.white)),
               onPressed: () {
                 Navigator.of(context).pushNamed('/lent_qr', arguments: item);
               },
@@ -146,6 +140,52 @@ class PanelBorrowed extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  Widget _ExtendDialog(BuildContext context) {
+    VoidCallback? yesCallback;
+    VoidCallback? noCallback;
+    TextEditingController dateCtl = TextEditingController();
+    return AlertDialog(
+      title: const Text('Choose Date'),
+      content: TextFormField(
+        controller: dateCtl,
+        decoration: const InputDecoration(
+          labelText: "Extend till",
+        ),
+        onTap: () async {
+          DateTime? date = DateTime(1900);
+          FocusScope.of(context).requestFocus(FocusNode());
+
+          date = await showDatePicker(context: context, initialDate: DateTime.now(), firstDate: DateTime.now(), lastDate: DateTime(2100));
+          if (date != null) {
+            dateCtl.text = DateFormat('dd-MM-yyyy').format(date);
+          }
+        },
+      ),
+      actions: [
+        TextButton(
+            onPressed: () {
+              noCallback?.call();
+              Navigator.of(context, rootNavigator: true).pop();
+            },
+            child: const Text('Cancel')),
+        TextButton(
+            onPressed: () {
+              yesCallback?.call();
+              Navigator.of(context, rootNavigator: true).pop();
+            },
+            child: const Text('Confirm'))
+      ],
+    );
+  }
+
+  void _showExtendDialog(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (BuildContext ctx) {
+          return _ExtendDialog(context);
+        });
   }
 
   Widget _notButtons() {
@@ -157,7 +197,7 @@ class PanelBorrowed extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: const [
             Text(
-                "You have pending request about this item",
+              "You have pending request about this item",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
