@@ -1,22 +1,23 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lendme/components/confirm_dialog.dart';
 import 'package:lendme/components/loadable_area.dart';
 import 'package:lendme/models/item.dart';
+import 'package:lendme/models/request.dart';
+import 'package:lendme/models/request_status.dart';
+import 'package:lendme/models/request_type.dart';
 import 'package:lendme/models/user.dart';
 import 'package:lendme/repositories/item_repository.dart';
+import 'package:lendme/repositories/request_repository.dart';
+import 'package:lendme/screens/home/home.dart';
 import 'package:provider/provider.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:lendme/models/rental.dart';
 import 'package:lendme/services/auth_service.dart';
-import 'package:lendme/repositories/rental_repository.dart';
-import 'package:lendme/repositories/user_repository.dart';
 import 'package:lendme/exceptions/exceptions.dart';
 import 'package:lendme/utils/error_snackbar.dart';
 
-
 class ItemDetails extends StatefulWidget {
-  const ItemDetails({Key? key,required this.itemId}) : super(key: key);
+  const ItemDetails({Key? key, required this.itemId}) : super(key: key);
 
   final String itemId;
 
@@ -26,9 +27,11 @@ class ItemDetails extends StatefulWidget {
 
 class _ItemDetailsState extends State<ItemDetails> {
   final ItemRepository _itemRepository = ItemRepository();
-  final RentalRepository _rentalRepository = RentalRepository();
-  final UserRepository _userRepository = UserRepository();
+  final RequestRepository _requestRepository = RequestRepository();
 
+  String date = "";
+  DateTime selectedDate = DateTime.now();
+  String value = "";
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +49,6 @@ class _ItemDetailsState extends State<ItemDetails> {
       return Container();
     }
 
-
     return Scaffold(
       appBar: AppBar(
           title: Row(
@@ -58,11 +60,10 @@ class _ItemDetailsState extends State<ItemDetails> {
           elevation: 0.0),
       body: LoadableArea(
           initialState:
-          item == null ? LoadableAreaState.loading : LoadableAreaState.main,
+              item == null ? LoadableAreaState.loading : LoadableAreaState.main,
           child: SingleChildScrollView(
             child: Padding(
-              padding:
-              const EdgeInsets.only(
+              padding: const EdgeInsets.only(
                   left: 16.0, right: 16.0, top: 0, bottom: 16.0),
               child: _mainLayout(context, item),
             ),
@@ -71,17 +72,75 @@ class _ItemDetailsState extends State<ItemDetails> {
   }
 
   Widget _mainLayout(BuildContext context, Item? item) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _itemImage(context, item),
-        const SizedBox(height: 16.0),
-        _title(item),
-        if (item?.description != null) _description(context, item),
-        const SizedBox(height: 16.0),
-        _borrowButton(item),
-      ],
+    return Column(children: [
+      const SizedBox(height: 16.0),
+      _itemImage(context, item),
+      const SizedBox(height: 16.0),
+      _title(item),
+      if (item?.description != null) _description(context, item),
+      const SizedBox(height: 30.0),
+      _borrow(context, item)
+    ]);
+  }
+
+  Widget _borrow(BuildContext context, Item? item) {
+    return Container(
+        margin: const EdgeInsets.all(5.0),
+        padding: const EdgeInsets.all(10.0),
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: Colors.blue,
+          ),
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            const Text("Borrow"),
+            const SizedBox(height: 16.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    _selectDate(context);
+                  },
+                  child: const Text("Choose Date"),
+                ),
+                Text(
+                    "${selectedDate.day}/${selectedDate.month}/${selectedDate.year}"),
+              ],
+            ),
+
+            TextField(
+              onChanged: (text) {
+                value = text;
+              },
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                labelText: 'Enter message to owner of item',
+                hintText: value,
+              ),
+            ),
+            //Text(value),
+            _borrowButton(item),
+          ],
+        ));
+  }
+
+  _selectDate(BuildContext context) async {
+    final DateTime? selected = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2025),
     );
+    if (selected != null && selected != selectedDate)
+      setState(() {
+        selectedDate = selected;
+      });
   }
 
   Widget _itemImage(BuildContext context, Item? item) {
@@ -90,13 +149,9 @@ class _ItemDetailsState extends State<ItemDetails> {
       children: [
         Container(
           decoration: BoxDecoration(
-              color: Theme
-                  .of(context)
-                  .primaryColor,
+              color: Theme.of(context).primaryColor,
               border: Border.all(
-                color: Theme
-                    .of(context)
-                    .primaryColor,
+                color: Theme.of(context).primaryColor,
                 width: 3,
               ),
               borderRadius: const BorderRadius.all(Radius.circular(20))),
@@ -104,15 +159,15 @@ class _ItemDetailsState extends State<ItemDetails> {
               borderRadius: BorderRadius.circular(18),
               child: item?.imageUrl != null
                   ? CachedNetworkImage(
-                  imageUrl: item?.imageUrl ?? '',
-                  height: 200,
-                  fit: BoxFit.fitHeight,
-                  errorWidget: (context, url, error) =>
-                  const Icon(Icons.error, size: 45))
+                      imageUrl: item?.imageUrl ?? '',
+                      height: 200,
+                      fit: BoxFit.fitHeight,
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error, size: 45))
                   : Image.asset(
-                'assets/images/item_default.jpg',
-                height: 200,
-              )),
+                      'assets/images/item_default.jpg',
+                      height: 200,
+                    )),
         )
       ],
     );
@@ -139,9 +194,7 @@ class _ItemDetailsState extends State<ItemDetails> {
         const SizedBox(height: 16),
         Container(
           decoration: BoxDecoration(
-              color: Theme
-                  .of(context)
-                  .primaryColor,
+              color: Theme.of(context).primaryColor,
               borderRadius: const BorderRadius.all(Radius.circular(10))),
           child: ExpansionTile(
             title: const Text('Description'),
@@ -157,13 +210,13 @@ class _ItemDetailsState extends State<ItemDetails> {
       ],
     );
   }
+
   void _showBorrowDialog(Item item) {
-    //_borrowItem(item);
     showConfirmDialog(
         context: context,
-        message: 'Are you sure that you want to borrow this item?',
-        yesCallback: () => _borrowItem(item)
-    );
+        message:
+            'Are you sure that you want to borrow ${item.title} from ${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year} to ${selectedDate.day}/${selectedDate.month}/${selectedDate.year}?',
+        yesCallback: () => _borrowItem(item));
   }
 
   Widget _borrowButton(Item? item) {
@@ -186,44 +239,26 @@ class _ItemDetailsState extends State<ItemDetails> {
     );
   }
 
-
   void _borrowItem(Item item) async {
+    var issuerId = AuthService().getUid();
+    final requestInfo = Request(
+        endDate: Timestamp.fromDate(selectedDate),
+        issuerId: issuerId.toString(),
+        itemId: widget.itemId,
+        requestMessage: value,
+        status: RequestStatus.pending,
+        type: RequestType.borrow);
 
-    var ownerId = AuthService().getUid();
-    var today = DateTime.now();
-    var end = today.add(const Duration(days: 30));
-    var borrowedId = AuthService().getUid();
-    User user = await _userRepository.getUser(borrowedId.toString());
-    var borrowedFullname = user.info.firstName.toString() + " " + user.info.lastName.toString();
-
-    User user2 = await _userRepository.getUser(borrowedId.toString());
-    var ownerFullname = user2.info.firstName.toString() + " " + user2.info.lastName.toString();
-    await _itemRepository.setLentById(widget.itemId, borrowedId.toString());
-
-      final itemInfo = Rental(
-          borrowerFullname: borrowedFullname,
-          borrowerId: borrowedId.toString(),
-          ownerId: item.ownerId.toString(),
-          ownerFullname: ownerFullname,
-          itemId: widget.itemId,
-          startDate: Timestamp.fromDate(today),
-          endDate: Timestamp.fromDate(end),
-          status: "pending"
-      );
-
-      try {
-        await _rentalRepository.addBorrow(itemInfo);
-      } on DomainException catch (e) {
-        showErrorSnackBar(context, "Failed to borrow Item. ${e.message}");
-        return;
-      }
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text("Item borrowed"),
-      ));
-      Navigator.pop(context);
-      //}
+    try {
+      await _requestRepository.addRequest(requestInfo);
+    } on DomainException catch (e) {
+      showErrorSnackBar(context, "Failed to send request ${e.message}");
+      return;
     }
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text("Send request to owner"),
+    ));
 
-
-
+    Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
   }
+}

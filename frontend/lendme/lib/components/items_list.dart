@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:lendme/components/my_item_tile.dart';
 import 'package:lendme/models/item.dart';
+import 'package:lendme/utils/enums.dart';
+
+import 'empty_state.dart';
 
 class ItemsList extends StatefulWidget {
   const ItemsList({Key? key, required this.itemsStream}) : super(key: key);
@@ -16,8 +19,8 @@ class _ItemsListState extends State<ItemsList> {
     return StreamBuilder<List<Item?>>(
         stream: widget.itemsStream,
         builder: (context, itemSnapshots) {
-          if (!itemSnapshots.hasData) {
-            return const Center(child: CircularProgressIndicator());
+          if (!itemSnapshots.hasData || itemSnapshots.data!.isEmpty) {
+            return const EmptyState(placement: EmptyStatePlacement.myItems);
           }
           return ListView.separated(
             padding: const EdgeInsets.all(9),

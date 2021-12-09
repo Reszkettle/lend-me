@@ -3,9 +3,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:lendme/exceptions/exceptions.dart';
+import 'package:lendme/repositories/user_repository.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final UserRepository _userRepository = UserRepository();
 
   // auth change user stream
   Stream<String?> get uidStream {
@@ -44,6 +46,7 @@ class AuthService {
       UserCredential userCredential =
           await FirebaseAuth.instance.signInWithCredential(credential);
       User? user = userCredential.user;
+      _userRepository.updateToken();
       return user?.uid;
     } catch (e) {
       throw _mapAuthException(e);
@@ -59,6 +62,7 @@ class AuthService {
       final UserCredential userCredential = await FirebaseAuth.instance
           .signInWithCredential(facebookAuthCredential);
       User? user = userCredential.user;
+      _userRepository.updateToken();
       return user?.uid;
     } catch (e) {
       throw _mapAuthException(e);
@@ -83,6 +87,7 @@ class AuthService {
       UserCredential credential = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
       User? user = credential.user;
+      _userRepository.updateToken();
       return user?.uid;
     } catch (e) {
       throw _mapAuthException(e);
@@ -92,6 +97,7 @@ class AuthService {
   // sign out
   Future signOut() async {
     try {
+      await _userRepository.clearToken();
       return await _auth.signOut();
     } catch (e) {
       throw _mapAuthException(e);

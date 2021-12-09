@@ -21,17 +21,18 @@ class PanelBorrowed extends StatelessWidget {
     );
   }
 
-  Widget _buildFromRental(BuildContext context, AsyncSnapshot<Rental?> rentalSnap) {
+  Widget _buildFromRental(
+      BuildContext context, AsyncSnapshot<Rental?> rentalSnap) {
     final rental = rentalSnap.data;
 
-    if(rental == null) {
+    if (rental == null) {
       return Container();
     } else {
-      return _mainLayout(rental);
+      return _mainLayout(context, rental);
     }
   }
 
-  Column _mainLayout(Rental rental) {
+  Column _mainLayout(BuildContext context, Rental rental) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -41,7 +42,7 @@ class PanelBorrowed extends StatelessWidget {
         const SizedBox(height: 16),
         UserView(userId: rental.ownerId),
         const SizedBox(height: 16),
-        _buttons(),
+        _buttons(context),
       ],
     );
   }
@@ -85,14 +86,13 @@ class PanelBorrowed extends StatelessWidget {
               children: [
                 const TextSpan(text: 'Status: Borrowed from '),
                 TextSpan(text: rental.ownerFullname)
-              ]
-          ),
+              ]),
         ),
       ],
     );
   }
 
-  Row _buttons() {
+  Row _buttons(BuildContext context) {
     return Row(
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -102,8 +102,7 @@ class PanelBorrowed extends StatelessWidget {
           icon: const Icon(Icons.more_time),
           style: OutlinedButton.styleFrom(
               primary: Colors.white,
-              side: const BorderSide(width: 1.0, color: Colors.white)
-          ),
+              side: const BorderSide(width: 1.0, color: Colors.white)),
           onPressed: () {
             // TODO: Extend time
           },
@@ -114,10 +113,9 @@ class PanelBorrowed extends StatelessWidget {
           icon: const Icon(Icons.local_shipping),
           style: OutlinedButton.styleFrom(
               primary: Colors.white,
-              side: const BorderSide(width: 1.0, color: Colors.white)
-          ),
+              side: const BorderSide(width: 1.0, color: Colors.white)),
           onPressed: () {
-            // TODO: Transfer loan
+            Navigator.of(context).pushNamed('/lent_qr', arguments: item);
           },
         ),
       ],

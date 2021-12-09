@@ -27,10 +27,11 @@ class _ProxyState extends State<Proxy> {
   final Map<_Screen, Widget> _screenViews = {
     _Screen.splash: const Splash(),
     _Screen.auth: PreMadeNavigator(
+      GlobalKey(),
       routes: authRoutes,
       key: UniqueKey(),
     ),
-    _Screen.main: PreMadeNavigator(routes: mainRoutes, key: UniqueKey()),
+    _Screen.main: PreMadeNavigator(mainNavigator, routes: mainRoutes, key: UniqueKey()),
     _Screen.fillProfile: const EditProfile(afterLoginVariant: true),
   };
 
@@ -72,10 +73,10 @@ class _ProxyState extends State<Proxy> {
 
 // Generally just a navigator, but with added support to hardware back button
 class PreMadeNavigator extends StatelessWidget {
-  PreMadeNavigator({required this.routes, this.initialRoute = '/', Key? key})
+  const PreMadeNavigator(this._navigator, {required this.routes, this.initialRoute = '/', Key? key})
       : super(key: key);
 
-  final GlobalKey<NavigatorState> _navigator = GlobalKey();
+  final GlobalKey<NavigatorState> _navigator;
   final String initialRoute;
   final Route<dynamic>? Function(RouteSettings) routes;
 

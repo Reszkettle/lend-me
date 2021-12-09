@@ -1,11 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:lendme/utils/constants.dart';
 
 class BaseTile extends StatefulWidget {
   final String title;
   final String subtitle;
   final String? thirdLine;
   final String? imageUrl;
+  final Color? backgroundColor;
   final Icon? icon;
   final GestureTapCallback? onTap;
 
@@ -16,7 +18,8 @@ class BaseTile extends StatefulWidget {
       this.thirdLine,
       this.imageUrl,
       this.icon,
-      this.onTap})
+      this.onTap,
+      this.backgroundColor})
       : super(key: key);
 
   @override
@@ -24,9 +27,8 @@ class BaseTile extends StatefulWidget {
 }
 
 class _BaseTileState extends State<BaseTile> {
-
-  final Color textColor = const Color(0xFF000000);
-  final Color borderColor = const Color(0xFF6200EE);
+  final Color textColor = tileTextColor;
+  final Color borderColor = tileBorderColor;
   final String fontFamily = 'Roboto';
   final BorderRadius tileBorderRadius = BorderRadius.circular(6);
   final BorderRadius imageBorderRadius = BorderRadius.circular(12);
@@ -34,9 +36,10 @@ class _BaseTileState extends State<BaseTile> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-        splashColor: const Color(0x557D00EE),
+        splashColor: darkPrimaryColor,
         onTap: () {},
         child: ListTile(
+            tileColor: widget.backgroundColor,
             shape: RoundedRectangleBorder(
                 side: BorderSide(color: borderColor),
                 borderRadius: tileBorderRadius),
@@ -57,8 +60,7 @@ class _BaseTileState extends State<BaseTile> {
                 style: TextStyle(
                     fontSize: 20,
                     fontFamily: fontFamily,
-                    fontWeight: FontWeight.bold,
-                    color: textColor)),
+                    fontWeight: FontWeight.bold)),
             subtitle: Padding(
                 padding: const EdgeInsets.only(top: 10),
                 child: Wrap(direction: Axis.vertical, spacing: 5, children: [

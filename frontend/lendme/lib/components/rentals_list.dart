@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lendme/components/borrowed_item_tile.dart';
+import 'package:lendme/components/empty_state.dart';
 import 'package:lendme/components/lent_item_tile.dart';
 import 'package:lendme/models/item_rental.dart';
 import 'package:lendme/utils/enums.dart';
@@ -21,8 +22,10 @@ class _RentalsListState extends State<RentalsList> {
     return StreamBuilder<List<ItemRental>>(
         stream: widget.rentalsStream,
         builder: (context, rentalSnapshots) {
-          if (!rentalSnapshots.hasData) {
-            return const Center(child: CircularProgressIndicator());
+          if (!rentalSnapshots.hasData || rentalSnapshots.data!.isEmpty) {
+            return widget.rentalOrigin == RentalOrigin.borrowed
+                ? const EmptyState(placement: EmptyStatePlacement.borrowedItems)
+                : const EmptyState(placement: EmptyStatePlacement.lentItems);
           }
           return ListView.separated(
             padding: const EdgeInsets.all(9),

@@ -26,6 +26,7 @@ class RentalRepository {
         log('Inconsistent database state! Item $itemId is rented multiple times!');
       }
       final data = snapshot.docs[0].data();
+      data['id']=snapshot.docs[0].id;
       final rental = Rental.fromMap(data);
       return rental;
     });
@@ -81,7 +82,6 @@ class RentalRepository {
     });
   }
 
-
   Future addBorrow(Rental rental) async {
     try {
       CollectionReference rentals =
@@ -91,6 +91,24 @@ class RentalRepository {
       throw UnknownException();
     }
   }
+
+  Future returnItemById(String rentalId) async {
+    try {
+      Map map = new Map();
+      map["status"] = "finished";
+
+      await firestore.runTransaction((transaction) async {
+        DocumentReference ref = firestore.collection("rentals").doc(rentalId);
+        transaction.update(ref, {
+          'status': map['status'],
+        });
+      });
+    } catch (e) {
+      throw UnknownException();
+    }
+  }
+
+
 
 
 }

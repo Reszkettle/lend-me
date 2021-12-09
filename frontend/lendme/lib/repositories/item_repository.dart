@@ -79,7 +79,6 @@ class ItemRepository {
     try {
       Map map = new Map();
       map["lentById"] = lentById;
-
       await firestore.runTransaction((transaction) async {
         DocumentReference ref = firestore.collection("items").doc(itemId);
         transaction.update(ref, {
@@ -90,7 +89,20 @@ class ItemRepository {
       throw UnknownException();
     }
   }
-
+  Future setLentByIdToNull(String itemId) async {
+    try {
+      Map map = new Map();
+      map["lentById"] =" ";
+      await firestore.runTransaction((transaction) async {
+        DocumentReference ref = firestore.collection("items").doc(itemId);
+        transaction.update(ref, {
+          'lentById': map['lentById'],
+        });
+      });
+    } catch (e) {
+      throw UnknownException();
+    }
+  }
 
   Future addImage(localImagePath) async {
     String downloadUrl;

@@ -4,8 +4,11 @@ import 'package:lendme/components/confirm_dialog.dart';
 import 'package:lendme/components/user_view.dart';
 import 'package:lendme/models/item.dart';
 import 'package:lendme/models/rental.dart';
+import 'package:lendme/repositories/item_repository.dart';
 import 'package:lendme/repositories/rental_repository.dart';
 import 'package:lendme/utils/constants.dart';
+import 'package:lendme/utils/error_snackbar.dart';
+import 'package:lendme/exceptions/exceptions.dart';
 
 class PanelLent extends StatelessWidget {
   PanelLent({required this.item, Key? key}) : super(key: key);
@@ -13,6 +16,7 @@ class PanelLent extends StatelessWidget {
   final Item item;
 
   final RentalRepository _rentalRepository = RentalRepository();
+  final ItemRepository _itemRepository = ItemRepository();
 
   @override
   Widget build(BuildContext context) {
@@ -22,10 +26,11 @@ class PanelLent extends StatelessWidget {
     );
   }
 
-  Widget _buildFromRental(BuildContext context, AsyncSnapshot<Rental?> rentalSnap) {
+  Widget _buildFromRental(
+      BuildContext context, AsyncSnapshot<Rental?> rentalSnap) {
     final rental = rentalSnap.data;
 
-    if(rental == null) {
+    if (rental == null) {
       return Container();
     } else {
       return _mainLayout(context, rental);
@@ -34,7 +39,7 @@ class PanelLent extends StatelessWidget {
 
   Column _mainLayout(BuildContext context, Rental rental) {
     return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _header(rental),
         const SizedBox(height: 16),
@@ -78,16 +83,15 @@ class PanelLent extends StatelessWidget {
       children: [
         RichText(
           text: TextSpan(
-            style: const TextStyle(
-              fontSize: 16,
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-            ),
-            children: [
-              const TextSpan(text: 'Status: Lent to '),
-              TextSpan(text: rental.borrowerFullname)
-            ]
-          ),
+              style: const TextStyle(
+                fontSize: 16,
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+              children: [
+                const TextSpan(text: 'Status: Lent to '),
+                TextSpan(text: rental.borrowerFullname)
+              ]),
         ),
       ],
     );
@@ -95,33 +99,42 @@ class PanelLent extends StatelessWidget {
 
   Row _buttons(BuildContext context, Rental rental) {
     return Row(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          OutlinedButton.icon(
-            label: const Text('Confirm return'),
-            icon: const Icon(Icons.done_rounded),
-            style: OutlinedButton.styleFrom(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        OutlinedButton.icon(
+          label: const Text('Confirm return'),
+          icon: const Icon(Icons.done_rounded),
+          style: OutlinedButton.styleFrom(
               primary: Colors.white,
-              side: const BorderSide(width: 1.0, color: Colors.white)
-            ),
-            onPressed: () {
-              _showConfirmReturnEnsureDialog(context, rental);
-            },
-          )
-        ],
-      );
+              side: const BorderSide(width: 1.0, color: Colors.white)),
+          onPressed: () {
+            _showConfirmReturnEnsureDialog(context, rental);
+          },
+        )
+      ],
+    );
   }
 
   void _showConfirmReturnEnsureDialog(BuildContext context, Rental rental) {
     showConfirmDialog(
         context: context,
         message: 'Are you sure that this item was returned?',
-        yesCallback: () => _confirmReturn(item, rental)
-    );
+        yesCallback: () => _confirmReturn(context, rental));
   }
 
-  void _confirmReturn(Item item, Rental rental) {
-    // TODO: Confirm return
+  void _confirmReturn(BuildContext context, Rental rental) async {
+    try {
+      await _rentalRepository.returnItemById(rental.id.toString());
+    } on DomainException catch (e) {
+      showErrorSnackBar(context,
+          "Failed to confirm return item. ${e.message}  Rental id: ${rental.id.toString()}");
+      return;
+    }
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text("Item return"),
+    ));
+    Navigator.pop(context);
+    //}
   }
 }

@@ -37,6 +37,7 @@ dependencies:
   firebase_remote_config: ^0.11.0
   firebase_storage: ^10.0.5
   cloud_functions: ^3.0.4
+  firebase_messaging: ^11.2.0
 
   # Other dependencies
   provider: ^6.0.1
@@ -56,9 +57,11 @@ dependencies:
   intl: ^0.17.0
   rxdart: ^0.27.3
   page_transition: ^2.0.4
+  get: ^4.5.1
+  get_storage: ^2.0.3
   qr_flutter: ^4.0.0
   qr_code_scanner: ^0.6.1
-
+  flutter_local_notifications: ^9.1.4
 
 dev_dependencies:
   flutter_test:
