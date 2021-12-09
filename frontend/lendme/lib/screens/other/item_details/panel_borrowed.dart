@@ -123,7 +123,6 @@ class PanelBorrowed extends StatelessWidget {
               icon: const Icon(Icons.more_time),
               style: OutlinedButton.styleFrom(primary: Colors.white, side: const BorderSide(width: 1.0, color: Colors.white)),
               onPressed: () {
-                // TODO: Extend time
                 _showExtendDialog(context);
               },
             ),
@@ -143,8 +142,6 @@ class PanelBorrowed extends StatelessWidget {
   }
 
   Widget _ExtendDialog(BuildContext context) {
-    VoidCallback? yesCallback;
-    VoidCallback? noCallback;
     TextEditingController dateCtl = TextEditingController();
     return AlertDialog(
       title: const Text('Choose Date'),
@@ -154,7 +151,7 @@ class PanelBorrowed extends StatelessWidget {
           labelText: "Extend till",
         ),
         onTap: () async {
-          DateTime? date = DateTime(1900);
+          DateTime? date = DateTime.now();
           FocusScope.of(context).requestFocus(FocusNode());
 
           date = await showDatePicker(context: context, initialDate: DateTime.now(), firstDate: DateTime.now(), lastDate: DateTime(2100));
@@ -166,13 +163,11 @@ class PanelBorrowed extends StatelessWidget {
       actions: [
         TextButton(
             onPressed: () {
-              noCallback?.call();
               Navigator.of(context, rootNavigator: true).pop();
             },
             child: const Text('Cancel')),
         TextButton(
             onPressed: () {
-              yesCallback?.call();
               Navigator.of(context, rootNavigator: true).pop();
             },
             child: const Text('Confirm'))
