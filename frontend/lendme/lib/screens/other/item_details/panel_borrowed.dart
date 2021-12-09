@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:lendme/components/user_view.dart';
@@ -6,6 +7,12 @@ import 'package:lendme/models/rental.dart';
 import 'package:lendme/repositories/rental_repository.dart';
 import 'package:lendme/repositories/request_repository.dart';
 import 'package:lendme/utils/constants.dart';
+import 'package:lendme/utils/error_snackbar.dart';
+import 'package:lendme/services/auth_service.dart';
+import 'package:lendme/models/request.dart';
+import 'package:lendme/models/request_type.dart';
+import 'package:lendme/models/request_status.dart';
+import 'package:lendme/exceptions/exceptions.dart';
 
 class PanelBorrowed extends StatelessWidget {
   PanelBorrowed({required this.item, Key? key}) : super(key: key);
@@ -123,7 +130,7 @@ class PanelBorrowed extends StatelessWidget {
               icon: const Icon(Icons.more_time),
               style: OutlinedButton.styleFrom(primary: Colors.white, side: const BorderSide(width: 1.0, color: Colors.white)),
               onPressed: () {
-                _showExtendDialog(context);
+                _showExtendDialog(item, context);
               },
             ),
             const SizedBox(width: 16),
@@ -141,24 +148,37 @@ class PanelBorrowed extends StatelessWidget {
     );
   }
 
-  Widget _ExtendDialog(BuildContext context) {
-    TextEditingController dateCtl = TextEditingController();
+  Widget _ExtendDialog(Item item, BuildContext context) {
+    TextEditingController dateController = TextEditingController();
+    TextEditingController messageController = TextEditingController();
+    late Timestamp timestamp;
     return AlertDialog(
       title: const Text('Choose Date'),
-      content: TextFormField(
-        controller: dateCtl,
-        decoration: const InputDecoration(
-          labelText: "Extend till",
-        ),
-        onTap: () async {
-          DateTime? date = DateTime.now();
-          FocusScope.of(context).requestFocus(FocusNode());
+      content: Column(
+        children: [
+          TextFormField(
+            controller: dateController,
+            decoration: const InputDecoration(
+              labelText: "Extend till",
+            ),
+            onTap: () async {
+              DateTime? date = DateTime.now();
+              FocusScope.of(context).requestFocus(FocusNode());
 
-          date = await showDatePicker(context: context, initialDate: DateTime.now(), firstDate: DateTime.now(), lastDate: DateTime(2100));
-          if (date != null) {
-            dateCtl.text = DateFormat('dd-MM-yyyy').format(date);
-          }
-        },
+              date = await showDatePicker(context: context, initialDate: DateTime.now(), firstDate: DateTime.now(), lastDate: DateTime(2100));
+              if (date != null) {
+                timestamp = Timestamp.fromDate(date);
+                dateController.text = DateFormat('dd-MM-yyyy').format(date);
+              }
+            },
+          ),
+          TextFormField(
+            controller: messageController,
+            decoration: const InputDecoration(
+              labelText: "Message",
+            ),
+          ),
+        ],
       ),
       actions: [
         TextButton(
@@ -168,19 +188,44 @@ class PanelBorrowed extends StatelessWidget {
             child: const Text('Cancel')),
         TextButton(
             onPressed: () {
-              Navigator.of(context, rootNavigator: true).pop();
+              if (timestamp == null) {
+                showErrorSnackBar(context, "Date cannot be empty");
+                Navigator.of(context, rootNavigator: true).pop();
+              } else {
+
+                _extendTime(item, timestamp, messageController.text);
+                Navigator.of(context, rootNavigator: true).pop();
+              }
             },
             child: const Text('Confirm'))
       ],
     );
   }
 
-  void _showExtendDialog(BuildContext context) {
+  void _showExtendDialog(Item item, BuildContext context) {
     showDialog(
         context: context,
         builder: (BuildContext ctx) {
-          return _ExtendDialog(context);
+          return _ExtendDialog(item, context);
         });
+  }
+
+  void _extendTime(Item item, Timestamp timestamp, String requestMessage) async {
+
+    await createExtendRequest(item, timestamp, requestMessage);
+
+  }
+
+  Future<void> createExtendRequest(Item item, Timestamp endDate, String? requestMessage) async {
+    final request = Request(
+        endDate: endDate,
+        issuerId: AuthService().getUid()!,
+        itemId: item.id!,
+        status: RequestStatus.pending,
+        type: RequestType.extend,
+        requestMessage: requestMessage);
+
+    await RequestRepository().addRequest(request);
   }
 
   Widget _notButtons() {
