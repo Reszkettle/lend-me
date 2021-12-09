@@ -3,12 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:lendme/components/confirm_dialog.dart';
 import 'package:lendme/components/loadable_area.dart';
 import 'package:lendme/models/item.dart';
-import 'package:lendme/models/request.dart';
-import 'package:lendme/models/request_status.dart';
-import 'package:lendme/models/request_type.dart';
 import 'package:lendme/models/user.dart';
 import 'package:lendme/repositories/item_repository.dart';
-import 'package:lendme/repositories/request_repository.dart';
 import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lendme/models/rental.dart';
@@ -180,37 +176,14 @@ class _ItemDetailsState extends State<ItemDetails> {
     );
   }
 
-  Future<void> createTransferRequest(
-      Item item, Timestamp endDate, String? requestMessage) async {
-    final request = Request(
-        endDate: endDate,
-        issuerId: AuthService().getUid()!,
-        itemId: item.id!,
-        status: RequestStatus.pending,
-        type: RequestType.transfer,
-        requestMessage: requestMessage);
-
-    await RequestRepository().addRequest(request);
-  }
-
   void _borrowItem(Item item) async {
     var today = DateTime.now();
-    final String borrowerId = AuthService().getUid()!;
-
     var end = today.add(const Duration(days: 30));
-
-    const String requestMessage = "To be populated from modal";
-
-    // Checking whether item is already on loan
-    if (item.lentById != null) {
-      await createTransferRequest(
-          item, Timestamp.fromDate(end), requestMessage);
-    }
-
-    await _itemRepository.setLentById(widget.itemId, borrowerId.toString());
+    var borrowedId = AuthService().getUid();
+    await _itemRepository.setLentById(widget.itemId, borrowedId.toString());
 
     final itemInfo = Rental(
-        borrowerId: borrowerId.toString(),
+        borrowerId: borrowedId.toString(),
         ownerId: item.ownerId.toString(),
         itemId: widget.itemId,
         startDate: Timestamp.fromDate(today),

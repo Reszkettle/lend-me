@@ -16,6 +16,7 @@ class PanelAvailable extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _header(),
+        const SizedBox(height: 16),
         _buttons(context),
       ],
     );
@@ -34,29 +35,24 @@ class PanelAvailable extends StatelessWidget {
     );
   }
 
-  Widget _buttons(BuildContext context) {
-    return Column(
+  Row _buttons(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const SizedBox(height: 16),
-        Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-              width: 300,
-              child: OutlinedButton.icon(
-                label: const Text('Lend'),
-                icon: const Icon(Icons.qr_code_rounded),
-                style: OutlinedButton.styleFrom(
-                    primary: Colors.white,
-                    side: const BorderSide(width: 1.0, color: Colors.white)),
-                onPressed: () {
-                  Navigator.of(context).pushNamed('/lent_qr', arguments: item);
-                },
-              ),
-            )
-          ],
-        ),
+        SizedBox(
+          width: 300,
+          child: OutlinedButton.icon(
+            label: const Text('Lend'),
+            icon: const Icon(Icons.qr_code_rounded),
+            style: OutlinedButton.styleFrom(
+                primary: Colors.white,
+                side: const BorderSide(width: 1.0, color: Colors.white)),
+            onPressed: () {
+              Navigator.of(context).pushNamed('/lent_qr', arguments: item);
+            },
+          ),
+        )
       ],
     );
   }
