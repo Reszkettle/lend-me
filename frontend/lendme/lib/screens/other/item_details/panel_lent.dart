@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:lendme/components/confirm_dialog.dart';
 import 'package:lendme/components/user_view.dart';
+import 'package:lendme/exceptions/exceptions.dart';
 import 'package:lendme/models/item.dart';
 import 'package:lendme/models/rental.dart';
 import 'package:lendme/repositories/rental_repository.dart';
 import 'package:lendme/utils/constants.dart';
+import 'package:lendme/utils/error_snackbar.dart';
 
 class PanelLent extends StatelessWidget {
   PanelLent({required this.item, Key? key}) : super(key: key);
@@ -125,11 +127,24 @@ class PanelLent extends StatelessWidget {
     showConfirmDialog(
         context: context,
         message: 'Are you sure that this item was returned?',
-        yesCallback: () => _confirmReturn(item, rental)
+        yesCallback: () => _confirmReturn(context, rental)
     );
   }
 
-  void _confirmReturn(Item item, Rental rental) {
-    // TODO: Confirm return
+  void _confirmReturn(BuildContext context, Rental rental) async {
+    try {
+      await _rentalRepository.returnItemById(rental.id.toString());
+    } on DomainException catch (e) {
+      showErrorSnackBar(context,
+          "Failed to confirm return item. ${e.message}  Rental id: ${rental.id
+              .toString()}");
+      return;
+    }
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text("Item return"),
+    ));
+    Navigator.pop(context);
+    //}
   }
 }
+

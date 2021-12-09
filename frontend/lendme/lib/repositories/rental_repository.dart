@@ -93,5 +93,21 @@ class RentalRepository {
     }
   }
 
+  Future returnItemById(String rentalId) async {
+    try {
+      Map map = new Map();
+      map["status"] = "finished";
+
+      await firestore.runTransaction((transaction) async {
+        DocumentReference ref = firestore.collection("rentals").doc(rentalId);
+        transaction.update(ref, {
+          'status': map['status'],
+        });
+      });
+    } catch (e) {
+      throw UnknownException();
+    }
+  }
+
 
 }
