@@ -7,19 +7,6 @@ const firestore = admin.firestore();
 /**
  * Trigger on rental created used to populate borrowerFullname and ownerFullname
  */
-
-
-
-export const onRentalUpdate = functions.firestore.document("rentals/{rental}").onUpdate(async (change) => {
-
-const rentalAfterChange = change.after.data() as Rental;
-const rentalBeforeChange = change.before.data() as Rental;
-
-if (rentalAfterChange.status == 'finished' && rentalBeforeChange.status != 'finished') {
-    await firestore.collection("items").doc(rentalAfterChange.itemId).update({lentById: null});
-  }
-});
-
 export const onWriteUpdateFullnames = functions.firestore.document("rentals/{rental}").onWrite(async (snapshot) => {
   const rental: Rental = snapshot.after.data() as Rental;
   const rentalId = snapshot.after.id;
@@ -53,13 +40,12 @@ async function updateFullnames(rentalId: string, borrowerName: string, ownerName
   await firestore.collection("rentals").doc(rentalId).update(rentalUpdate);
 }
 
+
 export const onWriteUpdateLentById = functions.firestore.document("rentals/{rental}").onWrite(async (snapshot) => {
   const rental: Rental = snapshot.after.data() as Rental;
   const lentById = await getLentById(rental.itemId);
   await setLentById(rental.itemId, lentById);
 });
-
-
 
 async function getLentById(itemId: string): Promise<string|null> {
   const pendingRentals = (await firestore.collection("rentals")
