@@ -116,13 +116,15 @@ class ItemDetails extends StatelessWidget {
     showConfirmDialog(
       context: context,
       message: 'Are you sure that you want to delete this item?',
-      yesCallback: () => _deleteItem(item)
+      yesCallback: () {
+        _deleteItem(item);
+        Navigator.pop(context);
+      }
     );
   }
 
   void _deleteItem(Item item) {
     _itemRepository.deleteItem(item.id);
-    print("deleted");
   }
 
   Widget _itemImage(BuildContext context, Item item) {
