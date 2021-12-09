@@ -119,6 +119,9 @@ class ItemDetails extends StatelessWidget {
       yesCallback: () {
         _deleteItem(item);
         Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("Item deleted"),
+        ));
       }
     );
   }
