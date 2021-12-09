@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lendme/components/confirm_dialog.dart';
 import 'package:lendme/components/loadable_area.dart';
@@ -9,12 +10,9 @@ import 'package:lendme/models/request_type.dart';
 import 'package:lendme/models/user.dart';
 import 'package:lendme/repositories/item_repository.dart';
 import 'package:lendme/repositories/request_repository.dart';
+import 'package:lendme/screens/home/home.dart';
 import 'package:provider/provider.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:lendme/models/rental.dart';
 import 'package:lendme/services/auth_service.dart';
-import 'package:lendme/repositories/rental_repository.dart';
-import 'package:lendme/repositories/user_repository.dart';
 import 'package:lendme/exceptions/exceptions.dart';
 import 'package:lendme/utils/error_snackbar.dart';
 
@@ -29,8 +27,11 @@ class ItemDetails extends StatefulWidget {
 
 class _ItemDetailsState extends State<ItemDetails> {
   final ItemRepository _itemRepository = ItemRepository();
-  final RentalRepository _rentalRepository = RentalRepository();
-  final UserRepository _userRepository = UserRepository();
+  final RequestRepository _requestRepository = RequestRepository();
+
+  String date = "";
+  DateTime selectedDate = DateTime.now();
+  String value = "";
 
   @override
   Widget build(BuildContext context) {
@@ -71,17 +72,75 @@ class _ItemDetailsState extends State<ItemDetails> {
   }
 
   Widget _mainLayout(BuildContext context, Item? item) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _itemImage(context, item),
-        const SizedBox(height: 16.0),
-        _title(item),
-        if (item?.description != null) _description(context, item),
-        const SizedBox(height: 16.0),
-        _borrowButton(item),
-      ],
+    return Column(children: [
+      const SizedBox(height: 16.0),
+      _itemImage(context, item),
+      const SizedBox(height: 16.0),
+      _title(item),
+      if (item?.description != null) _description(context, item),
+      const SizedBox(height: 16.0),
+      _borrow(context, item)
+    ]);
+  }
+
+  Widget _borrow(BuildContext context, Item? item) {
+    return Container(
+        margin: const EdgeInsets.all(5.0),
+        padding: const EdgeInsets.all(20.0),
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: Colors.blue,
+          ),
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            const Text("Borrow"),
+            const SizedBox(height: 16.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    _selectDate(context);
+                  },
+                  child: const Text("Choose Date"),
+                ),
+                Text(
+                    "${selectedDate.day}/${selectedDate.month}/${selectedDate.year}"),
+              ],
+            ),
+
+            TextField(
+              onChanged: (text) {
+                value = text;
+              },
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                labelText: 'Enter message to owner of item',
+                hintText: value,
+              ),
+            ),
+            //Text(value),
+            _borrowButton(item),
+          ],
+        ));
+  }
+
+  _selectDate(BuildContext context) async {
+    final DateTime? selected = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2025),
     );
+    if (selected != null && selected != selectedDate)
+      setState(() {
+        selectedDate = selected;
+      });
   }
 
   Widget _itemImage(BuildContext context, Item? item) {
@@ -153,10 +212,10 @@ class _ItemDetailsState extends State<ItemDetails> {
   }
 
   void _showBorrowDialog(Item item) {
-    //_borrowItem(item);
     showConfirmDialog(
         context: context,
-        message: 'Are you sure that you want to borrow this item?',
+        message:
+            'Are you sure that you want to borrow ${item.title} from ${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year} to ${selectedDate.day}/${selectedDate.month}/${selectedDate.year}?',
         yesCallback: () => _borrowItem(item));
   }
 
@@ -180,53 +239,26 @@ class _ItemDetailsState extends State<ItemDetails> {
     );
   }
 
-  Future<void> createTransferRequest(
-      Item item, Timestamp endDate, String? requestMessage) async {
-    final request = Request(
-        endDate: endDate,
-        issuerId: AuthService().getUid()!,
-        itemId: item.id!,
-        status: RequestStatus.pending,
-        type: RequestType.transfer,
-        requestMessage: requestMessage);
-
-    await RequestRepository().addRequest(request);
-  }
-
   void _borrowItem(Item item) async {
-    var today = DateTime.now();
-    final String borrowerId = AuthService().getUid()!;
-
-    var end = today.add(const Duration(days: 30));
-
-    const String requestMessage = "To be populated from modal";
-
-    // Checking whether item is already on loan
-    if (item.lentById != null) {
-      await createTransferRequest(
-          item, Timestamp.fromDate(end), requestMessage);
-    }
-
-    await _itemRepository.setLentById(widget.itemId, borrowerId.toString());
-
-    final itemInfo = Rental(
-        borrowerId: borrowerId.toString(),
-        ownerId: item.ownerId.toString(),
+    var issuerId = AuthService().getUid();
+    final requestInfo = Request(
+        endDate: Timestamp.fromDate(selectedDate),
+        issuerId: issuerId.toString(),
         itemId: widget.itemId,
-        startDate: Timestamp.fromDate(today),
-        endDate: Timestamp.fromDate(end),
-        status: "pending");
+        requestMessage: value,
+        status: RequestStatus.pending,
+        type: RequestType.borrow);
 
     try {
-      await _rentalRepository.addBorrow(itemInfo);
+      await _requestRepository.addRequest(requestInfo);
     } on DomainException catch (e) {
-      showErrorSnackBar(context, "Failed to borrow Item. ${e.message}");
+      showErrorSnackBar(context, "Failed to send request ${e.message}");
       return;
     }
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      content: Text("Item borrowed"),
+      content: Text("Send request to owner"),
     ));
-    Navigator.pop(context);
-    //}
+
+    Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
   }
 }

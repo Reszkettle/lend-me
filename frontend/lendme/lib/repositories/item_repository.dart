@@ -74,19 +74,11 @@ class ItemRepository {
       throw UnknownException();
     }
   }
-
-  Future<void> deleteItem(itemId) {
-    return firestore
-        .collection('items')
-        .doc(itemId)
-        .delete();
-  }
   // SET LENT BY ID
   Future setLentById(String itemId, String lentById) async {
     try {
       Map map = new Map();
       map["lentById"] = lentById;
-
       await firestore.runTransaction((transaction) async {
         DocumentReference ref = firestore.collection("items").doc(itemId);
         transaction.update(ref, {
@@ -97,7 +89,20 @@ class ItemRepository {
       throw UnknownException();
     }
   }
-
+  Future setLentByIdToNull(String itemId) async {
+    try {
+      Map map = new Map();
+      map["lentById"] =" ";
+      await firestore.runTransaction((transaction) async {
+        DocumentReference ref = firestore.collection("items").doc(itemId);
+        transaction.update(ref, {
+          'lentById': map['lentById'],
+        });
+      });
+    } catch (e) {
+      throw UnknownException();
+    }
+  }
 
   Future addImage(localImagePath) async {
     String downloadUrl;
