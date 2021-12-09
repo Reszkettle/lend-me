@@ -110,6 +110,4 @@ class RentalRepository {
   }
 
 
-
-
 }
