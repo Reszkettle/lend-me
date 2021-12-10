@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:lendme/components/user_view.dart';
@@ -6,6 +7,14 @@ import 'package:lendme/models/rental.dart';
 import 'package:lendme/repositories/rental_repository.dart';
 import 'package:lendme/repositories/request_repository.dart';
 import 'package:lendme/utils/constants.dart';
+import 'package:lendme/utils/error_snackbar.dart';
+import 'package:lendme/services/auth_service.dart';
+import 'package:lendme/models/request.dart';
+import 'package:lendme/models/request_type.dart';
+import 'package:lendme/models/request_status.dart';
+import 'package:lendme/exceptions/exceptions.dart';
+
+import 'extend_dialog.dart';
 
 class PanelBorrowed extends StatelessWidget {
   PanelBorrowed({required this.item, Key? key}) : super(key: key);
@@ -21,18 +30,18 @@ class PanelBorrowed extends StatelessWidget {
       stream: _rentalRepository.getItemActiveRentalStream(item.id!),
       builder: (BuildContext context, AsyncSnapshot<Rental?> rentalSnap) {
         final rental = rentalSnap.data;
-        if(rental == null) {
+        if (rental == null) {
           return const Text("Rental is null");
         }
         return StreamBuilder(
           stream: _requestRepository.userHasPendingRequestsForThisItemStream(rental.itemId),
           builder: (BuildContext context, AsyncSnapshot<bool> hasPendingRequestsSnap) {
             final hasPendingRequests = hasPendingRequestsSnap.data;
-            if(hasPendingRequests == null) {
+            if (hasPendingRequests == null) {
               return const Text("hasPendingRequests is null");
             }
             return _mainLayout(context, rental, hasPendingRequests);
-        },
+          },
         );
       },
     );
@@ -96,17 +105,14 @@ class PanelBorrowed extends StatelessWidget {
                 color: Colors.black,
                 fontWeight: FontWeight.bold,
               ),
-              children: [
-                const TextSpan(text: 'Status: Borrowed from '),
-                TextSpan(text: rental.ownerFullname)
-              ]),
+              children: [const TextSpan(text: 'Status: Borrowed from '), TextSpan(text: rental.ownerFullname)]),
         ),
       ],
     );
   }
 
   Widget _buttonsOrNot(BuildContext context, bool hasPendingRequests) {
-    if(!hasPendingRequests) {
+    if (!hasPendingRequests) {
       return _buttons(context);
     } else {
       return _notButtons();
@@ -124,20 +130,16 @@ class PanelBorrowed extends StatelessWidget {
             OutlinedButton.icon(
               label: const Text('Extend time'),
               icon: const Icon(Icons.more_time),
-              style: OutlinedButton.styleFrom(
-                  primary: Colors.white,
-                  side: const BorderSide(width: 1.0, color: Colors.white)),
+              style: OutlinedButton.styleFrom(primary: Colors.white, side: const BorderSide(width: 1.0, color: Colors.white)),
               onPressed: () {
-                // TODO: Extend time
+                _showExtendDialog(item, context);
               },
             ),
             const SizedBox(width: 16),
             OutlinedButton.icon(
               label: const Text('Transfer loan'),
               icon: const Icon(Icons.local_shipping),
-              style: OutlinedButton.styleFrom(
-                  primary: Colors.white,
-                  side: const BorderSide(width: 1.0, color: Colors.white)),
+              style: OutlinedButton.styleFrom(primary: Colors.white, side: const BorderSide(width: 1.0, color: Colors.white)),
               onPressed: () {
                 Navigator.of(context).pushNamed('/lent_qr', arguments: item);
               },
@@ -146,6 +148,14 @@ class PanelBorrowed extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  void _showExtendDialog(Item item, BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (BuildContext ctx) {
+          return ExtendDialog(item, context);
+        });
   }
 
   Widget _notButtons() {
@@ -157,7 +167,7 @@ class PanelBorrowed extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: const [
             Text(
-                "You have pending request about this item",
+              "You have pending request about this item",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
