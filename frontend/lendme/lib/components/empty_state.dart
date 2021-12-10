@@ -48,7 +48,9 @@ class _EmptyStateState extends State<EmptyState> {
       EmptyStatePlacement.lentItems: 'assets/images/empty_state_lend.png',
       EmptyStatePlacement.myItems: 'assets/images/empty_state_lend.png',
       EmptyStatePlacement.notifications:
-          'assets/images/empty_state_notifications.png'
+          'assets/images/empty_state_notifications.png',
+      EmptyStatePlacement.history:
+      'assets/images/empty_state_history.png'
     };
 
     return Image.asset(imageUriMap[widget.placement]!,
@@ -60,7 +62,8 @@ class _EmptyStateState extends State<EmptyState> {
       EmptyStatePlacement.borrowedItems: "You don't have any borrowed items",
       EmptyStatePlacement.lentItems: "You don't have any lent items",
       EmptyStatePlacement.myItems: "You don't have any items",
-      EmptyStatePlacement.notifications: "You don't have any requests"
+      EmptyStatePlacement.notifications: "You don't have any requests",
+      EmptyStatePlacement.history: "You didn't borrow this item"
     };
 
     return Text(textMap[widget.placement]!,

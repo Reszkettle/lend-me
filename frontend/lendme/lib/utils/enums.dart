@@ -7,4 +7,4 @@ enum RelationToItem {
   neutral,
 }
 
-enum EmptyStatePlacement { myItems, lentItems, borrowedItems, notifications }
+enum EmptyStatePlacement { myItems, lentItems, borrowedItems, notifications, history }

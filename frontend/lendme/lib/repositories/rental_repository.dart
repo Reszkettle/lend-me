@@ -95,13 +95,10 @@ class RentalRepository {
 
   Future returnItemById(String rentalId) async {
     try {
-      Map map = new Map();
-      map["status"] = "finished";
-
       await firestore.runTransaction((transaction) async {
         DocumentReference ref = firestore.collection("rentals").doc(rentalId);
         transaction.update(ref, {
-          'status': map['status'],
+          'status': "finished",
         });
       });
     } catch (e) {
@@ -109,5 +106,18 @@ class RentalRepository {
     }
   }
 
+  Stream<List<Rental?>> getStreamOfRentals(String itemId) {
+    return firestore
+        .collection('rentals')
+        .where('itemId', isEqualTo: itemId)
+        .orderBy('startDate', descending: true)
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((queryDocumentSnapshot) {
+        Map<String, dynamic> map = queryDocumentSnapshot.data();
+        return Rental.fromMap(map);
+      }).toList();
+    });
+  }
 
 }
