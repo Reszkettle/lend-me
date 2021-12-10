@@ -32,20 +32,6 @@ class RentalRepository {
     });
   }
 
-  Stream<List<Rental?>> getStreamOfRentals(String itemId) {
-    return firestore
-        .collection('rentals')
-        .where('itemId', isEqualTo: itemId)
-       // .orderBy('startDate', descending: true)
-        .snapshots()
-        .map((snapshot) {
-      return snapshot.docs.map((queryDocumentSnapshot) {
-        Map<String, dynamic> map = queryDocumentSnapshot.data();
-        return Rental.fromMap(map);
-      }).toList();
-    });
-  }
-
   Stream<List<ItemRental>> getStreamOfBorrowedItemsWithRentals(String uid) {
     return firestore
         .collection('rentals')
@@ -96,6 +82,7 @@ class RentalRepository {
     });
   }
 
+
   Future addBorrow(Rental rental) async {
     try {
       CollectionReference rentals =
@@ -122,6 +109,19 @@ class RentalRepository {
     }
   }
 
+  Stream<List<Rental?>> getStreamOfRentals(String itemId) {
+    return firestore
+        .collection('rentals')
+        .where('itemId', isEqualTo: itemId)
+        .orderBy('startDate', descending: true)
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((queryDocumentSnapshot) {
+        Map<String, dynamic> map = queryDocumentSnapshot.data();
+        return Rental.fromMap(map);
+      }).toList();
+    });
+  }
 
 
 

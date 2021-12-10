@@ -1,9 +1,14 @@
 import 'dart:developer';
 import 'dart:io';
+
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+
 import 'result.dart';
+
 
 class QRViewScreen extends StatefulWidget {
   const QRViewScreen({Key? key}) : super(key: key);
@@ -39,7 +44,7 @@ class _QRViewScreenState extends State<QRViewScreen> {
 
   Widget _buildQrView(BuildContext context) {
     var scanArea = (MediaQuery.of(context).size.width < 400 ||
-            MediaQuery.of(context).size.height < 400)
+        MediaQuery.of(context).size.height < 400)
         ? 190.0
         : 380.0;
 
@@ -63,12 +68,12 @@ class _QRViewScreenState extends State<QRViewScreen> {
       Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ItemDetails(
-              itemId: '${result?.code}',
-            ),
-          )).then((value) => controller.resumeCamera());
-      ;
+            builder: (context) => ItemDetails(itemId: '${result!.code}',),
+          )).then((value) => controller.resumeCamera());;
+
+
     });
+
   }
 
   void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
@@ -86,3 +91,5 @@ class _QRViewScreenState extends State<QRViewScreen> {
     super.dispose();
   }
 }
+
+
