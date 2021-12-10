@@ -80,6 +80,7 @@ class RequestRepository {
         .collection('requests')
         .where('issuerId', isEqualTo: firebaseAuth.currentUser!.uid)
         .where('itemId', isEqualTo: itemId)
+        .where('status', isEqualTo: "pending")
         .snapshots()
         .map((snapshot) => snapshot.docs.isNotEmpty);
     }
