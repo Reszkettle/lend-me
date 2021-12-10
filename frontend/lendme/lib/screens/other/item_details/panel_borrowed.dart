@@ -14,6 +14,8 @@ import 'package:lendme/models/request_type.dart';
 import 'package:lendme/models/request_status.dart';
 import 'package:lendme/exceptions/exceptions.dart';
 
+import 'extend_dialog.dart';
+
 class PanelBorrowed extends StatelessWidget {
   PanelBorrowed({required this.item, Key? key}) : super(key: key);
 
@@ -148,88 +150,12 @@ class PanelBorrowed extends StatelessWidget {
     );
   }
 
-  Widget _ExtendDialog(Item item, BuildContext context) {
-    TextEditingController dateController = TextEditingController();
-    TextEditingController messageController = TextEditingController();
-    late Timestamp timestamp;
-    return AlertDialog(
-      title: const Text('Extend Time'),
-
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          TextFormField(
-            controller: dateController,
-            decoration: const InputDecoration(
-              labelText: "Extend till date:",
-            ),
-            onTap: () async {
-              DateTime? date = DateTime.now();
-              FocusScope.of(context).requestFocus(FocusNode());
-
-              date = await showDatePicker(context: context, initialDate: DateTime.now(), firstDate: DateTime.now(), lastDate: DateTime(2100));
-              if (date != null) {
-                timestamp = Timestamp.fromDate(date);
-                dateController.text = DateFormat('dd-MM-yyyy').format(date);
-              }
-            },
-          ),
-          const SizedBox(height: 32),
-          TextFormField(
-            controller: messageController,
-            decoration: const InputDecoration(
-              labelText: "Message:",
-            ),
-          ),
-        ],
-      ),
-      actions: [
-        TextButton(
-            onPressed: () {
-              Navigator.of(context, rootNavigator: true).pop();
-            },
-            child: const Text('Cancel')),
-
-        TextButton(
-            onPressed: () {
-              if (timestamp == null) {
-                showErrorSnackBar(context, "Date cannot be empty");
-                Navigator.of(context, rootNavigator: true).pop();
-              } else {
-
-                _extendTime(item, timestamp, messageController.text);
-                Navigator.of(context, rootNavigator: true).pop();
-              }
-            },
-            child: const Text('Confirm'))
-      ],
-    );
-  }
-
   void _showExtendDialog(Item item, BuildContext context) {
     showDialog(
         context: context,
         builder: (BuildContext ctx) {
-          return _ExtendDialog(item, context);
+          return ExtendDialog(item, context);
         });
-  }
-
-  void _extendTime(Item item, Timestamp timestamp, String requestMessage) async {
-
-    await createExtendRequest(item, timestamp, requestMessage);
-
-  }
-
-  Future<void> createExtendRequest(Item item, Timestamp endDate, String? requestMessage) async {
-    final request = Request(
-        endDate: endDate,
-        issuerId: AuthService().getUid()!,
-        itemId: item.id!,
-        status: RequestStatus.pending,
-        type: RequestType.extend,
-        requestMessage: requestMessage);
-
-    await RequestRepository().addRequest(request);
   }
 
   Widget _notButtons() {
