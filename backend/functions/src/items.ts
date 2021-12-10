@@ -10,17 +10,20 @@ export async function getItem(itemId: string): Promise<Item> {
 
 export const onItemDeleteRemoveRelatedRecords = functions.firestore.document("items/{item}").onDelete( async (snapshot) => {
   const deletedItemId = snapshot.id;
-  await Promise.all([removeRequestsByItemId(deletedItemId), removeRentalsByItemId(deletedItemId)]);
+
+  const rentalRefs = await getRentalRefsByItemId(deletedItemId);
+  const requestRefs = await getRequestRefsByItemId(deletedItemId);
+
+  const deletionBatch = firestore.batch();
+  [...rentalRefs, ...requestRefs].forEach((ref) => deletionBatch.delete(ref));
+
+  return deletionBatch.commit();
 });
 
-const removeRentalsByItemId = async (itemId: string): Promise<void> => {
-  (await firestore.collection("rentals").where("itemId", "==", itemId).get()).docs.forEach(async (doc) => {
-    await doc.ref.delete();
-  });
+const getRentalRefsByItemId = async (itemId: string) => {
+  return (await firestore.collection("rentals").where("itemId", "==", itemId).get()).docs.map((doc) => doc.ref);
 };
 
-const removeRequestsByItemId = async (itemId: string): Promise<void> => {
-  (await firestore.collection("requests").where("itemId", "==", itemId).get()).docs.forEach(async (doc) => {
-    await doc.ref.delete();
-  });
+const getRequestRefsByItemId = async (itemId: string) => {
+  return (await firestore.collection("requests").where("itemId", "==", itemId).get()).docs.map((doc) => doc.ref);
 };
