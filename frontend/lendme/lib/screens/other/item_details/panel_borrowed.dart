@@ -153,13 +153,15 @@ class PanelBorrowed extends StatelessWidget {
     TextEditingController messageController = TextEditingController();
     late Timestamp timestamp;
     return AlertDialog(
-      title: const Text('Choose Date'),
+      title: const Text('Extend Time'),
+
       content: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           TextFormField(
             controller: dateController,
             decoration: const InputDecoration(
-              labelText: "Extend till",
+              labelText: "Extend till date:",
             ),
             onTap: () async {
               DateTime? date = DateTime.now();
@@ -172,10 +174,11 @@ class PanelBorrowed extends StatelessWidget {
               }
             },
           ),
+          const SizedBox(height: 32),
           TextFormField(
             controller: messageController,
             decoration: const InputDecoration(
-              labelText: "Message",
+              labelText: "Message:",
             ),
           ),
         ],
@@ -186,6 +189,7 @@ class PanelBorrowed extends StatelessWidget {
               Navigator.of(context, rootNavigator: true).pop();
             },
             child: const Text('Cancel')),
+
         TextButton(
             onPressed: () {
               if (timestamp == null) {
