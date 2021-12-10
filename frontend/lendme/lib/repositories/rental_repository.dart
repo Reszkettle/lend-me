@@ -82,6 +82,7 @@ class RentalRepository {
     });
   }
 
+
   Future addBorrow(Rental rental) async {
     try {
       CollectionReference rentals =
@@ -107,8 +108,6 @@ class RentalRepository {
       throw UnknownException();
     }
   }
-
-
 
 
 }
