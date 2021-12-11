@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:lendme/components/confirm_dialog.dart';
+import 'package:lendme/components/empty_state.dart';
 import 'package:lendme/components/loadable_area.dart';
 import 'package:lendme/models/item.dart';
 import 'package:lendme/models/request.dart';
@@ -9,9 +10,10 @@ import 'package:lendme/models/request_type.dart';
 import 'package:lendme/models/user.dart';
 import 'package:lendme/repositories/item_repository.dart';
 import 'package:lendme/repositories/request_repository.dart';
+import 'package:lendme/screens/home/home.dart';
+import 'package:lendme/utils/enums.dart';
 import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:lendme/models/rental.dart';
 import 'package:lendme/services/auth_service.dart';
 import 'package:lendme/repositories/rental_repository.dart';
 import 'package:lendme/repositories/user_repository.dart';
@@ -29,8 +31,11 @@ class ItemDetails extends StatefulWidget {
 
 class _ItemDetailsState extends State<ItemDetails> {
   final ItemRepository _itemRepository = ItemRepository();
-  final RentalRepository _rentalRepository = RentalRepository();
-  final UserRepository _userRepository = UserRepository();
+  final RequestRepository _requestRepository=RequestRepository();
+
+  String date = "";
+  DateTime selectedDate = DateTime.now();
+  String value = "";
 
   @override
   Widget build(BuildContext context) {
@@ -42,46 +47,119 @@ class _ItemDetailsState extends State<ItemDetails> {
 
   Widget _buildFromItem(BuildContext context, AsyncSnapshot<Item?> itemSnap) {
     final item = itemSnap.data;
-
     final user = Provider.of<User?>(context);
     if (user == null) {
       return Container();
     }
-
-    return Scaffold(
-      appBar: AppBar(
-          title: Row(
-            children: [
-              const Text('Item: '),
-              if (item != null) Text(item.title),
-            ],
-          ),
-          elevation: 0.0),
-      body: LoadableArea(
-          initialState:
-              item == null ? LoadableAreaState.loading : LoadableAreaState.main,
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.only(
-                  left: 16.0, right: 16.0, top: 0, bottom: 16.0),
-              child: _mainLayout(context, item),
+    if(item==null)
+      {
+        return Scaffold(
+          appBar: AppBar(
+              title: Row(
+                children: [
+                  const Text('No item'),
+                  if (item != null) Text(item.title),
+                ],
+              ),
+              elevation: 0.0),
+          body:
+          EmptyState(
+              placement: EmptyStatePlacement.scanValue),
+        );
+      }
+    else {
+      return Scaffold(
+        appBar: AppBar(
+            title: Row(
+              children: [
+                const Text('Item: '),
+                if (item != null) Text(item.title),
+              ],
             ),
-          )),
-    );
+            elevation: 0.0),
+        body: LoadableArea(
+            initialState:
+            item == null ? LoadableAreaState.loading : LoadableAreaState.main,
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.only(
+                    left: 16.0, right: 16.0, top: 0, bottom: 16.0),
+                child: _mainLayout(context, item),
+              ),
+            )),
+      );
+    }
   }
 
   Widget _mainLayout(BuildContext context, Item? item) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _itemImage(context, item),
-        const SizedBox(height: 16.0),
-        _title(item),
-        if (item?.description != null) _description(context, item),
-        const SizedBox(height: 16.0),
-        _borrowButton(item),
-      ],
+    return Column(children: [
+      const SizedBox(height: 16.0),
+      _itemImage(context, item),
+      const SizedBox(height: 16.0),
+      _title(item),
+      if (item?.description != null) _description(context, item),
+      const SizedBox(height: 16.0),
+      _borrow(context, item)
+    ]);
+  }
+
+  Widget _borrow(BuildContext context, Item? item) {
+    return Container(
+        margin: const EdgeInsets.all(5.0),
+        padding: const EdgeInsets.all(20.0),
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: Colors.blue,
+          ),
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            const Text("Borrow"),
+            const SizedBox(height: 16.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    _selectDate(context);
+                  },
+                  child: const Text("Choose Date"),
+                ),
+                Text(
+                    "${selectedDate.day}/${selectedDate.month}/${selectedDate.year}"),
+              ],
+            ),
+
+            TextField(
+              onChanged: (text) {
+                value = text;
+              },
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                labelText: 'Enter message to owner of item',
+                hintText: value,
+              ),
+            ),
+            //Text(value),
+            _borrowButton(item),
+          ],
+        ));
+  }
+  _selectDate(BuildContext context) async {
+    final DateTime? selected = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2025),
     );
+    if (selected != null && selected != selectedDate)
+      setState(() {
+        selectedDate = selected;
+      });
   }
 
   Widget _itemImage(BuildContext context, Item? item) {
@@ -153,10 +231,10 @@ class _ItemDetailsState extends State<ItemDetails> {
   }
 
   void _showBorrowDialog(Item item) {
-    //_borrowItem(item);
     showConfirmDialog(
         context: context,
-        message: 'Are you sure that you want to borrow this item?',
+        message:
+        'Are you sure that you want to borrow ${item.title} from ${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year} to ${selectedDate.day}/${selectedDate.month}/${selectedDate.year}?',
         yesCallback: () => _borrowItem(item));
   }
 
@@ -194,39 +272,33 @@ class _ItemDetailsState extends State<ItemDetails> {
   }
 
   void _borrowItem(Item item) async {
-    var today = DateTime.now();
-    final String borrowerId = AuthService().getUid()!;
-
-    var end = today.add(const Duration(days: 30));
-
-    const String requestMessage = "To be populated from modal";
 
     // Checking whether item is already on loan
     if (item.lentById != null) {
       await createTransferRequest(
-          item, Timestamp.fromDate(end), requestMessage);
+          item, Timestamp.fromDate(selectedDate), value);
+    }
+    else {
+      var issuerId = AuthService().getUid();
+      final requestInfo = Request(
+          endDate: Timestamp.fromDate(selectedDate),
+          issuerId: issuerId.toString(),
+          itemId: widget.itemId,
+          requestMessage: value,
+          status: RequestStatus.pending,
+          type: RequestType.borrow);
+
+      try {
+        await _requestRepository.addRequest(requestInfo);
+      } on DomainException catch (e) {
+        showErrorSnackBar(context, "Failed to send request ${e.message}");
+        return;
+      }
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text("Send request to owner"),
+      ));
     }
 
-    await _itemRepository.setLentById(widget.itemId, borrowerId.toString());
-
-    final itemInfo = Rental(
-        borrowerId: borrowerId.toString(),
-        ownerId: item.ownerId.toString(),
-        itemId: widget.itemId,
-        startDate: Timestamp.fromDate(today),
-        endDate: Timestamp.fromDate(end),
-        status: "pending");
-
-    try {
-      await _rentalRepository.addBorrow(itemInfo);
-    } on DomainException catch (e) {
-      showErrorSnackBar(context, "Failed to borrow Item. ${e.message}");
-      return;
-    }
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      content: Text("Item borrowed"),
-    ));
-    Navigator.pop(context);
-    //}
+    Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
   }
 }
