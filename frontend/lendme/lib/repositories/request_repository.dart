@@ -28,7 +28,7 @@ class RequestRepository {
       await firestore.collection('requests').add(request.toMap());
     } on PlatformException catch (exception) {
       throw UnknownException(exception.message ??
-          'Something went wrong while creating transfer request');
+          'Something went wrong');
     }
   }
 
