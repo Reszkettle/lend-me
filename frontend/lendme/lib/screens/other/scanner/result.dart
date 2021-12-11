@@ -1,8 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lendme/components/confirm_dialog.dart';
 import 'package:lendme/components/empty_state.dart';
-import 'package:lendme/components/loadable_area.dart';
+import 'package:lendme/exceptions/exceptions.dart';
 import 'package:lendme/models/item.dart';
 import 'package:lendme/models/request.dart';
 import 'package:lendme/models/request_status.dart';
@@ -11,14 +12,10 @@ import 'package:lendme/models/user.dart';
 import 'package:lendme/repositories/item_repository.dart';
 import 'package:lendme/repositories/request_repository.dart';
 import 'package:lendme/screens/home/home.dart';
-import 'package:lendme/utils/enums.dart';
-import 'package:provider/provider.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lendme/services/auth_service.dart';
-import 'package:lendme/repositories/rental_repository.dart';
-import 'package:lendme/repositories/user_repository.dart';
-import 'package:lendme/exceptions/exceptions.dart';
+import 'package:lendme/utils/enums.dart';
 import 'package:lendme/utils/error_snackbar.dart';
+import 'package:provider/provider.dart';
 
 class ItemDetails extends StatefulWidget {
   const ItemDetails({Key? key, required this.itemId}) : super(key: key);
@@ -63,8 +60,7 @@ class _ItemDetailsState extends State<ItemDetails> {
               ),
               elevation: 0.0),
           body:
-          EmptyState(
-              placement: EmptyStatePlacement.scanValue),
+          const EmptyState(placement: EmptyStatePlacement.scanValue),
         );
       }
     else {
@@ -73,20 +69,17 @@ class _ItemDetailsState extends State<ItemDetails> {
             title: Row(
               children: [
                 const Text('Item: '),
-                if (item != null) Text(item.title),
+                Text(item.title),
               ],
             ),
             elevation: 0.0),
-        body: LoadableArea(
-            initialState:
-            item == null ? LoadableAreaState.loading : LoadableAreaState.main,
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.only(
-                    left: 16.0, right: 16.0, top: 0, bottom: 16.0),
-                child: _mainLayout(context, item),
-              ),
-            )),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.only(
+                left: 16.0, right: 16.0, top: 0, bottom: 16.0),
+            child: _mainLayout(context, item),
+          ),
+        ),
       );
     }
   }
@@ -156,10 +149,11 @@ class _ItemDetailsState extends State<ItemDetails> {
       firstDate: DateTime.now(),
       lastDate: DateTime(2025),
     );
-    if (selected != null && selected != selectedDate)
+    if (selected != null && selected != selectedDate) {
       setState(() {
         selectedDate = selected;
       });
+    }
   }
 
   Widget _itemImage(BuildContext context, Item? item) {
@@ -235,7 +229,7 @@ class _ItemDetailsState extends State<ItemDetails> {
         context: context,
         message:
         'Are you sure that you want to borrow ${item.title} from ${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year} to ${selectedDate.day}/${selectedDate.month}/${selectedDate.year}?',
-        yesCallback: () => _borrowItem(item));
+        yesCallback: () => _borrowOrTransferItem(item));
   }
 
   Widget _borrowButton(Item? item) {
@@ -252,53 +246,56 @@ class _ItemDetailsState extends State<ItemDetails> {
               _showBorrowDialog(item);
             }
           },
+          // TODO: Maybe show borrow / transfer text instead of borrow always?
           child: const Text('Borrow'),
         ),
       ],
     );
   }
 
-  Future<void> createTransferRequest(
-      Item item, Timestamp endDate, String? requestMessage) async {
+  void _borrowOrTransferItem(Item item) async {
+    // Checking whether item is already on loan
+    if (item.lentById != null) {
+      await _createTransferRequest();
+    }
+    else {
+      await _createBorrowRequest();
+    }
+
+    Navigator.push(context, MaterialPageRoute(builder: (context) => const Home()));
+  }
+
+  Future<void> _createTransferRequest() async {
     final request = Request(
-        endDate: endDate,
+        endDate: Timestamp.fromDate(selectedDate),
         issuerId: AuthService().getUid()!,
-        itemId: item.id!,
+        itemId: widget.itemId,
         status: RequestStatus.pending,
         type: RequestType.transfer,
-        requestMessage: requestMessage);
+        requestMessage: value);
 
     await RequestRepository().addRequest(request);
   }
 
-  void _borrowItem(Item item) async {
+  Future<void> _createBorrowRequest() async {
+    var issuerId = AuthService().getUid();
+    final requestInfo = Request(
+        endDate: Timestamp.fromDate(selectedDate),
+        issuerId: issuerId.toString(),
+        itemId: widget.itemId,
+        requestMessage: value,
+        status: RequestStatus.pending,
+        type: RequestType.borrow);
 
-    // Checking whether item is already on loan
-    if (item.lentById != null) {
-      await createTransferRequest(
-          item, Timestamp.fromDate(selectedDate), value);
+    try {
+      await _requestRepository.addRequest(requestInfo);
+    } on DomainException catch (e) {
+      showErrorSnackBar(context, "Failed to send request: ${e.message}");
+      return;
     }
-    else {
-      var issuerId = AuthService().getUid();
-      final requestInfo = Request(
-          endDate: Timestamp.fromDate(selectedDate),
-          issuerId: issuerId.toString(),
-          itemId: widget.itemId,
-          requestMessage: value,
-          status: RequestStatus.pending,
-          type: RequestType.borrow);
-
-      try {
-        await _requestRepository.addRequest(requestInfo);
-      } on DomainException catch (e) {
-        showErrorSnackBar(context, "Failed to send request ${e.message}");
-        return;
-      }
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text("Send request to owner"),
-      ));
-    }
-
-    Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text("Request sent to owner"),
+    ));
   }
+
 }
