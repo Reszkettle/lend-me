@@ -100,8 +100,6 @@ class AuthButtons extends StatelessWidget {
       children: [
         emailButton(context),
         const SizedBox(height: 10),
-        facebookButton(context),
-        const SizedBox(height: 10),
         googleButton(context),
       ],
     );
@@ -115,26 +113,6 @@ class AuthButtons extends StatelessWidget {
         elevation: 0,
         onPressed: () async {
           Navigator.of(context).pushNamed('/email');
-        },
-      ),
-    );
-  }
-
-  SizedBox facebookButton(BuildContext context) {
-    return SizedBox(
-      height: 50,
-      child: SignInButton(
-        Buttons.Facebook,
-        elevation: 0,
-        onPressed: () async {
-          try {
-            _loadableAreaController.setState(LoadableAreaState.pending);
-            await Future.delayed(const Duration(seconds: 1));
-            await _auth.signInWithFacebook();
-          } on DomainException catch(e) {
-            _loadableAreaController.setState(LoadableAreaState.main);
-            showErrorSnackBar(context, e.message);
-          }
         },
       ),
     );
