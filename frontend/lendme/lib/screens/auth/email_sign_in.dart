@@ -37,7 +37,7 @@ class _EmailSignInState extends State<EmailSignIn> {
                 TextFormField(
                   decoration: const InputDecoration(
                       border: OutlineInputBorder(),
-                      hintText: 'Email',
+                      labelText: 'Email',
                       prefixIcon: Icon(Icons.email)
                   ),
                   validator: (val) => val!.isEmpty ? 'Enter an email' : null,
@@ -52,7 +52,7 @@ class _EmailSignInState extends State<EmailSignIn> {
                   obscureText: true,
                   decoration: const InputDecoration(
                       border: OutlineInputBorder(),
-                      hintText: 'Password',
+                      labelText: 'Passowrd',
                       prefixIcon: Icon(Icons.password)
                   ),
                   validator: (val) => val!.length < 6 ? 'Enter a password min 6 characters long' : null,
