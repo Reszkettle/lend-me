@@ -1,6 +1,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:lendme/components/background.dart';
+import 'package:lendme/repositories/user_repository.dart';
 import 'package:lendme/utils/constants.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'borrowed.dart';
@@ -79,6 +80,7 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    UserRepository().updateToken();
     return Background(
       child: Scaffold(
           backgroundColor: Colors.transparent,

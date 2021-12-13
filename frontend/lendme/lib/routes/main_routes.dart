@@ -51,6 +51,6 @@ Route? mainRoutes(RouteSettings settings) {
     return MaterialPageRoute(builder: (context) {return RequestScreen(requestId: requestId);});
   }
   else if(settings.name == '/delete') {
-    return MaterialPageRoute(builder: (context) {return const DeleteAccount();});
+    return MaterialPageRoute(builder: (context) {return DeleteAccount();});
   }
 }

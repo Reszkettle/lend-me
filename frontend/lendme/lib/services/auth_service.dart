@@ -82,9 +82,12 @@ class AuthService {
   // sign out
   Future signOut() async {
     try {
-      await _userRepository.clearToken();
+      try {
+        await _userRepository.clearToken();
+      } catch(e) {}
       return await _auth.signOut();
     } catch (e) {
+      print(e);
       throw _mapAuthException(e);
     }
   }
