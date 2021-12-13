@@ -73,6 +73,7 @@ class _HomeState extends State<Home> {
       return;
     }
     print("Message received: $message");
+    print("requestId: $requestId");
     Navigator.of(context).pushNamed('/request', arguments: requestId);
   }
 
