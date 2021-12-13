@@ -59,6 +59,7 @@ class AuthService {
       UserCredential credential = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       User? user = credential.user;
+      _userRepository.updateToken();
       return user?.uid;
     } catch (e) {
       throw _mapAuthException(e);

@@ -46,9 +46,12 @@ class NotificationService {
       RemoteNotification? notification = message.notification;
       AndroidNotification? android = message.notification?.android;
 
-      print('1');
+      final requestId = message.data['requestId'] as String?;
+      if(requestId == null) {
+        return;
+      }
+
       if (notification != null && android != null) {
-        print('2');
         flutterLocalNotificationsPlugin.show(
             notification.hashCode,
             notification.title,
@@ -59,13 +62,13 @@ class NotificationService {
                 channel.name,
               ),
             ),
-          payload: "abc",
+          payload: requestId,
         );
       }
     });
   }
 
   static Future onSelectNotification(String payload) async {
-    mainNavigator.currentState!.pushNamed('/request', arguments: 'borrow');
+    mainNavigator.currentState!.pushNamed('/request', arguments: payload);
   }
 }
