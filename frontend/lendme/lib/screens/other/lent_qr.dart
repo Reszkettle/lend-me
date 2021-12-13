@@ -26,7 +26,12 @@ class LentQr extends StatelessWidget {
           Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Text("${item.title}"),
+              Text(
+                item.title,
+                style: const TextStyle(
+                  fontSize: 27.0,
+                ),
+              ),
               QrImage(
                 backgroundColor: Colors.white,
                 data: "${item.id}",

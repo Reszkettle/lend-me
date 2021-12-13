@@ -24,7 +24,7 @@ class Settings extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                RaisedButton(
+                ElevatedButton(
                 onPressed: () => {
                 Navigator.of(context).pushNamed('/edit_profile'),
           },
@@ -47,13 +47,10 @@ class Settings extends StatelessWidget {
                   ],
                 ),
               ),
-              shape: new RoundedRectangleBorder(
-                  borderRadius: new BorderRadius.circular(5.0)
-              )
           ),
 
                 const SizedBox(height: 16.0),
-                RaisedButton(
+                ElevatedButton(
                     onPressed: () => {
                     Navigator.of(context).pushNamed('/change_theme'),
                     },
@@ -76,13 +73,10 @@ class Settings extends StatelessWidget {
                         ],
                       ),
                     ),
-                    shape: new RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(5.0)
-                    )
                 ),
                 const SizedBox(height: 16.0),
 
-                RaisedButton(
+                ElevatedButton(
                     onPressed: () => {
                     Navigator.of(context).pushNamed('/credits'),
                     },
@@ -105,12 +99,9 @@ class Settings extends StatelessWidget {
                         ],
                       ),
                     ),
-                    shape: new RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(5.0)
-                    )
                 ),
                 const SizedBox(height: 16.0),
-                RaisedButton(
+                ElevatedButton(
                     onPressed: () => _showLogOutConfirmDialog(context),
                     // padding: const EdgeInsets.all(0.0),
                     child: Container(
@@ -131,9 +122,6 @@ class Settings extends StatelessWidget {
                         ],
                       ),
                     ),
-                    shape: new RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(5.0)
-                    )
                 ),
               ],
             ),

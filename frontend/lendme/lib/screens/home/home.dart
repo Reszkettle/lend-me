@@ -127,6 +127,7 @@ class _HomeState extends State<Home> {
   Widget? _floatingActionButton() {
     if(_selectedIndex == 0) {
       return FloatingActionButton(
+        backgroundColor: Theme.of(context).primaryColor,
         child: const Icon(Icons.add),
         onPressed: () {
           Navigator.of(context).pushNamed('/add_item');
@@ -135,6 +136,7 @@ class _HomeState extends State<Home> {
     }
     else if(_selectedIndex == 2) {
       return FloatingActionButton(
+          backgroundColor: Theme.of(context).primaryColor,
           child: const Icon(Icons.qr_code_scanner_rounded),
           onPressed: () {
             Navigator.of(context).push(MaterialPageRoute(

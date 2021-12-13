@@ -204,13 +204,13 @@ class _EditProfileState extends State<EditProfile> {
       inputFormatters: [
         LengthLimitingTextInputFormatter(EditProfile.maxFirstNameLength),
       ],
-      decoration: const InputDecoration(
-          fillColor: Colors.white,
+      decoration: InputDecoration(
+          fillColor: Theme.of(context).canvasColor,
           filled: true,
-          border: OutlineInputBorder(),
+          border: const OutlineInputBorder(),
           hintText: 'First name',
           labelText: 'First name',
-          prefixIcon: Icon(Icons.person_rounded)
+          prefixIcon: const Icon(Icons.person_rounded)
       ),
       validator: validateFirstName,
     );
@@ -223,13 +223,13 @@ class _EditProfileState extends State<EditProfile> {
       inputFormatters: [
         LengthLimitingTextInputFormatter(EditProfile.maxLastNameLength),
       ],
-      decoration: const InputDecoration(
-          fillColor: Colors.white,
+      decoration: InputDecoration(
+          fillColor: Theme.of(context).canvasColor,
           filled: true,
-          border: OutlineInputBorder(),
+          border: const OutlineInputBorder(),
           labelText: 'Last name',
           hintText: 'Last name',
-          prefixIcon: Icon(Icons.person_rounded)
+          prefixIcon: const Icon(Icons.person_rounded)
       ),
       validator: validateLastName,
     );
@@ -243,13 +243,13 @@ class _EditProfileState extends State<EditProfile> {
       inputFormatters: [
         LengthLimitingTextInputFormatter(EditProfile.maxEmailLength),
       ],
-      decoration: const InputDecoration(
-          fillColor: Colors.white,
+      decoration: InputDecoration(
+          fillColor: Theme.of(context).canvasColor,
           filled: true,
-          border: OutlineInputBorder(),
+          border: const OutlineInputBorder(),
           labelText: 'Email address',
           hintText: 'Email address',
-          prefixIcon: Icon(Icons.email_rounded)
+          prefixIcon: const Icon(Icons.email_rounded)
       ),
       validator: validateEmail,
     );
@@ -263,13 +263,13 @@ class _EditProfileState extends State<EditProfile> {
       inputFormatters: [
         LengthLimitingTextInputFormatter(EditProfile.maxPhoneLength),
       ],
-      decoration: const InputDecoration(
-          fillColor: Colors.white,
+      decoration: InputDecoration(
+          fillColor: Theme.of(context).canvasColor,
           filled: true,
-          border: OutlineInputBorder(),
+          border: const OutlineInputBorder(),
           labelText: 'Phone number',
           hintText: 'Phone number',
-          prefixIcon: Icon(Icons.call_rounded)
+          prefixIcon: const Icon(Icons.call_rounded)
       ),
       validator: validatePhone,
     );
