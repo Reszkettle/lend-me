@@ -123,6 +123,31 @@ class Settings extends StatelessWidget {
                       ),
                     ),
                 ),
+                const SizedBox(height: 16.0),
+                ElevatedButton(
+                  onPressed: () => {
+                    Navigator.of(context).pushNamed('/delete'),
+                  },
+                  // padding: const EdgeInsets.all(0.0),
+                  child: Container(
+                    padding: const EdgeInsets.only(top: 20.0, bottom: 20 ),
+                    child:Row(
+                      children: [
+                        Align(
+                            alignment: Alignment.centerLeft,
+                            child: Icon(Icons.logout)
+                        ),
+                        Container(
+                            margin: const EdgeInsets.only( left: 10.0 ),
+                            child: Text(
+                              "Delete account",
+                              style: TextStyle( fontSize: 20.0),
+                            )
+                        )
+                      ],
+                    ),
+                  ),
+                ),
               ],
             ),
           ),

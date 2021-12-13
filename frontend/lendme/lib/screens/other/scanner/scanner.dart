@@ -80,7 +80,7 @@ class _QRViewScreenState extends State<QRViewScreen> {
     log('${DateTime.now().toIso8601String()}_onPermissionSet $p');
     if (!p) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('no Permission')),
+        const SnackBar(content: Text('No permission')),
       );
     }
   }

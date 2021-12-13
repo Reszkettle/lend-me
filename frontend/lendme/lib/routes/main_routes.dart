@@ -8,6 +8,7 @@ import 'package:lendme/screens/other/lent_qr.dart';
 import 'package:lendme/screens/other/requests/request_screen.dart';
 import 'package:lendme/screens/settings/change_theme.dart';
 import 'package:lendme/screens/settings/credits.dart';
+import 'package:lendme/screens/settings/delete_account.dart';
 import 'package:lendme/screens/settings/edit_profile.dart';
 import 'package:lendme/screens/settings/settings.dart';
 import 'package:page_transition/page_transition.dart';
@@ -48,5 +49,8 @@ Route? mainRoutes(RouteSettings settings) {
   else if(settings.name == '/request') {
     var requestId = settings.arguments! as String;
     return MaterialPageRoute(builder: (context) {return RequestScreen(requestId: requestId);});
+  }
+  else if(settings.name == '/delete') {
+    return MaterialPageRoute(builder: (context) {return const DeleteAccount();});
   }
 }
