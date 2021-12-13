@@ -9,7 +9,8 @@ class Themes {
     ),
   );
   static final dark = ThemeData.dark().copyWith(
-    canvasColor: Colors.black.withOpacity(0.7),
+    canvasColor: Colors.black.withOpacity(0.7), // Background
+
     primaryColor: darkPrimaryColor,
     scaffoldBackgroundColor: darkBackgroundColor,
     bottomAppBarColor: darkBackgroundColor,
