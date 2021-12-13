@@ -153,7 +153,7 @@ class _FromTime extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        Text(dateTimeFormat.format(rental.endDate.toDate())),
+        Text(dateTimeFormat.format(rental.startDate.toDate())),
         const SizedBox(height: 8),
       ],
     );
