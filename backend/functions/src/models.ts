@@ -56,6 +56,7 @@ export type RequestStatus = "pending" | "accepted" | "rejected";
 export type RequestType = "borrow" | "extend" | "transfer";
 
 export interface RequestUpdate {
+  createdAt: admin.firestore.Timestamp | admin.firestore.FieldValue;
   endDate: admin.firestore.Timestamp | admin.firestore.FieldValue;
   issuerId: string;
   itemId: string;

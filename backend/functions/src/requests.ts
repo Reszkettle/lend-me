@@ -195,30 +195,23 @@ async function updateStatusAndMessage(requestId: string, status: RequestStatus,
 }
 
 
-export const onWriteUpdateDisplayedTitleAndSubtitleOnTile = functions.firestore.document("requests/{request}").onWrite(async (snapshot) => {
-  const request: Request = snapshot.after.data() as Request;
-  const requestId = snapshot.after.id;
-
+export const onWriteUpdateDisplayedTitleAndSubtitleOnTile = functions.firestore.document("requests/{request}").onCreate(async (snapshot) => {
+  const request: Request = snapshot.data() as Request;
+  const createdAt = admin.firestore.FieldValue.serverTimestamp();
   const item = await getItem(request.itemId);
   const title = await getTitleFromType(request.type);
   const subtitle = `Item: ${item.title}`;
 
-  await updateRequest(requestId, title, subtitle, [
-    request.issuerId,
-    item.ownerId,
-  ]);
+  const requestUpdate: Partial<RequestUpdate> = {
+    createdAt,
+    title,
+    subtitle,
+    receivers: [item.ownerId, request.issuerId],
+  };
+
+  return snapshot.ref.update(requestUpdate);
 });
 
 async function getTitleFromType(type: RequestType): Promise<string> {
   return type === "extend" ? "Time extend request" : "Borrow request";
-}
-
-async function updateRequest(requestId: string, title: string, subtitle: string, receivers: Array<string>) {
-  const requestUpdate: Partial<RequestUpdate> = {
-    title,
-    subtitle,
-    receivers,
-  };
-
-  await firestore.collection("requests").doc(requestId).update(requestUpdate);
 }

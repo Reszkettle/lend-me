@@ -4,6 +4,7 @@ import 'package:lendme/models/request_type.dart';
 
 class Request {
   String? id;
+  Timestamp? createdAt;
   Timestamp endDate;
   String issuerId;
   String itemId;
@@ -19,6 +20,7 @@ class Request {
       required this.endDate,
       required this.issuerId,
       required this.itemId,
+      this.createdAt,
       this.requestMessage,
       this.responseMessage,
       this.title,
@@ -33,6 +35,7 @@ class Request {
     return Request(
         id: id,
         endDate: json['endDate'] as Timestamp,
+        createdAt: json['createdAt'] as Timestamp?,
         issuerId: json['issuerId'] as String,
         itemId: json['itemId'] as String,
         requestMessage: json['requestMessage'] as String?,
@@ -47,6 +50,7 @@ class Request {
     return {
       'id': id,
       'endDate': endDate,
+      'createdAt': createdAt,
       'issuerId': issuerId,
       'itemId': itemId,
       'requestMessage': requestMessage,

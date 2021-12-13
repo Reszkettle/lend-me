@@ -14,6 +14,7 @@ class RequestRepository {
     return firestore
         .collection('requests')
         .where('receivers', arrayContains: firebaseAuth.currentUser!.uid)
+        .orderBy('field')
         .snapshots()
         .map((snapshot) {
       return snapshot.docs.map((queryDocumentSnapshot) {
