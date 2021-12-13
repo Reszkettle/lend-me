@@ -33,9 +33,9 @@ class _RentalTileState extends State<RentalTile> {
   Color getBackgroundColor() {
     switch (widget.rental.status) {
       case "pending" :
-        return Colors.white;
+        return Theme.of(context).highlightColor;
       default:
-        return Colors.black12;
+        return Theme.of(context).cardColor;
     }
   }
 
