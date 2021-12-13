@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lendme/components/background.dart';
 import 'package:lendme/services/theme_service.dart';
 
 class ChangeTheme extends StatelessWidget {
@@ -6,28 +7,31 @@ class ChangeTheme extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Change theme'), elevation: 0.0),
-      body: Column(
-        children: [
-          const SizedBox(height: 15.0),
-          Center(
-            child: ElevatedButton(
-              child: const Text(
-                'Change Theme to Dark Mode',
+    return Background(
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(title: const Text('Change theme'), elevation: 0.0),
+        body: Column(
+          children: [
+            const SizedBox(height: 15.0),
+            Center(
+              child: ElevatedButton(
+                child: const Text(
+                  'Change Theme to Dark Mode',
+                ),
+                onPressed: ThemeService().switchToDark,
               ),
-              onPressed: ThemeService().switchToDark,
             ),
-          ),
-          Center(
-            child: ElevatedButton(
-              child: const Text(
-                'Change Theme to Light Mode',
+            Center(
+              child: ElevatedButton(
+                child: const Text(
+                  'Change Theme to Light Mode',
+                ),
+                onPressed: ThemeService().switchToLight,
               ),
-              onPressed: ThemeService().switchToLight,
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

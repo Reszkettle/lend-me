@@ -15,6 +15,7 @@ class _BorrowedState extends State<Borrowed> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Colors.transparent,
         floatingActionButton: null,
         body: RentalsList(
             rentalsStream: RentalRepository()

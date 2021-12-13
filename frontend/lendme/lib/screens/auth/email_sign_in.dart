@@ -36,6 +36,8 @@ class _EmailSignInState extends State<EmailSignIn> {
                 const SizedBox(height: 20.0),
                 TextFormField(
                   decoration: const InputDecoration(
+                      fillColor: Colors.white,
+                      filled: true,
                       border: OutlineInputBorder(),
                       labelText: 'Email',
                       prefixIcon: Icon(Icons.email)
@@ -51,6 +53,8 @@ class _EmailSignInState extends State<EmailSignIn> {
                 TextFormField(
                   obscureText: true,
                   decoration: const InputDecoration(
+                      fillColor: Colors.white,
+                      filled: true,
                       border: OutlineInputBorder(),
                       labelText: 'Passowrd',
                       prefixIcon: Icon(Icons.password)

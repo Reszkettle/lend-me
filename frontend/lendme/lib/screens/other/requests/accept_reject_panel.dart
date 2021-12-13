@@ -21,7 +21,7 @@ class AcceptRejectPanel extends StatefulWidget {
 class _AcceptRejectPanelState extends State<AcceptRejectPanel> {
 
   bool _pendingOperation = false;
-  TextEditingController _messageController = TextEditingController();
+  final TextEditingController _messageController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -79,6 +79,8 @@ class _AcceptRejectPanelState extends State<AcceptRejectPanel> {
           child: TextFormField(
             controller: _messageController,
             decoration: InputDecoration(
+                fillColor: Colors.white,
+                filled: true,
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(
                     color: Theme.of(context).primaryColor,

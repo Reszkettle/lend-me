@@ -1,5 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:lendme/components/background.dart';
 import 'package:lendme/utils/constants.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'borrowed.dart';
@@ -77,46 +78,49 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-            title: const Text('Lend me'),
-            elevation: 0.0,
-            actions: <Widget>[
-              IconButton(
-                icon: const Icon(Icons.settings_rounded, color: Colors.white),
-                onPressed: () async {
-                  Navigator.of(context).pushNamed('/settings');
-                },
+    return Background(
+      child: Scaffold(
+          backgroundColor: Colors.transparent,
+          appBar: AppBar(
+              title: const Text('Lend me'),
+              elevation: 0.0,
+              actions: <Widget>[
+                IconButton(
+                  icon: const Icon(Icons.settings_rounded, color: Colors.white),
+                  onPressed: () async {
+                    Navigator.of(context).pushNamed('/settings');
+                  },
+                ),
+              ]),
+          body: Center(
+            child: _tabsContent[_selectedIndex],
+          ),
+          floatingActionButton: _floatingActionButton(),
+          bottomNavigationBar: BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
+            items: const <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: Icon(Icons.category_rounded),
+                label: 'Items',
               ),
-            ]),
-        body: Center(
-          child: _tabsContent[_selectedIndex],
-        ),
-        floatingActionButton: _floatingActionButton(),
-        bottomNavigationBar: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.category_rounded),
-              label: 'Items',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.file_upload_rounded),
-              label: 'Lent',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.download_rounded),
-              label: 'Borrowed',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.notifications_rounded),
-              label: 'Notifications',
-            ),
-          ],
-          currentIndex: _selectedIndex,
-          selectedItemColor: Colors.white,
-          onTap: _onItemTapped,
-        ),);
+              BottomNavigationBarItem(
+                icon: Icon(Icons.file_upload_rounded),
+                label: 'Lent',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.download_rounded),
+                label: 'Borrowed',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.notifications_rounded),
+                label: 'Notifications',
+              ),
+            ],
+            currentIndex: _selectedIndex,
+            selectedItemColor: Colors.white,
+            onTap: _onItemTapped,
+          ),),
+    );
   }
 
   Widget? _floatingActionButton() {

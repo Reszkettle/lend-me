@@ -35,6 +35,8 @@ class _EmailSignUpState extends State<EmailSignUp> {
                 const SizedBox(height: 20.0),
                 TextFormField(
                   decoration: const InputDecoration(
+                      fillColor: Colors.white,
+                      filled: true,
                       border: OutlineInputBorder(),
                       labelText: 'Email',
                       prefixIcon: Icon(Icons.email)),
@@ -49,6 +51,8 @@ class _EmailSignUpState extends State<EmailSignUp> {
                 TextFormField(
                   obscureText: true,
                   decoration: const InputDecoration(
+                      fillColor: Colors.white,
+                      filled: true,
                       border: OutlineInputBorder(),
                       labelText: 'Password',
                       prefixIcon: Icon(Icons.password)),
@@ -61,6 +65,8 @@ class _EmailSignUpState extends State<EmailSignUp> {
                 TextFormField(
                   obscureText: true,
                   decoration: const InputDecoration(
+                      fillColor: Colors.white,
+                      filled: true,
                       border: OutlineInputBorder(),
                       labelText: 'Repeated password',
                       prefixIcon: Icon(Icons.password)),

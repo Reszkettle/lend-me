@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/button_list.dart';
 import 'package:flutter_signin_button/button_view.dart';
+import 'package:lendme/components/background.dart';
 import 'package:lendme/components/loadable_area.dart';
 import 'package:lendme/exceptions/exceptions.dart';
 import 'package:lendme/services/auth_service.dart';
@@ -20,18 +21,21 @@ class _AuthMainState extends State<AuthMain> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(elevation: 0.0, title: const Text('Sign in to Lend Me')),
-        body: LoadableArea(
-          controller: _loadableAreaController,
-          child: OrientationBuilder(builder: (context, orientation) {
-            if (orientation == Orientation.portrait) {
-              return buildPortraitLayout();
-            } else {
-              return buildLandscapeLayout();
-            }
-          }),
-        ));
+    return Background(
+      child: Scaffold(
+          backgroundColor: Colors.transparent,
+          appBar: AppBar(elevation: 0.0, title: const Text('Sign in to Lend Me')),
+          body: LoadableArea(
+            controller: _loadableAreaController,
+            child: OrientationBuilder(builder: (context, orientation) {
+              if (orientation == Orientation.portrait) {
+                return buildPortraitLayout();
+              } else {
+                return buildLandscapeLayout();
+              }
+            }),
+          )),
+    );
   }
 
   Row buildLandscapeLayout() {
