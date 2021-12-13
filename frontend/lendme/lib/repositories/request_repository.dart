@@ -14,7 +14,7 @@ class RequestRepository {
     return firestore
         .collection('requests')
         .where('receivers', arrayContains: firebaseAuth.currentUser!.uid)
-        .orderBy('field')
+        .orderBy('createdAt', descending: true)
         .snapshots()
         .map((snapshot) {
       return snapshot.docs.map((queryDocumentSnapshot) {
@@ -28,8 +28,7 @@ class RequestRepository {
     try {
       await firestore.collection('requests').add(request.toMap());
     } on PlatformException catch (exception) {
-      throw UnknownException(exception.message ??
-          'Something went wrong');
+      throw UnknownException(exception.message ?? 'Something went wrong');
     }
   }
 
@@ -84,5 +83,5 @@ class RequestRepository {
         .where('status', isEqualTo: "pending")
         .snapshots()
         .map((snapshot) => snapshot.docs.isNotEmpty);
-    }
+  }
 }
