@@ -9,10 +9,11 @@ class Background extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
             image: DecorationImage(
-              image: AssetImage('assets/images/background.png'),
+              image: const AssetImage('assets/images/background.png'),
               fit: BoxFit.cover,
+              colorFilter: ColorFilter.mode(Theme.of(context).canvasColor, BlendMode.darken),
             )
         ),
         child: child,
