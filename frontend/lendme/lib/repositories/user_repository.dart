@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fa;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -116,6 +117,20 @@ class UserRepository {
         DocumentReference ref = _firestore.collection("users").doc(uid);
         transaction.update(ref, data);
       });
+    }
+  }
+
+  Future<bool> deleteUser() async {
+    try {
+      HttpsCallable acceptFunction =
+      FirebaseFunctions.instance.httpsCallable('users-deleteAccount');
+      final result = await acceptFunction({});
+      final data = result.data as String;
+      return data == "success";
+    } on FirebaseFunctionsException catch (e) {
+      throw DomainException(e.message ?? "Unknown exception");
+    } catch (e) {
+      throw UnknownException();
     }
   }
 

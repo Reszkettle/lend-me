@@ -61,7 +61,7 @@ class _ProxyState extends State<Proxy> {
       return _Screen.auth;
     } else {
       if (user == null) {
-        return _Screen.splash;
+        return _Screen.auth;
       } else if (!user.info.isFilled()) {
         return _Screen.fillProfile;
       } else {
