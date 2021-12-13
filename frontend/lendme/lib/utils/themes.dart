@@ -3,6 +3,11 @@ import 'package:lendme/utils/constants.dart';
 
 class Themes {
   static final light = ThemeData.light().copyWith(
+    highlightColor: Colors.green.shade200,
+    errorColor: Colors.red.shade200,
+    dividerColor: Colors.yellow.shade200,
+    cardColor: Colors.black12,
+
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       backgroundColor: lightAppBarColor,
       showUnselectedLabels: true,
@@ -10,6 +15,10 @@ class Themes {
   );
   static final dark = ThemeData.dark().copyWith(
     canvasColor: Colors.black.withOpacity(0.7), // Background
+    highlightColor: Colors.green,
+    errorColor: Colors.red,
+    dividerColor: Colors.orange,
+    cardColor: Colors.white12,
 
     primaryColor: darkPrimaryColor,
     scaffoldBackgroundColor: darkBackgroundColor,

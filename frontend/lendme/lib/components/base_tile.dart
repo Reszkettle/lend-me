@@ -8,6 +8,7 @@ class BaseTile extends StatefulWidget {
   final String? thirdLine;
   final String? imageUrl;
   final Color? backgroundColor;
+  final Color? textColor;
   final Icon? icon;
   final GestureTapCallback? onTap;
 
@@ -19,7 +20,8 @@ class BaseTile extends StatefulWidget {
       this.imageUrl,
       this.icon,
       this.onTap,
-      this.backgroundColor=Colors.black12})
+      this.backgroundColor,
+      this.textColor})
       : super(key: key);
 
   @override
@@ -39,7 +41,7 @@ class _BaseTileState extends State<BaseTile> {
         splashColor: darkPrimaryColor,
         onTap: () {},
         child: ListTile(
-            tileColor: widget.backgroundColor,
+            tileColor: widget.backgroundColor ?? Theme.of(context).cardColor,
             shape: RoundedRectangleBorder(
                 side: BorderSide(color: borderColor),
                 borderRadius: tileBorderRadius),
@@ -58,6 +60,7 @@ class _BaseTileState extends State<BaseTile> {
                     : widget.icon),
             title: Text(widget.title,
                 style: TextStyle(
+                    color: widget.textColor,
                     fontSize: 20,
                     fontFamily: fontFamily,
                     fontWeight: FontWeight.bold)),
@@ -66,11 +69,16 @@ class _BaseTileState extends State<BaseTile> {
                 child: Wrap(direction: Axis.vertical, spacing: 5, children: [
                   Text(widget.subtitle,
                       style: TextStyle(
+                          color: widget.textColor,
                           fontSize: widget.thirdLine != null ? 11 : 14,
                           fontFamily: fontFamily)),
                   if (widget.thirdLine != null)
                     Text(widget.thirdLine!,
-                        style: TextStyle(fontSize: 11, fontFamily: fontFamily))
+                        style: TextStyle(
+                            color: widget.textColor,
+                            fontSize: 11,
+                            fontFamily: fontFamily,
+                        ))
                 ])),
             contentPadding:
                 const EdgeInsets.symmetric(vertical: 8, horizontal: 5),

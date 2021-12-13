@@ -18,6 +18,7 @@ class _NotificationTileState extends State<NotificationTile> {
   @override
   Widget build(BuildContext context) {
     return BaseTile(
+        textColor: Colors.black,
         backgroundColor: getBackgroundColor(),
         title: widget.request.title == null ? "Unknown" : widget.request.title!,
         subtitle: widget.request.subtitle == null
@@ -30,11 +31,11 @@ class _NotificationTileState extends State<NotificationTile> {
   Color getBackgroundColor() {
     switch (widget.request.status) {
       case RequestStatus.accepted:
-        return Colors.green.shade200;
+        return Theme.of(context).highlightColor;
       case RequestStatus.pending:
-        return Colors.yellow.shade200;
+        return Theme.of(context).dividerColor;
       default:
-        return Colors.red.shade200;
+        return Theme.of(context).errorColor;
     }
   }
 
