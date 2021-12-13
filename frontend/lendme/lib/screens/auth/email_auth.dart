@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lendme/components/background.dart';
 import 'package:lendme/screens/auth/email_sign_in.dart';
 import 'package:lendme/screens/auth/email_sign_up.dart';
 
@@ -23,11 +24,13 @@ class EmailAuth extends StatelessWidget {
                 ],
             )
           ),
-          body: const TabBarView(
-            children: [
-              EmailSignIn(),
-              EmailSignUp()
-            ],
+          body: const Background(
+            child: TabBarView(
+              children: [
+                EmailSignIn(),
+                EmailSignUp()
+              ],
+            ),
           ),
         ),
     );

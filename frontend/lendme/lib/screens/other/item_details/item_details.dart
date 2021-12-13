@@ -1,6 +1,7 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:lendme/components/background.dart';
 import 'package:lendme/components/confirm_dialog.dart';
 import 'package:lendme/models/item.dart';
 import 'package:lendme/models/user.dart';
@@ -34,20 +35,23 @@ class ItemDetails extends StatelessWidget {
 
   Widget _buildFromData(BuildContext context, Item item, User user) {
     final relationToItem = getItemStatus(item, user);
-    return Scaffold(
-      appBar: AppBar(
-          title: Row(
-            children: [
-              const Text('Item: '),
-              Text(item.title),
-            ],
+    return Background(
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+            title: Row(
+              children: [
+                const Text('Item: '),
+                Text(item.title),
+              ],
+            ),
+            elevation: 0.0),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding:
+                const EdgeInsets.only(left: 16.0, right: 16.0, top: 0, bottom: 16.0),
+            child: _mainLayout(context, item, relationToItem),
           ),
-          elevation: 0.0),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding:
-              const EdgeInsets.only(left: 16.0, right: 16.0, top: 0, bottom: 16.0),
-          child: _mainLayout(context, item, relationToItem),
         ),
       ),
     );

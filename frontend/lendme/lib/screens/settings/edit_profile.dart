@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lendme/components/avatar.dart';
+import 'package:lendme/components/background.dart';
 import 'package:lendme/components/loadable_area.dart';
 import 'package:lendme/exceptions/exceptions.dart';
 import 'package:lendme/models/user.dart';
@@ -45,6 +46,13 @@ class _EditProfileState extends State<EditProfile> {
 
   File? _pendingAvatar;
   bool _isAvatarPending = false;
+  bool _userSet = false;
+
+
+  @override
+  void initState() {
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,48 +62,56 @@ class _EditProfileState extends State<EditProfile> {
       return Container();
     }
 
-    _firstNameController.text = user.info.firstName ?? "";
-    _lastNameController.text = user.info.lastName ?? "";
-    _emailController.text = user.info.email ?? "";
-    _phoneController.text = user.info.phone ?? "";
+    if(!_userSet) {
+      setState(() {
+        _firstNameController.text = user.info.firstName ?? "";
+        _lastNameController.text = user.info.lastName ?? "";
+        _emailController.text = user.info.email ?? "";
+        _phoneController.text = user.info.phone ?? "";
+        _userSet = true;
+      });
+    }
 
     Future.delayed(const Duration(milliseconds: 10), () => _formKey.currentState!.validate());
 
-    return Scaffold(
-      appBar: AppBar(
-          title: Text(widget.afterLoginVariant ? 'Populate your profile' : 'Edit profile'),
-          elevation: 0.0
-      ),
-      body: LoadableArea(
-        controller: _loadableAreaController,
-        initialState: LoadableAreaState.main,
-        child: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Avatar(
-                    url: _isAvatarPending ? _pendingAvatar?.path : user.avatarUrl,
-                    size: 200,
-                  ),
-                  const SizedBox(height: 10),
-                  avatarButtons(user),
-                  const SizedBox(height: 20.0),
-                  firstNameField(),
-                  const SizedBox(height: 20.0),
-                  lastNameField(),
-                  const SizedBox(height: 20),
-                  emailField(),
-                  const SizedBox(height: 20),
-                  phoneField(),
-                  const SizedBox(height: 20),
-                  confirmButton(user.uid),
-                  if(widget.afterLoginVariant)
-                    signOutButton()
-                ],
+    return Background(
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+            title: Text(widget.afterLoginVariant ? 'Populate your profile' : 'Edit profile'),
+            elevation: 0.0
+        ),
+        body: LoadableArea(
+          controller: _loadableAreaController,
+          initialState: LoadableAreaState.main,
+          child: SingleChildScrollView(
+            child: Form(
+              key: _formKey,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Avatar(
+                      url: _isAvatarPending ? _pendingAvatar?.path : user.avatarUrl,
+                      size: 200,
+                    ),
+                    const SizedBox(height: 10),
+                    avatarButtons(user),
+                    const SizedBox(height: 20.0),
+                    firstNameField(),
+                    const SizedBox(height: 20.0),
+                    lastNameField(),
+                    const SizedBox(height: 20),
+                    emailField(),
+                    const SizedBox(height: 20),
+                    phoneField(),
+                    const SizedBox(height: 20),
+                    confirmButton(user.uid),
+                    if(widget.afterLoginVariant)
+                      signOutButton()
+                  ],
+                ),
               ),
             ),
           ),
@@ -189,8 +205,11 @@ class _EditProfileState extends State<EditProfile> {
         LengthLimitingTextInputFormatter(EditProfile.maxFirstNameLength),
       ],
       decoration: const InputDecoration(
+          fillColor: Colors.white,
+          filled: true,
           border: OutlineInputBorder(),
           hintText: 'First name',
+          labelText: 'First name',
           prefixIcon: Icon(Icons.person_rounded)
       ),
       validator: validateFirstName,
@@ -205,7 +224,10 @@ class _EditProfileState extends State<EditProfile> {
         LengthLimitingTextInputFormatter(EditProfile.maxLastNameLength),
       ],
       decoration: const InputDecoration(
+          fillColor: Colors.white,
+          filled: true,
           border: OutlineInputBorder(),
+          labelText: 'Last name',
           hintText: 'Last name',
           prefixIcon: Icon(Icons.person_rounded)
       ),
@@ -222,7 +244,10 @@ class _EditProfileState extends State<EditProfile> {
         LengthLimitingTextInputFormatter(EditProfile.maxEmailLength),
       ],
       decoration: const InputDecoration(
+          fillColor: Colors.white,
+          filled: true,
           border: OutlineInputBorder(),
+          labelText: 'Email address',
           hintText: 'Email address',
           prefixIcon: Icon(Icons.email_rounded)
       ),
@@ -239,7 +264,10 @@ class _EditProfileState extends State<EditProfile> {
         LengthLimitingTextInputFormatter(EditProfile.maxPhoneLength),
       ],
       decoration: const InputDecoration(
+          fillColor: Colors.white,
+          filled: true,
           border: OutlineInputBorder(),
+          labelText: 'Phone number',
           hintText: 'Phone number',
           prefixIcon: Icon(Icons.call_rounded)
       ),

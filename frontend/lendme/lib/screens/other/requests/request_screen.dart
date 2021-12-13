@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lendme/components/background.dart';
 import 'package:lendme/components/item_view.dart';
 import 'package:lendme/components/user_view.dart';
 import 'package:lendme/models/item.dart';
@@ -43,15 +44,18 @@ class RequestScreen extends StatelessWidget {
   }
 
   Widget buildFromData(BuildContext context, Request request, User user, Item? item) {
-    return Scaffold(
-      appBar: AppBar(
-          title: Text(_titleText(request)),
-          elevation: 0.0
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: _mainLayout(context, request, user, item),
+    return Background(
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+            title: Text(_titleText(request)),
+            elevation: 0.0
+        ),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: _mainLayout(context, request, user, item),
+          ),
         ),
       ),
     );

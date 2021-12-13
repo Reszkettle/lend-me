@@ -13,6 +13,7 @@ class _ItemsState extends State<Items> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Colors.transparent,
         floatingActionButton: null,
         body: ItemsList(
             itemsStream: ItemRepository().getStreamOfCurrentUserItems()));

@@ -35,8 +35,10 @@ class _EmailSignUpState extends State<EmailSignUp> {
                 const SizedBox(height: 20.0),
                 TextFormField(
                   decoration: const InputDecoration(
+                      fillColor: Colors.white,
+                      filled: true,
                       border: OutlineInputBorder(),
-                      hintText: 'Email',
+                      labelText: 'Email',
                       prefixIcon: Icon(Icons.email)),
                   validator: (val) => val!.isEmpty ? 'Enter an email' : null,
                   onChanged: (val) {
@@ -49,8 +51,10 @@ class _EmailSignUpState extends State<EmailSignUp> {
                 TextFormField(
                   obscureText: true,
                   decoration: const InputDecoration(
+                      fillColor: Colors.white,
+                      filled: true,
                       border: OutlineInputBorder(),
-                      hintText: 'Password',
+                      labelText: 'Password',
                       prefixIcon: Icon(Icons.password)),
                   validator: (val) => val!.length < 6 ? 'Enter a password min 6 characters long' : null,
                   onChanged: (val) {
@@ -61,8 +65,10 @@ class _EmailSignUpState extends State<EmailSignUp> {
                 TextFormField(
                   obscureText: true,
                   decoration: const InputDecoration(
+                      fillColor: Colors.white,
+                      filled: true,
                       border: OutlineInputBorder(),
-                      hintText: 'Repeated password',
+                      labelText: 'Repeated password',
                       prefixIcon: Icon(Icons.password)),
                   validator: (val) => val != password ? "Passwords are not the same" : null,
                   onChanged: (val) {

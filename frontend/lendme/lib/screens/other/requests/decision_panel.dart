@@ -99,21 +99,6 @@ class RequestDecisionPanel extends StatelessWidget {
     );
   }
 
-  Widget _responseMessage() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          "Justification message:",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        Text(request.responseMessage ?? ''),
-      ],
-    );
-  }
-
   Widget _pendingDecisiveState() {
     return AcceptRejectPanel(
       request: request,

@@ -127,22 +127,26 @@ class PanelBorrowed extends StatelessWidget {
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            OutlinedButton.icon(
-              label: const Text('Extend time'),
-              icon: const Icon(Icons.more_time),
-              style: OutlinedButton.styleFrom(primary: Colors.white, side: const BorderSide(width: 1.0, color: Colors.white)),
-              onPressed: () {
-                _showExtendDialog(item, context);
-              },
+            Expanded(
+              child: OutlinedButton.icon(
+                label: const Text('Extend time'),
+                icon: const Icon(Icons.more_time),
+                style: OutlinedButton.styleFrom(primary: Colors.white, side: const BorderSide(width: 1.0, color: Colors.white)),
+                onPressed: () {
+                  _showExtendDialog(item, context);
+                },
+              ),
             ),
             const SizedBox(width: 16),
-            OutlinedButton.icon(
-              label: const Text('Transfer loan'),
-              icon: const Icon(Icons.local_shipping),
-              style: OutlinedButton.styleFrom(primary: Colors.white, side: const BorderSide(width: 1.0, color: Colors.white)),
-              onPressed: () {
-                Navigator.of(context).pushNamed('/lent_qr', arguments: item);
-              },
+            Expanded(
+              child: OutlinedButton.icon(
+                label: const Text('Transfer loan'),
+                icon: const Icon(Icons.local_shipping),
+                style: OutlinedButton.styleFrom(primary: Colors.white, side: const BorderSide(width: 1.0, color: Colors.white)),
+                onPressed: () {
+                  Navigator.of(context).pushNamed('/lent_qr', arguments: item);
+                },
+              ),
             ),
           ],
         ),

@@ -14,6 +14,7 @@ class _EmptyStateState extends State<EmptyState> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Colors.transparent,
         body: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,

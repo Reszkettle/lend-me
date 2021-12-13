@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lendme/components/background.dart';
 import 'package:lendme/models/item.dart';
 
 //qr flutter
@@ -12,22 +13,26 @@ class LentQr extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-          title: Text('Lent item: ' + item.title),
-          elevation: 0.0
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(32.0),
-        child: //Text("QR code for item ${item.id}"),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Text("${item.title}"),
-            QrImage(
-              data: "${item.id}",
-            ),
-          ],
+    return Background(
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+            title: Text('Lent item: ' + item.title),
+            elevation: 0.0
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(32.0),
+          child: //Text("QR code for item ${item.id}"),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Text("${item.title}"),
+              QrImage(
+                backgroundColor: Colors.white,
+                data: "${item.id}",
+              ),
+            ],
+          ),
         ),
       ),
     );

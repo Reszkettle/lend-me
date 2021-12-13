@@ -19,7 +19,7 @@ class BaseTile extends StatefulWidget {
       this.imageUrl,
       this.icon,
       this.onTap,
-      this.backgroundColor})
+      this.backgroundColor=Colors.black12})
       : super(key: key);
 
   @override

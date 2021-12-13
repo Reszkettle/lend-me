@@ -53,22 +53,6 @@ class AuthService {
     }
   }
 
-  // sign in with Facebook
-  Future<String?> signInWithFacebook() async {
-    try {
-      final LoginResult loginResult = await FacebookAuth.instance.login();
-      final OAuthCredential facebookAuthCredential =
-          FacebookAuthProvider.credential(loginResult.accessToken!.token);
-      final UserCredential userCredential = await FirebaseAuth.instance
-          .signInWithCredential(facebookAuthCredential);
-      User? user = userCredential.user;
-      _userRepository.updateToken();
-      return user?.uid;
-    } catch (e) {
-      throw _mapAuthException(e);
-    }
-  }
-
   // register with email & password
   Future<String?> registerWithEmailAndPassword(String email, String password) async {
     try {

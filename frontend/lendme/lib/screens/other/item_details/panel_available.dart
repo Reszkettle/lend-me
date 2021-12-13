@@ -42,8 +42,7 @@ class PanelAvailable extends StatelessWidget {
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(
-              width: 300,
+            Expanded(
               child: OutlinedButton.icon(
                 label: const Text('Lend'),
                 icon: const Icon(Icons.qr_code_rounded),

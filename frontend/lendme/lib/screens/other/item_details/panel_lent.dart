@@ -106,16 +106,18 @@ class PanelLent extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              OutlinedButton.icon(
-                label: const Text('Confirm return'),
-                icon: const Icon(Icons.done_rounded),
-                style: OutlinedButton.styleFrom(
-                  primary: Colors.white,
-                  side: const BorderSide(width: 1.0, color: Colors.white)
+              Expanded(
+                child: OutlinedButton.icon(
+                  label: const Text('Confirm return'),
+                  icon: const Icon(Icons.done_rounded),
+                  style: OutlinedButton.styleFrom(
+                    primary: Colors.white,
+                    side: const BorderSide(width: 1.0, color: Colors.white)
+                  ),
+                  onPressed: () {
+                    _showConfirmReturnEnsureDialog(context, rental);
+                  },
                 ),
-                onPressed: () {
-                  _showConfirmReturnEnsureDialog(context, rental);
-                },
               )
             ],
           ),
@@ -141,7 +143,7 @@ class PanelLent extends StatelessWidget {
       return;
     }
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      content: Text("Item return"),
+      content: Text("Returning item"),
     ));
     Navigator.pop(context);
     //}
