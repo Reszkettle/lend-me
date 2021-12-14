@@ -15,12 +15,12 @@ class ChangeTheme extends StatelessWidget {
           children: [
             const SizedBox(height: 35.0),
             Center(child: ColorFiltered(
-                colorFilter: const ColorFilter.matrix(<double>[
-                  0.2126, 0.7152, 0.0722, 0, 0,
-                  0.2126, 0.7152, 0.0722, 0, 0,
-                  0.2126, 0.7152, 0.0722, 0, 0,
-                  0,      0,      0,      1, 0,
-                ]),
+              colorFilter: const ColorFilter.matrix(<double>[
+                0.1, 0.7, 0.07, 0, 0,
+                0.1, 0.7, 0.07, 0, 0,
+                0.1, 0.7, 0.07, 0, 0,
+                0,      0,      0,      1, 0,
+              ]),
                 child: Image.asset('assets/images/theme_moon.png',
                   height: 150,
                   width: 120,))
@@ -28,7 +28,8 @@ class ChangeTheme extends StatelessWidget {
             Center(
               child: ElevatedButton(
                 child: const Text(
-                  'Change Theme to Dark Mode',
+                  'Dark Mode',
+                  style: TextStyle(fontSize: 18),
                 ),
                 onPressed: ThemeService().switchToDark,
               ),
@@ -43,7 +44,8 @@ class ChangeTheme extends StatelessWidget {
             Center(
               child: ElevatedButton(
                 child: const Text(
-                  'Change Theme to Light Mode',
+                  'Light Mode',
+                  style: TextStyle(fontSize: 18),
                 ),
                 onPressed: ThemeService().switchToLight,
               ),
