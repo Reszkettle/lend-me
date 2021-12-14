@@ -13,7 +13,18 @@ class ChangeTheme extends StatelessWidget {
         appBar: AppBar(title: const Text('Change theme'), elevation: 0.0),
         body: Column(
           children: [
-            const SizedBox(height: 15.0),
+            const SizedBox(height: 35.0),
+            Center(child: ColorFiltered(
+                colorFilter: const ColorFilter.matrix(<double>[
+                  0.2126, 0.7152, 0.0722, 0, 0,
+                  0.2126, 0.7152, 0.0722, 0, 0,
+                  0.2126, 0.7152, 0.0722, 0, 0,
+                  0,      0,      0,      1, 0,
+                ]),
+                child: Image.asset('assets/images/theme_moon.png',
+                  height: 150,
+                  width: 120,))
+            ),
             Center(
               child: ElevatedButton(
                 child: const Text(
@@ -22,6 +33,13 @@ class ChangeTheme extends StatelessWidget {
                 onPressed: ThemeService().switchToDark,
               ),
             ),
+
+            const SizedBox(height: 35.0),
+            Center(
+                    child: Image.asset('assets/images/theme_sun.png',
+                  height: 150,
+                    width: 140,),
+                ),
             Center(
               child: ElevatedButton(
                 child: const Text(
