@@ -42,6 +42,7 @@ class _LentMeAppState extends State<LentMeApp> {
         value: _userStream,
         initialData: null,
         child: GetMaterialApp(
+          debugShowCheckedModeBanner: false,
           title: 'Lend Me',
           theme: Themes.light,
           darkTheme: Themes.dark,
