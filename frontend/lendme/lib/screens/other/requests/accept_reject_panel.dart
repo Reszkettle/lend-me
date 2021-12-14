@@ -79,7 +79,7 @@ class _AcceptRejectPanelState extends State<AcceptRejectPanel> {
           child: TextFormField(
             controller: _messageController,
             decoration: InputDecoration(
-                fillColor: Colors.white,
+                fillColor: Theme.of(context).canvasColor,
                 filled: true,
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(

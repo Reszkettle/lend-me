@@ -34,12 +34,12 @@ class _EmailSignUpState extends State<EmailSignUp> {
               children: [
                 const SizedBox(height: 20.0),
                 TextFormField(
-                  decoration: const InputDecoration(
-                      fillColor: Colors.white,
+                  decoration: InputDecoration(
+                      fillColor: Theme.of(context).canvasColor,
                       filled: true,
-                      border: OutlineInputBorder(),
+                      border: const OutlineInputBorder(),
                       labelText: 'Email',
-                      prefixIcon: Icon(Icons.email)),
+                      prefixIcon: const Icon(Icons.email)),
                   validator: (val) => val!.isEmpty ? 'Enter an email' : null,
                   onChanged: (val) {
                     setState(() {
@@ -50,12 +50,12 @@ class _EmailSignUpState extends State<EmailSignUp> {
                 const SizedBox(height: 20.0),
                 TextFormField(
                   obscureText: true,
-                  decoration: const InputDecoration(
-                      fillColor: Colors.white,
+                  decoration: InputDecoration(
+                      fillColor: Theme.of(context).canvasColor,
                       filled: true,
-                      border: OutlineInputBorder(),
+                      border: const OutlineInputBorder(),
                       labelText: 'Password',
-                      prefixIcon: Icon(Icons.password)),
+                      prefixIcon: const Icon(Icons.password)),
                   validator: (val) => val!.length < 6 ? 'Enter a password min 6 characters long' : null,
                   onChanged: (val) {
                     password = val;
@@ -64,12 +64,12 @@ class _EmailSignUpState extends State<EmailSignUp> {
                 const SizedBox(height: 20.0),
                 TextFormField(
                   obscureText: true,
-                  decoration: const InputDecoration(
-                      fillColor: Colors.white,
+                  decoration: InputDecoration(
+                      fillColor: Theme.of(context).canvasColor,
                       filled: true,
-                      border: OutlineInputBorder(),
+                      border: const OutlineInputBorder(),
                       labelText: 'Repeated password',
-                      prefixIcon: Icon(Icons.password)),
+                      prefixIcon: const Icon(Icons.password)),
                   validator: (val) => val != password ? "Passwords are not the same" : null,
                   onChanged: (val) {
                     repeatedPassword = val;

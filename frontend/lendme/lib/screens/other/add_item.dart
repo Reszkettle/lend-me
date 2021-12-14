@@ -60,7 +60,7 @@ class _AddItemState extends State<AddItem> {
                               onChanged: (val) => {_formKey.currentState!.validate()},
                               validator: validateTitle,
                               decoration: InputDecoration(
-                                  fillColor: Colors.white,
+                                  fillColor: Theme.of(context).canvasColor,
                                   filled: true,
                                   enabledBorder: OutlineInputBorder(
                                     // width: 0.0 produces a thin "hairline" border
@@ -80,7 +80,7 @@ class _AddItemState extends State<AddItem> {
                               controller: _descriptionController,
                               onChanged: (val) => {_formKey.currentState!.validate()},
                               decoration: InputDecoration(
-                                  fillColor: Colors.white,
+                                  fillColor: Theme.of(context).canvasColor,
                                   filled: true,
                                   enabledBorder: OutlineInputBorder(
                                     // width: 0.0 produces a thin "hairline" border

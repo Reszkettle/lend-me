@@ -35,12 +35,12 @@ class _EmailSignInState extends State<EmailSignIn> {
               children: [
                 const SizedBox(height: 20.0),
                 TextFormField(
-                  decoration: const InputDecoration(
-                      fillColor: Colors.white,
+                  decoration: InputDecoration(
+                      fillColor: Theme.of(context).canvasColor,
                       filled: true,
-                      border: OutlineInputBorder(),
+                      border: const OutlineInputBorder(),
                       labelText: 'Email',
-                      prefixIcon: Icon(Icons.email)
+                      prefixIcon: const Icon(Icons.email)
                   ),
                   validator: (val) => val!.isEmpty ? 'Enter an email' : null,
                   onChanged: (val) {
@@ -52,12 +52,12 @@ class _EmailSignInState extends State<EmailSignIn> {
                 const SizedBox(height: 20.0),
                 TextFormField(
                   obscureText: true,
-                  decoration: const InputDecoration(
-                      fillColor: Colors.white,
+                  decoration: InputDecoration(
+                      fillColor: Theme.of(context).canvasColor,
                       filled: true,
-                      border: OutlineInputBorder(),
+                      border: const OutlineInputBorder(),
                       labelText: 'Passowrd',
-                      prefixIcon: Icon(Icons.password)
+                      prefixIcon: const Icon(Icons.password)
                   ),
                   validator: (val) => val!.length < 6 ? 'Enter a password min 6 characters long' : null,
                   onChanged: (val) {
